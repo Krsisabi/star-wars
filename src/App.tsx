@@ -50,7 +50,11 @@ class App extends Component<object, AppState> {
           onChange={this.searchInputHandler}
           onSubmit={this.fetchCharacters}
         />
-        <List data={this.state.characters} />
+        {this.state.isLoading ? (
+          <h2 style={{ marginTop: '32px' }}>Loading...</h2>
+        ) : (
+          <List data={this.state.characters} />
+        )}
       </div>
     );
   }
