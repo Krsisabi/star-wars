@@ -1,9 +1,10 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import { Outlet } from 'react-router';
-import { Character, TResponse } from '../../types';
-import { List } from '../../components/List';
+import { Character, TResponse } from '~/types';
+import { List } from '~/components/List';
+import { Search } from '~/components/Search';
+import { Pagination } from '~/Pagination';
 import styles from './Home.module.scss';
-import { Search } from '../../components/Search';
 
 const BASE_URL = 'https://swapi.dev/api/people/';
 

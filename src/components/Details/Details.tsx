@@ -1,9 +1,8 @@
-// import { Character } from '../../types';
 import { useParams } from 'react-router';
-import styles from './Details.module.scss';
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Character } from '../../types';
+import { useEffect, useState } from 'react';
+import { Character } from '~/types';
+import styles from './Details.module.scss';
 
 const BASE_URL = 'https://swapi.dev/api/people/';
 

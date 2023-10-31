@@ -1,4 +1,4 @@
-import { Character } from '../../types';
+import { Character } from '~/types';
 import { Card } from './Card';
 import styles from './List.module.scss';
 

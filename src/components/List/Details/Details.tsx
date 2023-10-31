@@ -1,4 +1,4 @@
-import { Character } from '../../../types';
+import { Character } from '~/types';
 import styles from './Card.module.scss';
 
 const localDate = new Intl.DateTimeFormat('en-GB', {
