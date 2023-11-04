@@ -11,17 +11,6 @@
     "format:fix": "prettier --write .",
     "preview": "vite preview"
   },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "npm run format:fix"
-    ],
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "npm run format:fix"
-    ],
-    "src/**/*.+(js|json|ts|tsx)": [
-      "npm run lint"
-    ]
-  },
   "devDependencies": {
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
