@@ -1,4 +1,4 @@
-import { ChangeEvent, Component } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { Search } from './components/Search';
 import { Character, TResponse } from './types';
 import { List } from './components/List';
@@ -6,71 +6,65 @@ import styles from './App.module.scss';
 
 const BASE_URL = 'https://swapi.dev/api/people/';
 
-type AppState = {
-  searchValue: string;
-  characters: Character[];
-  isLoading: boolean;
-  hasError: boolean;
-};
+const App = () => {
+  const [searchValue, setSearchValue] = useState(
+    localStorage.getItem('searchValue') ?? ''
+  );
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-class App extends Component<object, AppState> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      isLoading: false,
-      searchValue: localStorage.getItem('searchValue') ?? '',
-      characters: [],
-      hasError: false,
-    };
+  useEffect(() => {
+    fetchCharacters(searchValue);
+  }, [searchValue]);
 
-    this.fetchCharacters = this.fetchCharacters.bind(this);
-  }
+  useEffect(() => {
+    if (hasError) {
+      throw new Error('Your bad =(');
+    }
+  }, [hasError]);
 
-  componentDidMount(): void {
-    this.fetchCharacters(this.state.searchValue);
-  }
-
-  componentDidUpdate(): void {
-    if (this.state.hasError) throw new Error('Your bad =(');
-  }
-
-  private async fetchCharacters(character: string) {
-    this.setState((prev) => ({ ...prev, isLoading: true }));
+  const fetchCharacters = async (character: string) => {
+    setIsLoading(true);
     const url = character ? `${BASE_URL}?search=${character}` : BASE_URL;
-    const res = await fetch(url);
-    this.setState((prev) => ({ ...prev, isLoading: false }));
-    const data = (await res.json()) as TResponse;
-    const { results } = data;
-    this.setState((prev) => ({ ...prev, characters: results }));
-  }
-
-  private searchInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    this.setState((prev) => ({ ...prev, searchValue: e.target.value }));
+    try {
+      const res = await fetch(url);
+      const data = (await res.json()) as TResponse;
+      const { results } = data;
+      setCharacters(results);
+    } catch (error) {
+      setIsLoading(false);
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  private throwError = () => {
-    this.setState((prev) => ({ ...prev, hasError: true }));
+  const searchInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
   };
 
-  render() {
-    return (
-      <div className={styles.app}>
-        <button className={styles.button} onClick={this.throwError}>
-          Generate error
-        </button>
-        <Search
-          value={this.state.searchValue}
-          onChange={this.searchInputHandler}
-          onSubmit={this.fetchCharacters}
-        />
-        {this.state.isLoading ? (
-          <h2 style={{ marginTop: '32px' }}>Loading...</h2>
-        ) : (
-          <List data={this.state.characters} />
-        )}
-      </div>
-    );
-  }
-}
+  const throwError = () => {
+    setHasError(true);
+  };
+
+  return (
+    <div className={styles.app}>
+      <button className={styles.button} onClick={throwError}>
+        Generate error
+      </button>
+      <Search
+        value={searchValue}
+        onChange={searchInputHandler}
+        onSubmit={fetchCharacters}
+      />
+      {isLoading ? (
+        <h2 style={{ marginTop: '32px' }}>Loading...</h2>
+      ) : (
+        <List data={characters} />
+      )}
+    </div>
+  );
+};
 
 export default App;
