@@ -18,9 +18,9 @@ export function Search({ onSubmit, value, onChange }: SearchProps) {
     event.preventDefault();
 
     const text = event.currentTarget.search.value;
+    localStorage.setItem('searchValue', text);
 
     if (text.trim()) {
-      localStorage.setItem('searchValue', text);
       onSubmit(text);
     }
   };

@@ -20,7 +20,7 @@ export const Home = () => {
 
   useEffect(() => {
     fetchCharacters(searchValue);
-  }, [searchValue, currentPage]);
+  }, [currentPage]);
 
   useEffect(() => {
     if (hasError) {
