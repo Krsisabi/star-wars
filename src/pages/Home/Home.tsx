@@ -3,10 +3,10 @@ import { Outlet } from 'react-router';
 import { Character, TResponse } from '~/types';
 import { List } from '~/components/List';
 import { Search } from '~/components/Search';
-import { Pagination } from '~/Pagination';
+import { Pagination } from '~/components/Pagination';
 import styles from './Home.module.scss';
 
-const BASE_URL = 'https://swapi.dev/api/people/';
+export const BASE_URL = 'https://swapi.dev/api/people/';
 
 export const Home = () => {
   const [searchValue, setSearchValue] = useState(
@@ -15,10 +15,12 @@ export const Home = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     fetchCharacters(searchValue);
-  }, []);
+  }, [searchValue, currentPage]);
 
   useEffect(() => {
     if (hasError) {
@@ -28,11 +30,15 @@ export const Home = () => {
 
   const fetchCharacters = async (character: string) => {
     setIsLoading(true);
-    const url = character ? `${BASE_URL}?search=${character}` : BASE_URL;
+
+    const urlPage = `${BASE_URL}?page=${currentPage}`;
+
+    const url = character ? `${urlPage}&search=${character}` : `${urlPage}`;
     try {
       const res = await fetch(url);
       const data = (await res.json()) as TResponse;
       const { results } = data;
+      setTotalCount(data.count);
       setCharacters(results);
     } catch (error) {
       setIsLoading(false);
@@ -63,10 +69,19 @@ export const Home = () => {
       {isLoading ? (
         <h2 style={{ marginTop: '32px' }}>Loading...</h2>
       ) : (
-        <div className={styles.wrapper}>
-          <List data={characters} />
-          <Outlet />
-        </div>
+        <>
+          <div className={styles.wrapper}>
+            <List data={characters} />
+            <Outlet />
+          </div>
+          {characters && (
+            <Pagination
+              currentPage={currentPage}
+              totalCount={totalCount}
+              onPageChange={setCurrentPage}
+            />
+          )}
+        </>
       )}
     </div>
   );
