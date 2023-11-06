@@ -2,13 +2,15 @@
 import { useParams } from 'react-router';
 import styles from './Details.module.scss';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Character } from '../../types';
 
 const BASE_URL = 'https://swapi.dev/api/people/';
 
-export function Details(/* { name, mass, skin_color }: Character */) {
+export function Details() {
   const [character, setCharacters] = useState<Character>();
   const [isLoading, setIsLoading] = useState(false);
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -31,6 +33,10 @@ export function Details(/* { name, mass, skin_color }: Character */) {
 
   return (
     <div className={styles.details}>
+      <Link className={styles.button} to={'/'}>
+        X
+      </Link>
+
       {isLoading ? (
         <div>Loading...</div>
       ) : (
