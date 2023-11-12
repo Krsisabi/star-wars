@@ -4,6 +4,7 @@ import { Character, TResponse } from '~/types';
 import { List } from '~/components/List';
 import { Search } from '~/components/Search';
 import { Pagination } from '~/components/Pagination';
+import { ErrorButton } from '~/components/ErrorButton';
 import styles from './Home.module.scss';
 
 export const BASE_URL = 'https://swapi.dev/api/people/';
@@ -52,15 +53,9 @@ export const Home = () => {
     setSearchValue(e.target.value);
   };
 
-  const throwError = () => {
-    setHasError(true);
-  };
-
   return (
     <div className={styles.home}>
-      <button className={styles.button} onClick={throwError}>
-        Generate error
-      </button>
+      <ErrorButton />
       <Search
         value={searchValue}
         onChange={searchInputHandler}
