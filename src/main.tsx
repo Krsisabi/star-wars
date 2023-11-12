@@ -6,12 +6,15 @@ import App from './App.tsx';
 import './index.scss';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary.tsx';
 import { Error } from './components/Error';
+import { SearchProvider } from './hooks/useSearch.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary fallback={<Error />}>
       <BrowserRouter>
-        <App />
+        <SearchProvider>
+          <App />
+        </SearchProvider>
       </BrowserRouter>
     </ErrorBoundary>
   </React.StrictMode>

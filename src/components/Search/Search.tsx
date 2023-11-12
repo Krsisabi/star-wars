@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from 'react';
+import { useSearch } from '~/hooks';
 import styles from './Search.module.scss';
 
 type FormFields = {
@@ -7,11 +7,11 @@ type FormFields = {
 
 type SearchProps = {
   onSubmit: (text: string) => void;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-  value: string;
 };
 
-export function Search({ onSubmit, value, onChange }: SearchProps) {
+export function Search({ onSubmit }: SearchProps) {
+  const { searchValue: value, setSearchInputValue } = useSearch();
+
   const handleSubmit = (
     event: React.FormEvent<HTMLFormElement & FormFields>
   ) => {
@@ -30,7 +30,7 @@ export function Search({ onSubmit, value, onChange }: SearchProps) {
       <input
         className={styles.textField}
         value={value}
-        onChange={onChange}
+        onChange={setSearchInputValue}
         type="text"
         name="search"
         placeholder="Search..."

@@ -1,23 +1,18 @@
 import clsx from 'clsx';
-
-import { usePagination, DOTS } from '~/hooks/usePagination';
+import { Link } from 'react-router-dom';
+import { usePagination, DOTS, useSearch } from '~/hooks';
 
 import styles from './Pagination.module.scss';
-import { Link } from 'react-router-dom';
 
 export type PaginationProps = {
-  totalCount: number;
   pageSize?: number;
   siblingCount?: number;
-  currentPage: number;
-  onPageChange:
-    | React.Dispatch<React.SetStateAction<number>>
-    | ((value: number) => void);
 };
 
 export const Pagination = (props: PaginationProps) => {
-  const { onPageChange, totalCount, siblingCount, currentPage, pageSize } =
-    props;
+  const { pageSize, siblingCount } = props;
+
+  const { currentPage, totalCount, setCurrentPage } = useSearch();
 
   const paginationRange = usePagination({
     currentPage,
@@ -56,7 +51,7 @@ export const Pagination = (props: PaginationProps) => {
               })}
               onClick={() => {
                 onTop();
-                onPageChange(+pageNumber);
+                setCurrentPage(+pageNumber);
               }}
               key={pageNumber}
             >

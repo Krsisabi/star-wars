@@ -1,15 +1,13 @@
-import { Character } from '~/types';
+import { useSearch } from '~/hooks';
 import { Card } from './Card';
 import styles from './List.module.scss';
 
-type ListProps = {
-  data: Character[];
-};
+export function List() {
+  const { results } = useSearch();
 
-export function List({ data }: ListProps) {
   return (
     <div className={styles.list}>
-      {data.map((el) => (
+      {results.map((el) => (
         <Card key={el.name} {...el} />
       ))}
     </div>
