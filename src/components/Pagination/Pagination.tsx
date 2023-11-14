@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-import { usePagination, DOTS, useSearch } from '~/hooks';
+import { usePagination, DOTS, useSearchContext } from '~/hooks';
 
 import styles from './Pagination.module.scss';
 
@@ -12,7 +12,7 @@ export type PaginationProps = {
 export const Pagination = (props: PaginationProps) => {
   const { pageSize, siblingCount } = props;
 
-  const { currentPage, totalCount, setCurrentPage } = useSearch();
+  const { currentPage, totalCount, setCurrentPage } = useSearchContext();
 
   const paginationRange = usePagination({
     currentPage,

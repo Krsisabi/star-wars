@@ -1,4 +1,4 @@
-import { useSearch } from '~/hooks';
+import { useSearchContext } from '~/hooks';
 import styles from './Search.module.scss';
 
 type FormFields = {
@@ -10,7 +10,7 @@ type SearchProps = {
 };
 
 export function Search({ onSubmit }: SearchProps) {
-  const { searchValue: value, setSearchInputValue } = useSearch();
+  const { searchValue: value, setSearchInputValue } = useSearchContext();
 
   const handleSubmit = (
     event: React.FormEvent<HTMLFormElement & FormFields>
@@ -35,7 +35,9 @@ export function Search({ onSubmit }: SearchProps) {
         name="search"
         placeholder="Search..."
       />
-      <button className={styles.button}>Search</button>
+      <button className={styles.button} type="submit">
+        Search
+      </button>
     </form>
   );
 }

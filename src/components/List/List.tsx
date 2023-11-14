@@ -1,9 +1,9 @@
-import { useSearch } from '~/hooks';
+import { useSearchContext } from '~/hooks';
 import { Card } from './Card';
 import styles from './List.module.scss';
 
 export function List() {
-  const { results } = useSearch();
+  const { results } = useSearchContext();
 
   return (
     <div className={styles.list}>
