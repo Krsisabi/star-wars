@@ -10,10 +10,8 @@ export type PaginationProps = {
 };
 
 export const Pagination = (props: PaginationProps) => {
-  const [queryParams] = useSearchParams();
-
+  const [searchParams] = useSearchParams();
   const { pageSize, siblingCount } = props;
-
   const { currentPage, totalCount, setCurrentPage } = useSearchContext();
 
   const paginationRange = usePagination({
@@ -45,10 +43,10 @@ export const Pagination = (props: PaginationProps) => {
           );
         }
 
-        queryParams.set('page', pageNumber.toString());
+        searchParams.set('page', pageNumber.toString());
 
         return (
-          <Link to={{ search: queryParams.toString() }} key={pageNumber}>
+          <Link to={{ search: searchParams.toString() }} key={pageNumber}>
             <li
               className={clsx(styles.paginationItem, {
                 [styles.selected]: +pageNumber === currentPage,

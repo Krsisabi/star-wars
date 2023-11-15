@@ -54,22 +54,32 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
 
   const fetchList = useCallback(
     (searchValue?: string, pageNumber?: number, options?: RequestInit) => {
-      searchValue && searchParams.set('search', searchValue);
-      pageNumber && searchParams.set('page', pageNumber.toString());
-      setSearchParams(searchParams);
-      setIsLoading(true);
+      setSearchParams((prevSearchParams) => {
+        const newSearchParams = new URLSearchParams(prevSearchParams);
 
-      baseFetch<TResponse>('?' + searchParams, options)
-        .then(({ results, count }) => {
-          setIsLoading(false);
-          setResults(results);
-          setTotalCount(count);
-        })
-        .catch(setError)
-        .finally(() => setIsLoading(false));
+        searchValue
+          ? newSearchParams.set('search', searchValue)
+          : newSearchParams.delete('search');
+
+        pageNumber
+          ? newSearchParams.set('page', pageNumber.toString())
+          : newSearchParams.delete('page');
+
+        setIsLoading(true);
+
+        baseFetch<TResponse>('?' + newSearchParams, options)
+          .then(({ results, count }) => {
+            setIsLoading(false);
+            setResults(results);
+            setTotalCount(count);
+          })
+          .catch(setError)
+          .finally(() => setIsLoading(false));
+
+        return newSearchParams;
+      });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [setSearchParams]
   );
 
   return (
