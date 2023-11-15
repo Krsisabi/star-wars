@@ -12,7 +12,7 @@ type SearchProps = {
 };
 
 export function Search({ onSubmit }: SearchProps) {
-  const { searchValue, setCurrentPage } = useSearchContext();
+  const { searchValue, setCurrentPage, setSearchValue } = useSearchContext();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [searchValueLocal, setSearchValueLocal] = useState(searchValue);
@@ -29,8 +29,10 @@ export function Search({ onSubmit }: SearchProps) {
     if (searchValueLocal) {
       searchParams.set('search', searchValueLocal);
     }
+    searchParams.set('page', '1');
 
     setCurrentPage(1);
+    setSearchValue(searchValueLocal);
     setSearchParams(searchParams);
 
     const text = event.currentTarget.search.value.trim();
