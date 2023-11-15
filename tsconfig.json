@@ -12,6 +12,7 @@
     "paths": {
       "~/*": ["./*"]
     },
+    "types": ["vitest/globals"],
 
     /* Bundler mode */
     "moduleResolution": "Node",
@@ -28,6 +29,6 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "vite.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
