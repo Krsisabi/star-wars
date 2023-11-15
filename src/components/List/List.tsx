@@ -8,7 +8,7 @@ export function List() {
   return (
     <div className={styles.list}>
       {results.map((el) => (
-        <Card key={el.name} {...el} />
+        <Card key={el.name} {...el} data-testid="listItem" />
       ))}
     </div>
   );
