@@ -1,5 +1,6 @@
-import { Link, generatePath } from 'react-router-dom';
+import { Link, generatePath, useLocation } from 'react-router-dom';
 import { Character } from '~/types';
+import { DETAILS_ROUTE } from '~/constants';
 import styles from './Card.module.scss';
 
 const localDate = new Intl.DateTimeFormat('en-GB', {
@@ -9,6 +10,8 @@ const localDate = new Intl.DateTimeFormat('en-GB', {
 });
 
 export function Card({ name, created, mass, skin_color, url }: Character) {
+  const location = useLocation();
+
   const joinedDate = localDate.format(new Date(created));
 
   const urlObj = new URL(url);
@@ -22,9 +25,12 @@ export function Card({ name, created, mass, skin_color, url }: Character) {
       <div>skin color - {skin_color}</div>
       <Link
         className={styles.link}
-        to={generatePath('/search/:id', {
-          id: username,
-        })}
+        to={{
+          pathname: generatePath(DETAILS_ROUTE, {
+            id: username,
+          }),
+          search: location.search,
+        }}
       />
     </div>
   );

@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useState,
 } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { baseFetch } from '~/api/baseFetch';
 import { Character, TResponse } from '~/types';
 
@@ -31,11 +32,15 @@ type SearchContext = {
 const SearchContext = React.createContext<SearchContext | null>(null);
 
 export const SearchProvider = ({ children }: PropsWithChildren) => {
+  const [searchParams] = useSearchParams();
+
   const [searchValue, setSearchValue] = useState(
-    localStorage.getItem('searchValue') ?? ''
+    searchParams.get('search') ?? ''
   );
   const [results, setResults] = useState<Character[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(
+    Number(searchParams.get('page')) || 1
+  );
   const [totalCount, setTotalCount] = useState(0);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -43,6 +48,7 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
 
   const setSearchInputValue = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
+      setCurrentPage(1);
       setSearchValue(e.target.value);
     },
     []
@@ -50,19 +56,20 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
 
   const fetchList = useCallback(
     (searchValue?: string, pageNumber?: number, options?: RequestInit) => {
+      searchValue && searchParams.set('search', searchValue);
+      pageNumber && searchParams.set('page', pageNumber.toString());
+
       setIsLoading(true);
-      const searchParams = new URLSearchParams();
-      searchValue && searchParams.append('search', searchValue);
-      pageNumber && searchParams.append('page', pageNumber.toString());
       baseFetch<TResponse>('?' + searchParams, options)
         .then(({ results, count }) => {
           setIsLoading(false);
           setResults(results);
           setTotalCount(count);
         })
-        .catch(setError);
+        .catch(setError)
+        .finally(() => setIsLoading(false));
     },
-    []
+    [searchParams]
   );
 
   return (

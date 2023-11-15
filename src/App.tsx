@@ -1,14 +1,18 @@
 import { Route, Routes } from 'react-router';
-import { Home } from './pages/Home';
+import { ItemList } from './pages/ItemList';
 import { Details } from './components/Details';
+import { DETAILS_ROUTE, LIST_ROUTE } from './constants';
+import { Home } from './pages/Home';
+import { NotFound } from './pages/NotFound';
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />}>
-        <Route path="search/:id" element={<Details />} />
+      <Route path={LIST_ROUTE} element={<ItemList />}>
+        <Route path={DETAILS_ROUTE} element={<Details />} />
       </Route>
-      <Route path="search" element={<Home />} />
+      <Route index element={<Home />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
