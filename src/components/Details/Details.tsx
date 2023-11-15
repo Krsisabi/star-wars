@@ -1,38 +1,39 @@
 import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Character } from '~/types';
+import { baseFetch } from '~/api/baseFetch';
 import styles from './Details.module.scss';
 
-const BASE_URL = 'https://swapi.dev/api/people/';
-
 export function Details() {
-  const [character, setCharacters] = useState<Character>();
+  const [character, setCharacter] = useState<Character>();
   const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
+    if (!id) return;
+    const fetchCharacter = async () => {
+      setIsLoading(true);
+      try {
+        const data = await baseFetch<Character>(id);
+        setCharacter(data);
+      } catch (error) {
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     fetchCharacter();
   }, [id]);
 
-  const fetchCharacter = async () => {
-    setIsLoading(true);
-    const url = `${BASE_URL}/${id}`;
-    try {
-      const res = await fetch(url);
-      const data = (await res.json()) as Character;
-      setCharacters(data);
-    } catch (error) {
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className={styles.details}>
-      <Link className={styles.button} to={'/'}>
+      <Link
+        className={styles.button}
+        to={{ pathname: `../`, search: searchParams.toString() }}
+      >
         X
       </Link>
 

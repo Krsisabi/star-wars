@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { usePagination, DOTS, useSearchContext } from '~/hooks';
 
 import styles from './Pagination.module.scss';
@@ -10,6 +10,8 @@ export type PaginationProps = {
 };
 
 export const Pagination = (props: PaginationProps) => {
+  const [queryParams] = useSearchParams();
+
   const { pageSize, siblingCount } = props;
 
   const { currentPage, totalCount, setCurrentPage } = useSearchContext();
@@ -43,8 +45,10 @@ export const Pagination = (props: PaginationProps) => {
           );
         }
 
+        queryParams.set('page', pageNumber.toString());
+
         return (
-          <Link to={`/search?page=${pageNumber}`} key={pageNumber}>
+          <Link to={{ search: queryParams.toString() }} key={pageNumber}>
             <li
               className={clsx(styles.paginationItem, {
                 [styles.selected]: +pageNumber === currentPage,
