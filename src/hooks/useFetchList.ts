@@ -12,12 +12,11 @@ export function useFetchList({
   pageNumber,
   options,
 }: useFetchListProps) {
-  const { results, setResults, setTotalCount, totalCount, fetchList } =
-    useSearchContext();
+  const { results, totalCount, fetchList } = useSearchContext();
 
   useEffect(() => {
     fetchList(searchValue, pageNumber, options);
-  }, [searchValue, pageNumber, options, setResults, setTotalCount, fetchList]);
+  }, [searchValue, pageNumber, options, fetchList]);
 
   return { results, totalCount };
 }

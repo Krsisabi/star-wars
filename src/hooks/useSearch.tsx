@@ -32,8 +32,7 @@ type SearchContext = {
 const SearchContext = React.createContext<SearchContext | null>(null);
 
 export const SearchProvider = ({ children }: PropsWithChildren) => {
-  const [searchParams] = useSearchParams();
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState(
     searchParams.get('search') ?? ''
   );
@@ -42,7 +41,6 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
     Number(searchParams.get('page')) || 1
   );
   const [totalCount, setTotalCount] = useState(0);
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -58,8 +56,9 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
     (searchValue?: string, pageNumber?: number, options?: RequestInit) => {
       searchValue && searchParams.set('search', searchValue);
       pageNumber && searchParams.set('page', pageNumber.toString());
-
+      setSearchParams(searchParams);
       setIsLoading(true);
+
       baseFetch<TResponse>('?' + searchParams, options)
         .then(({ results, count }) => {
           setIsLoading(false);
@@ -69,7 +68,8 @@ export const SearchProvider = ({ children }: PropsWithChildren) => {
         .catch(setError)
         .finally(() => setIsLoading(false));
     },
-    [searchParams]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   return (

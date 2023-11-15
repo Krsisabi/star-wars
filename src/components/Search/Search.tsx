@@ -26,7 +26,9 @@ export function Search({ onSubmit }: SearchProps) {
   ) => {
     event.preventDefault();
 
-    searchValueLocal && searchParams.set('search', searchValueLocal);
+    if (searchValueLocal) {
+      searchParams.set('search', searchValueLocal);
+    }
 
     setCurrentPage(1);
     setSearchParams(searchParams);
