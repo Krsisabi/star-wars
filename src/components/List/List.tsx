@@ -6,10 +6,10 @@ export function List() {
   const { results } = useSearchContext();
 
   return (
-    <div className={styles.list}>
+    <ul className={styles.list}>
       {results.map((el) => (
         <Card key={el.name} {...el} data-testid="listItem" />
       ))}
-    </div>
+    </ul>
   );
 }

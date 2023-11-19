@@ -18,7 +18,7 @@ export function Card({ name, created, mass, skin_color, url }: Character) {
   const username = urlObj.pathname.split('/')[3];
 
   return (
-    <div className={styles.card}>
+    <li className={styles.card}>
       <h2>{name}</h2>
       <span>{joinedDate}</span>
       <div>mass - {mass}</div>
@@ -32,6 +32,6 @@ export function Card({ name, created, mass, skin_color, url }: Character) {
           search: location.search,
         }}
       />
-    </div>
+    </li>
   );
 }
