@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { findAllByRole, fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import results from '~/test/mockData';
 import { render } from '~/test/setup';
 import { List } from './List';
@@ -24,5 +24,18 @@ describe('ListCards Component', () => {
 
     const cards = screen.getAllByRole('listitem');
     expect(cards).toHaveLength(results.length);
+  });
+
+  it('displays a message if no cards are present', () => {
+    const results = {
+      items: [],
+    };
+
+    mocks.useSearchContext.mockReturnValue({ results });
+
+    render(<List />);
+
+    const message = screen.getByText('Nothing found...');
+    expect(message).toBeInTheDocument();
   });
 });
