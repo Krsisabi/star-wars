@@ -16,7 +16,7 @@ export const ItemList = () => {
       <ErrorButton />
       <Search onSubmit={fetchList} />
       {isLoading ? (
-        <h2 style={{ marginTop: '32px' }}>Loading...</h2>
+        <h2 className={styles.loader}>Loading...</h2>
       ) : (
         <>
           <div className={styles.wrapper}>
