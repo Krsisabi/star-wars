@@ -1,0 +1,16 @@
+.itemList {
+  padding: 2rem;
+
+  .wrapper {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+  }
+
+  .loader {
+    margin-bottom: 10px;
+    text-align: center;
+    flex-grow: 1;
+    margin-top: 32px;
+  }
+}
