@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://swapi.dev/api/people/';
+import { BASE_URL } from '~/constants';
 
 export async function baseFetch<T>(
   url: string,
