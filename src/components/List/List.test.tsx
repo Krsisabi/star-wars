@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { screen } from '@testing-library/react';
-import results from '~/test/mockData';
+import { data } from '~/test/mockData';
 import { render } from '~/test/setup';
 import { List } from './List';
 
@@ -18,12 +18,12 @@ vi.mock('~/hooks', () => {
 
 describe('ListCards Component', () => {
   it('renders the specified number of cards', async () => {
-    mocks.useSearchContext.mockReturnValue({ results });
+    mocks.useSearchContext.mockReturnValue({ results: data });
 
     render(<List />);
 
     const cards = screen.getAllByRole('listitem');
-    expect(cards).toHaveLength(results.length);
+    expect(cards).toHaveLength(data.length);
   });
 
   it('displays a message if no cards are present', () => {

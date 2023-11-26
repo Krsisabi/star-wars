@@ -1,4 +1,4 @@
-const mockData = [
+export const data = [
   {
     name: 'Luke Skywalker',
     height: '172',
@@ -237,4 +237,9 @@ const mockData = [
   },
 ];
 
-export default mockData;
+export const response = {
+  count: 82,
+  next: 'https://swapi.dev/api/people/?page=2',
+  previous: null,
+  results: data,
+};
