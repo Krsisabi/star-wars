@@ -10,6 +10,7 @@ type AppState = {
   searchValue: string;
   characters: Character[];
   isLoading: boolean;
+  hasError: boolean;
 };
 
 class App extends Component<object, AppState> {
@@ -19,6 +20,7 @@ class App extends Component<object, AppState> {
       isLoading: false,
       searchValue: localStorage.getItem('searchValue') ?? '',
       characters: [],
+      hasError: false,
     };
 
     this.fetchCharacters = this.fetchCharacters.bind(this);
@@ -26,6 +28,10 @@ class App extends Component<object, AppState> {
 
   componentDidMount(): void {
     this.fetchCharacters(this.state.searchValue);
+  }
+
+  componentDidUpdate(): void {
+    if (this.state.hasError) throw new Error('Your bad =(');
   }
 
   private async fetchCharacters(character: string) {
@@ -42,15 +48,26 @@ class App extends Component<object, AppState> {
     this.setState((prev) => ({ ...prev, searchValue: e.target.value }));
   };
 
+  private throwError = () => {
+    this.setState((prev) => ({ ...prev, hasError: true }));
+  };
+
   render() {
     return (
       <div className={styles.app}>
+        <button className={styles.button} onClick={this.throwError}>
+          Generate error
+        </button>
         <Search
           value={this.state.searchValue}
           onChange={this.searchInputHandler}
           onSubmit={this.fetchCharacters}
         />
-        <List data={this.state.characters} />
+        {this.state.isLoading ? (
+          <h2 style={{ marginTop: '32px' }}>Loading...</h2>
+        ) : (
+          <List data={this.state.characters} />
+        )}
       </div>
     );
   }
