@@ -35,21 +35,35 @@ class App extends Component<object, AppState> {
   }
 
   private async fetchCharacters(character: string) {
-    this.setState((prev) => ({ ...prev, isLoading: true }));
-    const url = character ? `${BASE_URL}?search=${character}` : BASE_URL;
-    const res = await fetch(url);
-    this.setState((prev) => ({ ...prev, isLoading: false }));
-    const data = (await res.json()) as TResponse;
-    const { results } = data;
-    this.setState((prev) => ({ ...prev, characters: results }));
+    try {
+      this.setState({ isLoading: true });
+      const url = new URL(BASE_URL);
+
+      if (character) {
+        url.searchParams.append('search', character);
+      }
+
+      const res = await fetch(url.toString());
+      if (!res.ok) {
+        throw new Error(`Error fetching characters: ${res.statusText}`);
+      }
+
+      this.setState((prev) => ({ ...prev, isLoading: false }));
+      const { results } = (await res.json()) as TResponse;
+
+      this.setState({ characters: results });
+    } catch (error) {
+      console.error('Failed to fetch characters:', error);
+      this.setState({ isLoading: false });
+    }
   }
 
   private searchInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    this.setState((prev) => ({ ...prev, searchValue: e.target.value }));
+    this.setState({ searchValue: e.target.value });
   };
 
   private throwError = () => {
-    this.setState((prev) => ({ ...prev, hasError: true }));
+    this.setState({ hasError: true });
   };
 
   render() {
