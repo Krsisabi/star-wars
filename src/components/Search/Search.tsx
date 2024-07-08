@@ -17,12 +17,10 @@ export function Search({ onSubmit, value, onChange }: SearchProps) {
   ) => {
     event.preventDefault();
 
-    const text = event.currentTarget.search.value;
+    const text = event.currentTarget.search.value.trim();
 
-    if (text.trim()) {
-      localStorage.setItem('searchValue', text);
-      onSubmit(text);
-    }
+    localStorage.setItem('searchValue', text);
+    onSubmit(text);
   };
 
   return (
