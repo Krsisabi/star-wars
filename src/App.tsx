@@ -36,7 +36,10 @@ class App extends Component<object, AppState> {
 
   private async fetchCharacters(character: string) {
     try {
-      this.setState({ isLoading: true });
+      this.setState((prev) => ({
+        searchValue: prev.searchValue.trim(),
+        isLoading: true,
+      }));
       const url = new URL(BASE_URL);
 
       if (character) {
@@ -48,7 +51,7 @@ class App extends Component<object, AppState> {
         throw new Error(`Error fetching characters: ${res.statusText}`);
       }
 
-      this.setState((prev) => ({ ...prev, isLoading: false }));
+      this.setState({ isLoading: false });
       const { results } = (await res.json()) as TResponse;
 
       this.setState({ characters: results });
