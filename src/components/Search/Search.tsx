@@ -1,4 +1,6 @@
 import { ChangeEventHandler } from 'react';
+import { useLocalStorage } from '~/hooks';
+import { LSKey } from '~/App';
 import styles from './Search.module.scss';
 
 type FormFields = {
@@ -12,6 +14,8 @@ type SearchProps = {
 };
 
 export function Search({ onSubmit, value, onChange }: SearchProps) {
+  const { setValue } = useLocalStorage(LSKey);
+
   const handleSubmit = (
     event: React.FormEvent<HTMLFormElement & FormFields>
   ) => {
@@ -19,7 +23,7 @@ export function Search({ onSubmit, value, onChange }: SearchProps) {
 
     const text = event.currentTarget.search.value.trim();
 
-    localStorage.setItem('searchValue', text);
+    setValue(text);
     onSubmit(text);
   };
 

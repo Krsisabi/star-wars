@@ -2,44 +2,51 @@ import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { Search } from './components/Search';
 import { List } from './components/List';
 import { Character, TResponse } from './types';
+import { useLocalStorage } from './hooks';
 import styles from './App.module.scss';
 
 const BASE_URL = 'https://swapi.dev/api/people/';
+export const LSKey = 'searchValue';
 
 function App() {
-  const [searchValue, setSearchValue] = useState(
-    localStorage.getItem('searchValue') ?? ''
-  );
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
+  const { value: searchValue, setValue: setSearchValue } = useLocalStorage(
+    LSKey,
+    ''
+  );
+
   const initSearchValue = useRef(searchValue);
 
-  const fetchCharacters = useCallback(async (character: string) => {
-    try {
-      setSearchValue((prev) => prev.trim());
-      setIsLoading(true);
-      const url = new URL(BASE_URL);
+  const fetchCharacters = useCallback(
+    async (character: string) => {
+      try {
+        setSearchValue((prev) => prev.trim());
+        setIsLoading(true);
+        const url = new URL(BASE_URL);
 
-      if (character) {
-        url.searchParams.append('search', character);
+        if (character) {
+          url.searchParams.append('search', character);
+        }
+
+        const res = await fetch(url.toString());
+        if (!res.ok) {
+          throw new Error(`Error fetching characters: ${res.statusText}`);
+        }
+
+        setIsLoading(false);
+        const { results } = (await res.json()) as TResponse;
+
+        setCharacters(results);
+      } catch (error) {
+        console.error('Failed to fetch characters:', error);
+        setIsLoading(false);
       }
-
-      const res = await fetch(url.toString());
-      if (!res.ok) {
-        throw new Error(`Error fetching characters: ${res.statusText}`);
-      }
-
-      setIsLoading(false);
-      const { results } = (await res.json()) as TResponse;
-
-      setCharacters(results);
-    } catch (error) {
-      console.error('Failed to fetch characters:', error);
-      setIsLoading(false);
-    }
-  }, []);
+    },
+    [setSearchValue]
+  );
 
   useEffect(() => {
     fetchCharacters(initSearchValue.current);
