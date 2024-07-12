@@ -1,27 +1,22 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { Search } from './components/Search';
 import { List } from './components/List';
 import { Character, TResponse } from './types';
 import styles from './App.module.scss';
 
 const BASE_URL = 'https://swapi.dev/api/people/';
-const INIT_SEARCH_VALUE = localStorage.getItem('searchValue') ?? '';
 
 function App() {
-  const [searchValue, setSearchValue] = useState(INIT_SEARCH_VALUE);
+  const [searchValue, setSearchValue] = useState(
+    localStorage.getItem('searchValue') ?? ''
+  );
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  useEffect(() => {
-    fetchCharacters(INIT_SEARCH_VALUE);
-  }, []);
+  const initSearchValue = useRef(searchValue);
 
-  useEffect(() => {
-    if (hasError) throw new Error('Your bad =(');
-  }, [hasError]);
-
-  const fetchCharacters = async (character: string) => {
+  const fetchCharacters = useCallback(async (character: string) => {
     try {
       setSearchValue((prev) => prev.trim());
       setIsLoading(true);
@@ -44,15 +39,20 @@ function App() {
       console.error('Failed to fetch characters:', error);
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const searchInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    fetchCharacters(initSearchValue.current);
+  }, [fetchCharacters]);
+
+  useEffect(() => {
+    if (hasError) throw new Error('Your bad =(');
+  }, [hasError]);
+
+  const searchInputHandler = (e: ChangeEvent<HTMLInputElement>) =>
     setSearchValue(e.target.value);
-  };
 
-  const throwError = () => {
-    setHasError(true);
-  };
+  const throwError = () => setHasError(true);
 
   return (
     <div className={styles.app}>
