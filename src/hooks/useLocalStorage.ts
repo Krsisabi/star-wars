@@ -1,5 +1,7 @@
 import { useCallback, useState } from 'react';
 
+export const LSKey = 'searchValue';
+
 export const useLocalStorage = <T>(key: string, initialValue?: T) => {
   const [value, setStoredValue] = useState<T>(() => {
     const item = window.localStorage.getItem(key);

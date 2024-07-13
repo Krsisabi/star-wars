@@ -1,6 +1,5 @@
 import { ChangeEventHandler } from 'react';
-import { useLocalStorage } from '~/hooks';
-import { LSKey } from '~/App';
+import { useLocalStorage, LSKey } from '~/hooks';
 import styles from './Search.module.scss';
 
 type FormFields = {
