@@ -1,7 +1,29 @@
 .card {
-  color: #fff;
+  position: relative;
   flex: 1 0 30%;
   border: 1px solid #fff;
   padding: 8px;
   border-radius: 8px;
+  background-color: var(--background-color);
+  transition:
+    box-shadow 0.25s,
+    filter 0.25s ease,
+    transform 0.25s;
+  overflow: hidden;
+
+  &:hover {
+    filter: brightness(1.4);
+    box-shadow: 0 0 15px var(--box-shadow-color);
+  }
+
+  &:active {
+    filter: brightness(1.6);
+    box-shadow: 0 0 20px var(--box-shadow-color);
+  }
+
+  .link {
+    position: absolute;
+    display: block;
+    inset: 0;
+  }
 }
