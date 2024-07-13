@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Character } from '~/types';
 import styles from './Details.module.scss';
+import { Link } from 'react-router-dom';
 
 const BASE_URL = 'https://swapi.dev/api/people/';
 
@@ -30,6 +31,9 @@ export function Details() {
 
   return (
     <div className={styles.details}>
+      <Link className={styles.button} to={'/'}>
+        X
+      </Link>
       {isLoading ? (
         <div>Loading...</div>
       ) : (

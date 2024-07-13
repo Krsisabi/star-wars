@@ -8,7 +8,7 @@
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    background-color: #a08d8d;
+    background-color: var(--error-color);
     cursor: pointer;
     transition:
       box-shadow 0.25s,
