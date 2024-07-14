@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
 import { Character } from '~/types';
 import styles from './Details.module.scss';
-import { Link } from 'react-router-dom';
-
-const BASE_URL = 'https://swapi.dev/api/people/';
+import { Link, useParams } from 'react-router-dom';
+import { BASE_URL } from '~/pages/Home';
 
 export function Details() {
   const [character, setCharacters] = useState<Character>();
@@ -13,7 +11,7 @@ export function Details() {
 
   const fetchCharacter = useCallback(async () => {
     setIsLoading(true);
-    const url = `${BASE_URL}/${id}`;
+    const url = `${BASE_URL}${id}`;
     try {
       const res = await fetch(url);
       const data = (await res.json()) as Character;
