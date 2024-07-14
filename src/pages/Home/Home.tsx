@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent, useRef, useCallback } from 'react';
+import { useState, useEffect, ChangeEvent, useCallback } from 'react';
 import { Outlet } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { Character, TResponse } from '~/types';
@@ -21,52 +21,51 @@ export const Home = () => {
     ''
   );
 
-  const initSearchValue = useRef(searchValue);
+  const fetchCharacters = useCallback(
+    async (character: string) => {
+      try {
+        setSearchValue((prev) => prev.trim());
+        setIsLoading(true);
+        const url = new URL(BASE_URL);
 
-  const fetchCharacters = useCallback(async (character: string) => {
-    try {
-      setSearchValue((prev) => prev.trim());
-      setIsLoading(true);
-      const url = new URL(BASE_URL);
+        searchParams.set('page', currentPage.toString());
 
-      searchParams.set('page', currentPage.toString());
+        if (character) {
+          searchParams.set('search', character);
+          searchParams.set('page', '1');
+          setCurrentPage(1);
+        }
 
-      if (character) {
-        searchParams.set('search', character);
-        searchParams.set('page', '1');
-        setCurrentPage(1);
+        if (!character) {
+          searchParams.delete('search');
+        }
+
+        url.search = searchParams.toString();
+        setSearchParams(searchParams);
+
+        const res = await fetch(url.toString());
+        if (!res.ok) {
+          throw new Error(`Error fetching characters: ${res.statusText}`);
+        }
+
+        setIsLoading(false);
+        const data = (await res.json()) as TResponse;
+
+        setTotalCount(data.count);
+        setCharacters(data.results);
+      } catch (error) {
+        console.error('Failed to fetch characters:', error);
+        setIsLoading(false);
       }
-
-      if (!character) {
-        searchParams.delete('search');
-      }
-
-      url.search = searchParams.toString();
-      setSearchParams(searchParams);
-
-      const res = await fetch(url.toString());
-      if (!res.ok) {
-        throw new Error(`Error fetching characters: ${res.statusText}`);
-      }
-
-      setIsLoading(false);
-      const data = (await res.json()) as TResponse;
-
-      setTotalCount(data.count);
-      setCharacters(data.results);
-    } catch (error) {
-      console.error('Failed to fetch characters:', error);
-      setIsLoading(false);
-    }
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    },
+    [currentPage, searchParams, setSearchParams, setSearchValue]
+  );
 
   useEffect(() => {
-    fetchCharacters(initSearchValue.current);
+    fetchCharacters(searchValue);
     // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     if (hasError) throw new Error('Your bad =(');
@@ -95,7 +94,7 @@ export const Home = () => {
         )}
         <Outlet />
       </div>
-      {characters && (
+      {characters && !isLoading && (
         <Pagination
           currentPage={currentPage}
           totalCount={totalCount}
