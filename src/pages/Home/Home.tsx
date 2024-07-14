@@ -1,16 +1,20 @@
 import { useState, useEffect, ChangeEvent, useRef, useCallback } from 'react';
 import { Outlet } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 import { Character, TResponse } from '~/types';
-import { List, Search } from '~/components';
+import { List, Search, Pagination } from '~/components';
 import { useLocalStorage, LSKey } from '~/hooks';
 import styles from './Home.module.scss';
 
-const BASE_URL = 'https://swapi.dev/api/people/';
+export const BASE_URL = 'https://swapi.dev/api/people/';
 
 export const Home = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { value: searchValue, setValue: setSearchValue } = useLocalStorage(
     LSKey,
@@ -19,37 +23,50 @@ export const Home = () => {
 
   const initSearchValue = useRef(searchValue);
 
-  const fetchCharacters = useCallback(
-    async (character: string) => {
-      try {
-        setSearchValue((prev) => prev.trim());
-        setIsLoading(true);
-        const url = new URL(BASE_URL);
+  const fetchCharacters = useCallback(async (character: string) => {
+    try {
+      setSearchValue((prev) => prev.trim());
+      setIsLoading(true);
+      const url = new URL(BASE_URL);
 
-        if (character) {
-          url.searchParams.append('search', character);
-        }
+      searchParams.set('page', currentPage.toString());
 
-        const res = await fetch(url.toString());
-        if (!res.ok) {
-          throw new Error(`Error fetching characters: ${res.statusText}`);
-        }
-
-        setIsLoading(false);
-        const { results } = (await res.json()) as TResponse;
-
-        setCharacters(results);
-      } catch (error) {
-        console.error('Failed to fetch characters:', error);
-        setIsLoading(false);
+      if (character) {
+        searchParams.set('search', character);
+        searchParams.set('page', '1');
+        setCurrentPage(1);
       }
-    },
-    [setSearchValue]
-  );
+
+      if (!character) {
+        searchParams.delete('search');
+      }
+
+      url.search = searchParams.toString();
+      setSearchParams(searchParams);
+
+      const res = await fetch(url.toString());
+      if (!res.ok) {
+        throw new Error(`Error fetching characters: ${res.statusText}`);
+      }
+
+      setIsLoading(false);
+      const data = (await res.json()) as TResponse;
+
+      setTotalCount(data.count);
+      setCharacters(data.results);
+    } catch (error) {
+      console.error('Failed to fetch characters:', error);
+      setIsLoading(false);
+    }
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchCharacters(initSearchValue.current);
-  }, [fetchCharacters]);
+    // eslint-disable-next-line react-compiler/react-compiler
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (hasError) throw new Error('Your bad =(');
@@ -70,13 +87,20 @@ export const Home = () => {
         onChange={searchInputHandler}
         onSubmit={fetchCharacters}
       />
-      {isLoading ? (
-        <h2 style={{ marginTop: '32px' }}>Loading...</h2>
-      ) : (
-        <div className={styles.wrapper}>
+      <div className={styles.wrapper}>
+        {isLoading ? (
+          <h2 style={{ margin: 'auto' }}>Loading...</h2>
+        ) : (
           <List data={characters} />
-          <Outlet />
-        </div>
+        )}
+        <Outlet />
+      </div>
+      {characters && (
+        <Pagination
+          currentPage={currentPage}
+          totalCount={totalCount}
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );
