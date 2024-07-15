@@ -10,51 +10,64 @@ import { Character } from '~/types';
 import styles from './Details.module.scss';
 
 export function Details() {
-  const [character, setCharacters] = useState<Character>();
+  const [character, setCharacter] = useState<Character>();
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  const fetchCharacter = useCallback(async () => {
-    setIsLoading(true);
-    const url = `${BASE_URL}${id}`;
-    try {
-      const res = await fetch(url);
-      const data = (await res.json()) as Character;
-      setCharacters(data);
-    } catch (error) {
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id]);
+  const fetchCharacter = useCallback(
+    async (signal: AbortSignal) => {
+      setIsLoading(true);
+      const url = `${BASE_URL}${id}`;
+      try {
+        const res = await fetch(url, { signal });
+        const data = (await res.json()) as Character;
+        setCharacter(data);
+        setIsLoading(false);
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Failed to fetch character:', error);
+        }
+      }
+    },
+    [id]
+  );
 
   useEffect(() => {
-    fetchCharacter();
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    fetchCharacter(signal);
+
+    return () => {
+      controller.abort();
+    };
   }, [fetchCharacter, id]);
 
   const closeDetails =
     location.pathname
       .split('/')
       .filter((value) => !['details', id].includes(value))
-      .join('/') +
-    '/?' +
-    searchParams.toString();
-
-  if (isLoading || !character) return <div>Loading...</div>;
-
-  const { name, eye_color, mass } = character;
+      .join('/') + searchParams.toString()
+      ? `?${searchParams.toString()}`
+      : '';
 
   return (
     <div className={styles.details}>
       <Link className={styles.button} to={closeDetails}>
         X
       </Link>
-      <h2>name - {name}</h2>
-      <span>eye color - {eye_color}</span>
-      <div>mass - {mass}</div>
-      <div>skin color - {name}</div>
+      {isLoading || !character ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <h2>name - {character.name}</h2>
+          <span>eye color - {character.eye_color}</span>
+          <div>mass - {character.mass}</div>
+          <div>skin color - {character.name}</div>
+        </>
+      )}
     </div>
   );
 }
