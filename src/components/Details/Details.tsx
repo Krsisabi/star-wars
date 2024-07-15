@@ -1,13 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
+import { BASE_URL } from '~/pages/Home';
 import { Character } from '~/types';
 import styles from './Details.module.scss';
-import { Link, useParams } from 'react-router-dom';
-import { BASE_URL } from '~/pages/Home';
 
 export function Details() {
   const [character, setCharacters] = useState<Character>();
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const fetchCharacter = useCallback(async () => {
     setIsLoading(true);
@@ -27,21 +34,27 @@ export function Details() {
     fetchCharacter();
   }, [fetchCharacter, id]);
 
+  const closeDetails =
+    location.pathname
+      .split('/')
+      .filter((value) => !['details', id].includes(value))
+      .join('/') +
+    '/?' +
+    searchParams.toString();
+
+  if (isLoading || !character) return <div>Loading...</div>;
+
+  const { name, eye_color, mass } = character;
+
   return (
     <div className={styles.details}>
-      <Link className={styles.button} to={'/'}>
+      <Link className={styles.button} to={closeDetails}>
         X
       </Link>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <>
-          <h2>name - {character?.name}</h2>
-          <span>eye color - {character?.eye_color}</span>
-          <div>mass - {character?.mass}</div>
-          <div>skin color - {character?.name}</div>
-        </>
-      )}
+      <h2>name - {name}</h2>
+      <span>eye color - {eye_color}</span>
+      <div>mass - {mass}</div>
+      <div>skin color - {name}</div>
     </div>
   );
 }
