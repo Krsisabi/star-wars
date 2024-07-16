@@ -49,9 +49,7 @@ export function Details() {
     location.pathname
       .split('/')
       .filter((value) => !['details', id].includes(value))
-      .join('/') + searchParams.toString()
-      ? `?${searchParams.toString()}`
-      : '';
+      .join('/') + `/?${searchParams}`;
 
   return (
     <div className={styles.details}>
