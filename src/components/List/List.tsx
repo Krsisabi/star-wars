@@ -8,10 +8,10 @@ type ListProps = {
 
 export function List({ data }: ListProps) {
   return (
-    <div className={styles.list}>
+    <ul className={styles.list}>
       {data.map((el) => (
         <Card key={el.name} {...el} />
       ))}
-    </div>
+    </ul>
   );
 }

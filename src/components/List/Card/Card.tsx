@@ -22,12 +22,12 @@ export function Card({ name, created, mass, skin_color, url }: Character) {
   const newPath = `${generatePath('/details/:id', { id: username })}${searchParams ? `?${searchParams.toString()}` : ''}`;
 
   return (
-    <div className={styles.card}>
+    <li className={styles.card}>
       <h2>{name}</h2>
       <span>{joinedDate}</span>
       <div>mass - {mass}</div>
       <div>skin color - {skin_color}</div>
       <Link className={styles.link} to={newPath} />
-    </div>
+    </li>
   );
 }
