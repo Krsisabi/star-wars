@@ -10,8 +10,11 @@
     filter 0.25s ease,
     transform 0.25s;
   overflow: hidden;
+  cursor: pointer;
+  user-select: none;
 
-  &:hover {
+  &:hover,
+  &.active {
     filter: brightness(1.4);
     box-shadow: 0 0 15px var(--box-shadow-color);
   }

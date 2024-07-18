@@ -17,6 +17,7 @@ export const Home = () => {
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get('page')) || 1
   );
+  const [activeElement, setActiveElement] = useState('');
 
   const { value: searchValue, setValue: setSearchValue } = useLocalStorage(
     LSKey,
@@ -92,7 +93,11 @@ export const Home = () => {
         {isLoading ? (
           <h2 style={{ margin: 'auto' }}>Loading...</h2>
         ) : (
-          <List data={characters} />
+          <List
+            data={characters}
+            activeElement={activeElement}
+            setActiveElement={setActiveElement}
+          />
         )}
         <Outlet />
       </div>
