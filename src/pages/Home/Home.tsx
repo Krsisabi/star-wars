@@ -1,10 +1,23 @@
-import { useState, useEffect, ChangeEvent, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  ChangeEvent,
+  useCallback,
+  useRef,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import { Outlet } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { Character, TResponse } from '~/types';
 import { List, Search, Pagination } from '~/components';
 import { useLocalStorage, LSKey } from '~/hooks';
 import styles from './Home.module.scss';
+
+export type DetailsOutletContext = {
+  setActiveElement: Dispatch<SetStateAction<string>>;
+  wrapperRef: React.RefObject<HTMLDivElement>;
+};
 
 export const BASE_URL = 'https://swapi.dev/api/people/';
 
@@ -18,11 +31,11 @@ export const Home = () => {
     Number(searchParams.get('page')) || 1
   );
   const [activeElement, setActiveElement] = useState('');
-
   const { value: searchValue, setValue: setSearchValue } = useLocalStorage(
     LSKey,
     ''
   );
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const fetchCharacters = useCallback(
     async (character: string) => {
@@ -89,7 +102,7 @@ export const Home = () => {
         onChange={searchInputHandler}
         onSubmit={fetchCharacters}
       />
-      <div className={styles.wrapper}>
+      <div className={styles.wrapper} ref={wrapperRef}>
         {isLoading ? (
           <h2 style={{ margin: 'auto' }}>Loading...</h2>
         ) : (
@@ -99,7 +112,14 @@ export const Home = () => {
             setActiveElement={setActiveElement}
           />
         )}
-        <Outlet />
+        <Outlet
+          context={
+            {
+              setActiveElement,
+              wrapperRef,
+            } satisfies DetailsOutletContext
+          }
+        />
       </div>
       {characters && !isLoading && (
         <Pagination

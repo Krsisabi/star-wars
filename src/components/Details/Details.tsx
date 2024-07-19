@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  Link,
-  useLocation,
+  useNavigate,
+  useOutletContext,
   useParams,
   useSearchParams,
 } from 'react-router-dom';
-import { BASE_URL } from '~/pages/Home';
+import { BASE_URL, DetailsOutletContext } from '~/pages/Home';
 import { Character } from '~/types';
 import styles from './Details.module.scss';
 
@@ -13,8 +13,11 @@ export function Details() {
   const [character, setCharacter] = useState<Character>();
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
-  const location = useLocation();
   const [searchParams] = useSearchParams();
+  const { setActiveElement, wrapperRef } =
+    useOutletContext<DetailsOutletContext>();
+  const navigate = useNavigate();
+  const detailsRef = useRef<HTMLDivElement>(null);
 
   const fetchCharacter = useCallback(
     async (signal: AbortSignal) => {
@@ -45,27 +48,49 @@ export function Details() {
     };
   }, [fetchCharacter, id]);
 
-  const closeDetails =
-    location.pathname
-      .split('/')
-      .filter((value) => !['details', id].includes(value))
-      .join('/') + `/?${searchParams}`;
+  const closeHandler = useCallback(() => {
+    setActiveElement('');
+    navigate(
+      { pathname: `..`, search: searchParams.toString() },
+      { replace: true }
+    );
+  }, [navigate, searchParams, setActiveElement]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        detailsRef.current &&
+        wrapperRef.current?.contains(e.target as Node) &&
+        !detailsRef.current?.contains(e.target as Node)
+      )
+        closeHandler();
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [wrapperRef, closeHandler]);
+
+  if (isLoading || !character)
+    return (
+      <div className={styles.details}>
+        <div>Loading...</div>
+      </div>
+    );
 
   return (
-    <div className={styles.details}>
-      <Link className={styles.button} to={closeDetails}>
+    <div className={styles.details} ref={detailsRef}>
+      <button className={styles.button} onClick={closeHandler}>
         X
-      </Link>
-      {isLoading || !character ? (
-        <div>Loading...</div>
-      ) : (
-        <>
-          <h2>name - {character.name}</h2>
-          <span>eye color - {character.eye_color}</span>
-          <div>mass - {character.mass}</div>
-          <div>skin color - {character.name}</div>
-        </>
-      )}
+      </button>
+      <>
+        <h2>name - {character.name}</h2>
+        <span>eye color - {character.eye_color}</span>
+        <div>mass - {character.mass}</div>
+        <div>skin color - {character.name}</div>
+      </>
     </div>
   );
 }

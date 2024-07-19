@@ -1,7 +1,8 @@
+import { MouseEvent } from 'react';
 import { generatePath, useNavigate, useSearchParams } from 'react-router-dom';
+import clsx from 'clsx';
 import { Character } from '~/types';
 import styles from './Card.module.scss';
-import clsx from 'clsx';
 
 const localDate = new Intl.DateTimeFormat('en-GB', {
   day: 'numeric',
@@ -37,16 +38,18 @@ export function Card({
 
   const isActive = activeElement === id;
 
-  const onClickHandler = () => {
-    if (!isActive) {
-      setActiveElement?.(id);
-      navigate(
-        `${generatePath('/details/:id', { id })}${searchParams ? `?${searchParams.toString()}` : ''}`
-      );
-    } else {
+  const onClickHandler = (e: MouseEvent<HTMLLIElement>) => {
+    e.stopPropagation();
+    if (isActive) {
       setActiveElement?.('');
-      navigate('..');
+      navigate('..', { replace: true });
+      return;
     }
+    setActiveElement?.(id);
+    navigate(
+      `${generatePath('/details/:id', { id })}${searchParams ? `?${searchParams.toString()}` : ''}`,
+      { replace: true }
+    );
   };
 
   return (
