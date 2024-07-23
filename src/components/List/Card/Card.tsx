@@ -59,7 +59,7 @@ export function Card({
       })}
       onClick={onClickHandler}
     >
-      <h2>{name}</h2>
+      <h2 className={styles.title}>{name}</h2>
       <span>{joinedDate}</span>
       <div>mass - {mass}</div>
       <div>skin color - {skin_color}</div>

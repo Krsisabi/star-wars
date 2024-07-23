@@ -1,6 +1,5 @@
 .card {
   position: relative;
-  flex: 1 0 30%;
   border: 1px solid #fff;
   padding: 8px;
   border-radius: 8px;
@@ -22,6 +21,10 @@
   &:active {
     filter: brightness(1.6);
     box-shadow: 0 0 20px var(--box-shadow-color);
+  }
+
+  .title {
+    margin-bottom: 1rem;
   }
 
   .link {
