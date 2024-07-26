@@ -1,19 +1,20 @@
-import { ChangeEventHandler } from 'react';
+import { ChangeEvent } from 'react';
 import { useLocalStorage, LSKey } from '~/hooks';
 import styles from './Search.module.scss';
+import { useLazyGetCharactersQuery } from '~/store/api/apiSlice';
+import { useSearchParams } from 'react-router-dom';
 
 type FormFields = {
   search: HTMLInputElement;
 };
 
-type SearchProps = {
-  onSubmit: (text: string) => void;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-  value: string;
-};
+export function Search() {
+  const { value, setValue } = useLocalStorage<string>(LSKey);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchInputHandler = (e: ChangeEvent<HTMLInputElement>) =>
+    setValue(e.target.value);
 
-export function Search({ onSubmit, value, onChange }: SearchProps) {
-  const { setValue } = useLocalStorage(LSKey);
+  const [triggerGetCharacters] = useLazyGetCharactersQuery();
 
   const handleSubmit = (
     event: React.FormEvent<HTMLFormElement & FormFields>
@@ -21,9 +22,11 @@ export function Search({ onSubmit, value, onChange }: SearchProps) {
     event.preventDefault();
 
     const text = event.currentTarget.search.value.trim();
-
+    searchParams.set('search', text);
+    searchParams.set('page', '1');
+    setSearchParams(searchParams);
     setValue(text);
-    onSubmit(text);
+    triggerGetCharacters({ name: text, page: 1 });
   };
 
   return (
@@ -31,7 +34,7 @@ export function Search({ onSubmit, value, onChange }: SearchProps) {
       <input
         className={styles.textField}
         value={value}
-        onChange={onChange}
+        onChange={searchInputHandler}
         type="text"
         name="search"
         placeholder="Search..."

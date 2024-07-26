@@ -8,9 +8,9 @@ import {
 } from 'react';
 import { Outlet } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
-import { Character, TResponse } from '~/types';
 import { Header, List, Pagination } from '~/components';
 import { useLocalStorage, LSKey } from '~/hooks';
+import { useLazyGetCharactersQuery } from '~/store/api/apiSlice';
 import styles from './Home.module.scss';
 
 export type DetailsOutletContext = {
@@ -18,12 +18,7 @@ export type DetailsOutletContext = {
   wrapperRef: React.RefObject<HTMLDivElement>;
 };
 
-export const BASE_URL = 'https://swapi.dev/api/people/';
-
 export const Home = () => {
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
     Number(searchParams.get('page')) || 1
@@ -35,63 +30,60 @@ export const Home = () => {
   );
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const fetchCharacters = useCallback(
-    async (character: string) => {
-      try {
-        setSearchValue((prev) => prev.trim());
-        setIsLoading(true);
-        const url = new URL(BASE_URL);
-
-        searchParams.set('page', currentPage.toString());
-
-        if (character) {
-          searchParams.set('search', character);
-          searchParams.set('page', '1');
-          setCurrentPage(1);
-        }
-
-        if (!character) {
-          searchParams.delete('search');
-        }
-
-        url.search = searchParams.toString();
-        setSearchParams(searchParams);
-
-        const res = await fetch(url.toString());
-        if (!res.ok) {
-          throw new Error(`Error fetching characters: ${res.statusText}`);
-        }
-
-        setIsLoading(false);
-        const data = (await res.json()) as TResponse;
-
-        setTotalCount(data.count);
-        setCharacters(data.results);
-      } catch (error) {
-        console.error('Failed to fetch characters:', error);
-        setIsLoading(false);
-      }
-    },
-    [currentPage, searchParams, setSearchParams, setSearchValue]
-  );
+  const [triggerGetCharacters, resultGetCharacters] =
+    useLazyGetCharactersQuery();
+  const { data, error, isLoading, isFetching } = resultGetCharacters;
 
   useEffect(() => {
-    fetchCharacters(searchValue);
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+    triggerGetCharacters({
+      name: searchValue,
+      page: currentPage,
+    });
+  }, [currentPage, searchValue, triggerGetCharacters]);
+
+  useEffect(() => {
+    const pageFromUrl = Number(searchParams.get('page')) || 1;
+    if (pageFromUrl !== currentPage) {
+      setCurrentPage(pageFromUrl);
+    }
+    const searchFromUrl = searchParams.get('search') || '';
+    if (searchFromUrl !== searchValue) {
+      setSearchValue(searchFromUrl);
+    }
+  }, [searchParams, currentPage, searchValue, setSearchValue]);
+
+  const updateSearchParams = useCallback(
+    (name: string, page: number) => {
+      const params = new URLSearchParams(searchParams);
+      params.set('search', name);
+      params.set('page', page.toString());
+      setSearchParams(params);
+    },
+    [setSearchParams, searchParams]
+  );
+
+  const onPageChangeHandler = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      updateSearchParams(searchValue, page);
+    },
+    [searchValue, updateSearchParams]
+  );
+
+  const characters = data?.results || [];
 
   return (
     <div className={styles.home}>
-      <Header fetchCharacters={fetchCharacters} />
+      <Header />
       <div className={styles.wrapper} ref={wrapperRef}>
-        {isLoading ? (
+        {isFetching ? (
           <h2 style={{ margin: 'auto' }}>Loading...</h2>
         ) : (
           <List
             data={characters}
             activeElement={activeElement}
             setActiveElement={setActiveElement}
+            error={error}
           />
         )}
         <Outlet
@@ -103,11 +95,11 @@ export const Home = () => {
           }
         />
       </div>
-      {characters && !isLoading && (
+      {data?.results && !isLoading && (
         <Pagination
           currentPage={currentPage}
-          totalCount={totalCount}
-          onPageChange={setCurrentPage}
+          totalCount={data.count}
+          onPageChange={onPageChangeHandler}
         />
       )}
     </div>
