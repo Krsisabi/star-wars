@@ -10,7 +10,7 @@ import { Outlet } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { Header, List, Pagination } from '~/components';
 import { useLocalStorage, LSKey } from '~/hooks';
-import { useLazyGetCharactersQuery } from '~/store/api/apiSlice';
+import { useGetCharactersQuery } from '~/store/api/apiSlice';
 import styles from './Home.module.scss';
 
 export type DetailsOutletContext = {
@@ -30,16 +30,10 @@ export const Home = () => {
   );
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const [triggerGetCharacters, resultGetCharacters] =
-    useLazyGetCharactersQuery();
-  const { data, error, isLoading, isFetching } = resultGetCharacters;
-
-  useEffect(() => {
-    triggerGetCharacters({
-      name: searchValue,
-      page: currentPage,
-    });
-  }, [currentPage, searchValue, triggerGetCharacters]);
+  const { data, error, isLoading, isFetching } = useGetCharactersQuery({
+    name: searchValue,
+    page: currentPage,
+  });
 
   useEffect(() => {
     const pageFromUrl = Number(searchParams.get('page')) || 1;
@@ -70,8 +64,6 @@ export const Home = () => {
     [searchValue, updateSearchParams]
   );
 
-  const characters = data?.results || [];
-
   return (
     <div className={styles.home}>
       <Header />
@@ -80,7 +72,7 @@ export const Home = () => {
           <h2 style={{ margin: 'auto' }}>Loading...</h2>
         ) : (
           <List
-            data={characters}
+            data={data?.results}
             activeElement={activeElement}
             setActiveElement={setActiveElement}
             error={error}
