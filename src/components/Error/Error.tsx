@@ -2,7 +2,7 @@ import styles from './Error.module.scss';
 
 export const Error = () => {
   return (
-    <div className={styles.error} id="error-page">
+    <div className={styles.error} id="error-page" data-testid="error-page">
       <h1>Oops!</h1>
       <p>Sorry, an expected error has occurred.</p>
     </div>
