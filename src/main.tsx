@@ -12,13 +12,13 @@ import './styles/index.scss';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <Provider store={store}>
-        <ThemeProvider>
-          <ErrorBoundary fallback={<Error />}>
+      <ErrorBoundary fallback={<Error />}>
+        <Provider store={store}>
+          <ThemeProvider>
             <App />
-          </ErrorBoundary>
-        </ThemeProvider>
-      </Provider>
+          </ThemeProvider>
+        </Provider>
+      </ErrorBoundary>
     </BrowserRouter>
   </React.StrictMode>
 );

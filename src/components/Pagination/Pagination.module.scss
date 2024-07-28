@@ -7,7 +7,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 1rem;
-  color: var(--white);
+  color: var(--text-color);
 
   @media (min-width: 767px) {
     margin-top: 20px;
@@ -18,7 +18,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #fff;
+    border: 1px solid var(--border-color);
     height: 32px;
     min-width: 32px;
     padding: 16px;
@@ -35,20 +35,26 @@
     }
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.25);
+      background-color: var(--background-color);
+      box-shadow: 0 0 15px var(--box-shadow-color);
+      filter: brightness(1.4);
       cursor: pointer;
     }
 
     &.selected {
-      filter: brightness(1.2);
-      background-color: rgba(255, 255, 255, 0.25);
+      background-color: var(--background-color);
+      filter: brightness(1.6);
+      box-shadow:
+        0 0 20px var(--box-shadow-color),
+        inset 0 0 6px var(--box-shadow-color);
     }
 
     &.dots {
       line-height: 32px;
+      box-shadow: unset;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.25);
+        background-color: transparent;
         cursor: default;
       }
     }
