@@ -1,11 +1,17 @@
 import '@testing-library/jest-dom/vitest';
 import { render, type RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from '~/store';
 
 const AllTheProviders: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  return <BrowserRouter>{children}</BrowserRouter>;
+  return (
+    <BrowserRouter>
+      <Provider store={store}>{children}</Provider>
+    </BrowserRouter>
+  );
 };
 
 const customRender = (
