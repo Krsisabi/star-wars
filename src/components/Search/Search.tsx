@@ -21,7 +21,7 @@ export function Search() {
   ) => {
     event.preventDefault();
 
-    const text = event.currentTarget.search.value.trim();
+    const text = event.currentTarget.search?.value.trim();
     searchParams.set('search', text);
     searchParams.set('page', '1');
     setSearchParams(searchParams);
