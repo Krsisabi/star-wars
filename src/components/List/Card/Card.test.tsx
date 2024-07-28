@@ -1,14 +1,54 @@
-import { screen } from '@testing-library/react';
-import { render } from '@/tests/setup';
-import data from '@/tests/mockData';
+import { render, screen } from '@/tests/setup';
+import { mockData } from '@/tests/mockData';
+import userEvent from '@testing-library/user-event';
 import { Card } from './Card';
 
-describe('List Item Component', () => {
-  it('the card component renders the relevant card data', async () => {
-    const cardData = data[0];
+describe('Card', () => {
+  it('should card clicked', async () => {
+    const setActiveElement = vi.fn();
+    const onSelect = vi.fn();
 
-    render(<Card {...cardData} />);
+    render(
+      <Card
+        character={mockData[0]}
+        activeElement={'1'}
+        setActiveElement={setActiveElement}
+        isSelected={true}
+        onSelect={onSelect}
+      />
+    );
 
-    expect(screen.getByText(cardData.name)).toBeInTheDocument();
+    const card = screen.getByText(/luke/i);
+    const checkbox = screen.getByRole('checkbox');
+
+    const user = userEvent.setup();
+    await user.click(card);
+    await user.click(checkbox);
+
+    expect(checkbox).toBeChecked();
+  });
+
+  it('should card clicked checkbox', async () => {
+    const setActiveElement = vi.fn();
+    const onSelect = vi.fn();
+
+    render(
+      <Card
+        character={mockData[0]}
+        activeElement={'1'}
+        setActiveElement={setActiveElement}
+        isSelected={false}
+        onSelect={onSelect}
+      />
+    );
+
+    const card = screen.getByText(/luke/i);
+    const checkbox = screen.getByRole('checkbox');
+
+    const user = userEvent.setup();
+    await user.click(card);
+    await user.click(checkbox);
+
+    expect(checkbox).not.toBeChecked();
   });
 });
