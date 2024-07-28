@@ -4,7 +4,7 @@ import { CharacterNormilized } from '~/types';
 
 export const initialState: CharacterNormilized[] = [];
 
-const charactersSlice = createSlice({
+const selectedCharactersSlice = createSlice({
   name: 'selectedCharacters',
   initialState,
   reducers: {
@@ -18,9 +18,11 @@ const charactersSlice = createSlice({
         state.splice(index, 1);
       }
     },
+    deleteAllItems: () => [],
   },
 });
 
-export const { toggleChecked } = charactersSlice.actions;
+export const { toggleChecked, deleteAllItems } =
+  selectedCharactersSlice.actions;
 
-export default charactersSlice.reducer;
+export default selectedCharactersSlice.reducer;

@@ -11,6 +11,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Header, List, Pagination } from '~/components';
 import { useLocalStorage, LSKey } from '~/hooks';
 import { useGetCharactersQuery } from '~/store/api/apiSlice';
+import { Flyout } from '~/components/Flyout';
 import styles from './Home.module.scss';
 
 export type DetailsOutletContext = {
@@ -94,6 +95,7 @@ export const Home = () => {
           onPageChange={onPageChangeHandler}
         />
       )}
+      <Flyout />
     </div>
   );
 };
