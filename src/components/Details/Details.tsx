@@ -5,7 +5,7 @@ import {
   useParams,
   useSearchParams,
 } from 'react-router-dom';
-import { DetailsOutletContext } from '~/pages/Home';
+import { DetailsOutletContext } from '~/pagesComponents/Home';
 import styles from './Details.module.scss';
 import { useGetDetailsQuery } from '~/store/api/apiSlice';
 

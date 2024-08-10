@@ -16,6 +16,7 @@
       "@/tests/*": ["tests/*"]
     },
     "types": ["vitest/globals"],
+    "plugins": [{ "name": "next" }],
 
     /* Bundler mode */
     "moduleResolution": "Node",
@@ -24,7 +25,8 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
+    "incremental": true,
 
     /* Linting */
     "strict": true,
@@ -33,5 +35,12 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src", "tests", "vite.config.ts"]
+  "include": [
+    "src",
+    "tests",
+    "vite.config.ts",
+    "./dist/types/**/*.ts",
+    "./next-env.d.ts"
+  ],
+  "exclude": ["./node_modules"]
 }
