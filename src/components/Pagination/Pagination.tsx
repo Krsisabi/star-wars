@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { usePagination, DOTS } from '~/hooks/usePagination';
 
 import styles from './Pagination.module.scss';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 export type PaginationProps = {
   totalCount: number;
@@ -20,6 +20,7 @@ export const Pagination = (props: PaginationProps) => {
     props;
 
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
 
   const paginationRange = usePagination({
     currentPage,
@@ -35,6 +36,8 @@ export const Pagination = (props: PaginationProps) => {
   const onTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const searchFromUrl = searchParams.get('search');
 
   return (
     <ul className={styles.paginationContainer}>
@@ -52,7 +55,7 @@ export const Pagination = (props: PaginationProps) => {
 
         return (
           <Link
-            to={`${id ? `/details/${id}` : ''}?page=${pageNumber}`}
+            to={`${id ? `/details/${id}` : ''}?${searchFromUrl ? `search=${searchFromUrl}&` : ''}page=${pageNumber}`}
             key={pageNumber}
           >
             <li
