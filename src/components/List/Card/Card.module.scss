@@ -54,3 +54,7 @@
     }
   }
 }
+
+[data-theme='light'] .card {
+  filter: unset;
+}
