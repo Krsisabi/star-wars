@@ -1,40 +1,38 @@
 import { useCallback, useEffect, useRef } from 'react';
-import {
-  useNavigate,
-  useOutletContext,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
-import { DetailsOutletContext } from '~/pagesComponents/Home';
-import styles from './Details.module.scss';
+import { useRouter } from 'next/router';
 import { useGetDetailsQuery } from '~/store/api/apiSlice';
+import styles from './Details.module.scss';
 
 export function Details() {
-  const { id } = useParams();
-  const [searchParams] = useSearchParams();
-  const { setActiveElement, wrapperRef } =
-    useOutletContext<DetailsOutletContext>();
-  const navigate = useNavigate();
+  const router = useRouter();
+  const { characterId } = router.query;
   const detailsRef = useRef<HTMLDivElement>(null);
 
-  const { data: character, isLoading, error } = useGetDetailsQuery(id || '');
+  const {
+    data: character,
+    isLoading,
+    error,
+  } = useGetDetailsQuery(characterId as string);
 
   const closeHandler = useCallback(() => {
-    setActiveElement('');
-    navigate(
-      { pathname: `..`, search: searchParams.toString() },
-      { replace: true }
+    router.push(
+      {
+        pathname: '/',
+        query: router.query,
+      },
+      undefined,
+      { shallow: true }
     );
-  }, [navigate, searchParams, setActiveElement]);
+  }, [router]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
         detailsRef.current &&
-        wrapperRef.current?.contains(e.target as Node) &&
-        !detailsRef.current?.contains(e.target as Node)
-      )
+        !detailsRef.current.contains(e.target as Node)
+      ) {
         closeHandler();
+      }
     };
 
     document.addEventListener('click', handleClickOutside);
@@ -42,7 +40,7 @@ export function Details() {
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [wrapperRef, closeHandler]);
+  }, [closeHandler]);
 
   if (isLoading || !character)
     return (
@@ -67,7 +65,7 @@ export function Details() {
         <h2>name - {character.name}</h2>
         <span>eye color - {character.eye_color}</span>
         <div>mass - {character.mass}</div>
-        <div>skin color - {character.name}</div>
+        <div>skin color - {character.skin_color}</div>
       </>
     </div>
   );
