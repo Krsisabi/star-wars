@@ -3,7 +3,7 @@ import type { CharacterNormilized, TResponse } from '~/types';
 
 export const BASE_URL = 'https://swapi.dev/api/people/';
 
-type TransformedResponse = {
+export type TransformedResponse = {
   count: number;
   next: number | null;
   previous: number | null;
@@ -16,17 +16,14 @@ export const swApi = createApi({
   endpoints: (builder) => ({
     getCharacters: builder.query<
       TransformedResponse,
-      { name: string; page?: number }
+      { name: string; page?: number | string }
     >({
       query: ({ name, page }) => {
-        const searchParams = new URLSearchParams(window.location.search);
+        const searchParams = new URLSearchParams();
         const currentPage = page ?? (Number(searchParams.get('page')) || 1);
         searchParams.set('page', currentPage.toString());
+        searchParams.set('search', name);
 
-        if (name) {
-          searchParams.set('search', name);
-          searchParams.set('page', '1');
-        }
         return `?${searchParams.toString()}`;
       },
       transformResponse: (response: TResponse): TransformedResponse => {

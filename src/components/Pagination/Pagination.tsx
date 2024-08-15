@@ -1,9 +1,7 @@
 import clsx from 'clsx';
-
+import { useRouter } from 'next/router';
 import { usePagination, DOTS } from '~/hooks/usePagination';
-
 import styles from './Pagination.module.scss';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 export type PaginationProps = {
   totalCount: number;
@@ -19,8 +17,8 @@ export const Pagination = (props: PaginationProps) => {
   const { onPageChange, totalCount, siblingCount, currentPage, pageSize } =
     props;
 
-  const { id } = useParams();
-  const [searchParams] = useSearchParams();
+  const router = useRouter();
+  const { characterId } = router.query;
 
   const paginationRange = usePagination({
     currentPage,
@@ -37,7 +35,15 @@ export const Pagination = (props: PaginationProps) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const searchFromUrl = searchParams.get('search');
+  const handlePageChange = (pageNumber: number) => {
+    onTop();
+    onPageChange(pageNumber);
+    const query = { ...router.query, page: pageNumber };
+    router.push({
+      pathname: characterId ? `/details/[characterId]` : '/',
+      query,
+    });
+  };
 
   return (
     <ul className={styles.paginationContainer}>
@@ -54,23 +60,15 @@ export const Pagination = (props: PaginationProps) => {
         }
 
         return (
-          <Link
-            to={`${id ? `/details/${id}` : ''}?${searchFromUrl ? `search=${searchFromUrl}&` : ''}page=${pageNumber}`}
+          <li
+            className={clsx(styles.paginationItem, {
+              [styles.selected]: +pageNumber === currentPage,
+            })}
+            onClick={() => handlePageChange(+pageNumber)}
             key={pageNumber}
           >
-            <li
-              className={clsx(styles.paginationItem, {
-                [styles.selected]: +pageNumber === currentPage,
-              })}
-              onClick={() => {
-                onTop();
-                onPageChange(+pageNumber);
-              }}
-              key={pageNumber}
-            >
-              {pageNumber}
-            </li>
-          </Link>
+            {pageNumber}
+          </li>
         );
       })}
     </ul>

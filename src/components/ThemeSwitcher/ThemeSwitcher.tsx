@@ -1,17 +1,28 @@
-import { useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
 import styles from './ThemeSwitcher.module.scss';
 import { useTheme } from '~/hooks';
 
 export const ThemeSwitcher = () => {
   const { theme, setTheme } = useTheme();
+  const [clientTheme, setClientTheme] = useState<null | string>(null);
 
-  const isLight = theme === 'light';
   useEffect(() => {
-    document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
-  }, [isLight]);
+    setClientTheme(theme);
+  }, [theme]);
+
+  const isLight = clientTheme === 'light';
+
+  useEffect(() => {
+    if (clientTheme !== null) {
+      document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    }
+  }, [isLight, clientTheme]);
 
   const themeText = isLight ? 'Set Light Theme' : 'Set Dark Theme';
+
+  if (clientTheme === null) {
+    return null;
+  }
 
   return (
     <button

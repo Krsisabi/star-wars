@@ -1,33 +1,38 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import { useLocalStorage, LSKey } from '~/hooks';
 import styles from './Search.module.scss';
 import { useLazyGetCharactersQuery } from '~/store/api/apiSlice';
-import { useSearchParams } from 'react-router-dom';
 
 type FormFields = {
   search: HTMLInputElement;
 };
 
 export function Search() {
+  const router = useRouter();
   const { value, setValue } = useLocalStorage<string>(LSKey);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchInputHandler = (e: ChangeEvent<HTMLInputElement>) =>
-    setValue(e.target.value);
 
   const [triggerGetCharacters] = useLazyGetCharactersQuery();
 
-  const handleSubmit = (
-    event: React.FormEvent<HTMLFormElement & FormFields>
-  ) => {
-    event.preventDefault();
+  const searchInputHandler = (e: ChangeEvent<HTMLInputElement>) =>
+    setValue(e.target.value);
 
-    const text = event.currentTarget.search?.value.trim();
-    searchParams.set('search', text);
-    searchParams.set('page', '1');
-    setSearchParams(searchParams);
-    setValue(text);
-    triggerGetCharacters({ name: text, page: 1 });
-  };
+  const handleSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement & FormFields>) => {
+      event.preventDefault();
+
+      const text = event.currentTarget.search?.value.trim();
+
+      router.push({
+        pathname: router.pathname,
+        query: { search: text, page: '1' },
+      });
+
+      setValue(text);
+      triggerGetCharacters({ name: text, page: 1 });
+    },
+    [router, setValue, triggerGetCharacters]
+  );
 
   return (
     <form className={styles.search} onSubmit={handleSubmit}>
@@ -39,7 +44,11 @@ export function Search() {
         name="search"
         placeholder="Search..."
       />
-      <button className={styles.button}>Search</button>
+      <button className={styles.button} type="submit">
+        Search
+      </button>
     </form>
   );
 }
+
+export default Search;

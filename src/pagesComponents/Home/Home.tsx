@@ -1,94 +1,63 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  Dispatch,
-  SetStateAction,
-} from 'react';
-import { Outlet } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
-import { Header, List, Pagination } from '~/components';
+import { useState, useEffect, useCallback, PropsWithChildren } from 'react';
+import { useRouter } from 'next/router';
 import { useLocalStorage, LSKey } from '~/hooks';
-import { useGetCharactersQuery } from '~/store/api/apiSlice';
-import { Flyout } from '~/components/Flyout';
+import { Header, List, Pagination, Flyout } from '~/components';
 import styles from './Home.module.scss';
+import { CharacterNormilized } from '~/types';
 
-export type DetailsOutletContext = {
-  setActiveElement: Dispatch<SetStateAction<string>>;
-  wrapperRef: React.RefObject<HTMLDivElement>;
+export type HomeProps = {
+  data: { results?: CharacterNormilized[]; count?: number } | null;
 };
 
-export const Home = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get('page')) || 1
-  );
+export const Home = ({ data, children }: PropsWithChildren<HomeProps>) => {
+  const router = useRouter();
+  const { page, search } = router.query;
+  const pageNumber = typeof page === 'string' ? Number(page) : 1;
+  const [currentPage, setCurrentPage] = useState(pageNumber || 1);
   const [activeElement, setActiveElement] = useState('');
   const { value: searchValue, setValue: setSearchValue } = useLocalStorage(
     LSKey,
     ''
   );
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  const { data, error, isLoading, isFetching } = useGetCharactersQuery({
-    name: searchValue,
-    page: currentPage,
-  });
 
   useEffect(() => {
-    const pageFromUrl = Number(searchParams.get('page')) || 1;
-    if (pageFromUrl !== currentPage) {
-      setCurrentPage(pageFromUrl);
-    }
-    const searchFromUrl = searchParams.get('search') || '';
+    const searchFromUrl = typeof search === 'string' ? search : '';
     if (searchFromUrl !== searchValue) {
       setSearchValue(searchFromUrl);
     }
-  }, [searchParams, currentPage, searchValue, setSearchValue]);
-
-  const updateSearchParams = useCallback(
-    (name: string, page: number) => {
-      const params = new URLSearchParams(searchParams);
-      params.set('search', name);
-      params.set('page', page.toString());
-      setSearchParams(params);
-    },
-    [setSearchParams, searchParams]
-  );
+  }, [currentPage, searchValue, setSearchValue, search]);
 
   const onPageChangeHandler = useCallback(
     (page: number) => {
       setCurrentPage(page);
       updateSearchParams(searchValue, page);
+
+      function updateSearchParams(name: string, page: number) {
+        router.push({
+          pathname: router.pathname,
+          query: { search: name, page: page.toString() },
+        });
+      }
     },
-    [searchValue, updateSearchParams]
+    [router, searchValue]
   );
 
   return (
     <div className={styles.home}>
       <Header />
-      <div className={styles.wrapper} ref={wrapperRef}>
-        {isFetching ? (
+      <div className={styles.wrapper}>
+        {!data?.results ? (
           <h2 style={{ margin: 'auto' }}>Loading...</h2>
         ) : (
           <List
-            data={data?.results}
+            data={data.results}
             activeElement={activeElement}
             setActiveElement={setActiveElement}
-            error={error}
           />
         )}
-        <Outlet
-          context={
-            {
-              setActiveElement,
-              wrapperRef,
-            } satisfies DetailsOutletContext
-          }
-        />
+        {children}
       </div>
-      {data?.results && !isLoading && (
+      {data?.count && (
         <Pagination
           currentPage={currentPage}
           totalCount={data.count}

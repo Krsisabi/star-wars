@@ -1,5 +1,5 @@
 import { ChangeEvent, MouseEvent } from 'react';
-import { generatePath, useNavigate, useSearchParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { CharacterNormilized } from '~/types';
 import styles from './Card.module.scss';
@@ -25,7 +25,7 @@ export function Card({
   isSelected,
   character,
 }: CardProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const { name, created, mass, skin_color, url } = character;
 
@@ -33,11 +33,6 @@ export function Card({
 
   const urlObj = new URL(url);
   const id = urlObj.pathname.split('/')[3];
-
-  const [searchParams] = useSearchParams();
-
-  const newSearchParams = new URLSearchParams(searchParams);
-  newSearchParams.set('id', id);
 
   const isActive = activeElement === id;
 
@@ -47,14 +42,15 @@ export function Card({
     e.stopPropagation();
     if (isActive) {
       setActiveElement?.('');
-      navigate('..', { replace: true });
+      router.push('/');
       return;
     }
     setActiveElement?.(id);
-    navigate(
-      `${generatePath('/details/:id', { id })}${searchParams ? `?${searchParams.toString()}` : ''}`,
-      { replace: true }
-    );
+    const newQuery = { ...router.query, id };
+    router.push({
+      pathname: '/details/[id]',
+      query: newQuery,
+    });
   };
 
   return (
