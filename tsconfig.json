@@ -1,11 +1,48 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"],
+      "@/tests/*": ["tests/*"]
     },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+    "plugins": [{ "name": "next" }],
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "types": ["vitest/globals"],
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "jsx": "preserve",
+    "incremental": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src",
+    "tests",
+    "vite.config.ts",
+    "./dist/types/**/*.ts",
+    "./next-env.d.ts",
+    "pages",
+    "next-env.d.ts"
+  ],
+  "exclude": ["./node_modules"]
 }

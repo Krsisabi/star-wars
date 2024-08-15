@@ -1,0 +1,60 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  border: 1px solid var(--border-color);
+  padding: 8px 8px 0 8px;
+  border-radius: 8px;
+  background-color: var(--background-color);
+  transition:
+    box-shadow 0.25s,
+    filter 0.25s ease,
+    transform 0.25s;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover,
+  &.active {
+    filter: brightness(1.4);
+    box-shadow: 0 0 15px var(--box-shadow-color);
+  }
+
+  &:active {
+    filter: brightness(1.6);
+    box-shadow: 0 0 20px var(--box-shadow-color);
+  }
+
+  .title {
+    margin-bottom: 1rem;
+  }
+
+  .link {
+    position: absolute;
+    display: block;
+    inset: 0;
+  }
+
+  .checkboxContainer {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    cursor: pointer;
+    margin-top: auto;
+    padding-bottom: 8px;
+
+    .checkbox {
+      cursor: pointer;
+    }
+
+    .checkboxLabel {
+      margin-top: 16px;
+      margin-right: 8px;
+    }
+  }
+}
+
+[data-theme='light'] .card {
+  filter: unset;
+}

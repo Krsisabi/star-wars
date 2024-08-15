@@ -1,0 +1,46 @@
+.search {
+  display: flex;
+  max-width: 800px;
+  align-items: stretch;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: #fff;
+  border: 1px solid var(--border-color);
+  margin: 0 auto;
+  font-size: 24px;
+  box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.2);
+  cursor: pointer;
+  border-radius: 15px;
+
+  .textField {
+    margin: 10px 10px 10px 16px;
+    flex-grow: 5;
+    height: 24px;
+    max-width: calc(100% - 100px - 20px);
+    border: none;
+    color: #2b3442;
+    cursor: text;
+    background-color: #fff;
+    font-size: 16px;
+    line-height: 1.5;
+
+    &::placeholder {
+      color: #4b6a9b;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .button {
+    border: none;
+    border-left: 1px solid black;
+    font-weight: bold;
+    font-size: 16px;
+    flex: 1;
+    cursor: pointer;
+    outline: none;
+  }
+}

@@ -1,0 +1,24 @@
+.notFound {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; // Высота на весь экран
+  text-align: center;
+
+  .link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 1rem;
+  }
+
+  .title {
+    margin: 0;
+    font-size: 3rem;
+  }
+
+  .description {
+    margin: 1rem 0;
+  }
+}
