@@ -1,0 +1,13 @@
+.wrapper {
+  .title {
+    margin: 32px;
+  }
+
+  .list {
+    width: 300px;
+    padding: 16px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 16px;
+  }
+}
