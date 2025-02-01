@@ -1,10 +1,14 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
-import "./index.scss";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { Error } from './components/Error';
+import './index.scss';
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
+    <ErrorBoundary fallback={<Error />}>
+      <App />
+    </ErrorBoundary>
+  </StrictMode>
 );
