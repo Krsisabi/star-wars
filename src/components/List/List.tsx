@@ -9,9 +9,11 @@ type ListProps = {
 export function List({ data }: ListProps) {
   return (
     <div className={styles.list}>
-      {data.map((el) => (
-        <Card key={el.name} {...el} />
-      ))}
+      {data.length === 0 ? (
+        <h2>No such characters</h2>
+      ) : (
+        data.map((el) => <Card key={el.name} {...el} />)
+      )}
     </div>
   );
 }
