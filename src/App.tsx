@@ -36,7 +36,10 @@ class App extends Component<object, AppState> {
 
   private async fetchCharacters(character: string) {
     try {
-      this.setState({ isLoading: true });
+      this.setState((prev) => ({
+        searchValue: prev.searchValue.trim(),
+        isLoading: true,
+      }));
       const url = new URL(BASE_URL);
 
       if (character) {
@@ -77,7 +80,7 @@ class App extends Component<object, AppState> {
           onChange={this.searchInputHandler}
           onSubmit={this.fetchCharacters}
         />
-        <List data={this.state.characters} />
+
         {this.state.isLoading ? (
           <h2 style={{ marginTop: '32px' }}>Loading...</h2>
         ) : (
