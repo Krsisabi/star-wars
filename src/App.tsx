@@ -72,9 +72,6 @@ class App extends Component<object, AppState> {
   render() {
     return (
       <div className={styles.app}>
-        <button className={styles.button} onClick={this.throwError}>
-          Generate error
-        </button>
         <Search
           value={this.state.searchValue}
           onChange={this.searchInputHandler}
@@ -86,6 +83,9 @@ class App extends Component<object, AppState> {
         ) : (
           <List data={this.state.characters} />
         )}
+        <button className={styles.button} onClick={this.throwError}>
+          Generate error
+        </button>
       </div>
     );
   }
