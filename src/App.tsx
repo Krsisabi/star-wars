@@ -1,10 +1,9 @@
 import { ChangeEvent, Component } from 'react';
+import { fetchItems } from './services/api';
 import { Search } from './components/Search';
 import { Character, TResponse } from './types';
 import { List } from './components/List';
 import styles from './App.module.scss';
-
-const BASE_URL = 'https://swapi.dev/api/people/';
 
 type AppState = {
   searchValue: string;
@@ -23,40 +22,30 @@ class App extends Component<object, AppState> {
       hasError: false,
     };
 
-    this.fetchCharacters = this.fetchCharacters.bind(this);
+    this.loadCharacters = this.loadCharacters.bind(this);
   }
 
   componentDidMount(): void {
-    this.fetchCharacters(this.state.searchValue);
+    this.loadCharacters(this.state.searchValue);
   }
 
   componentDidUpdate(): void {
     if (this.state.hasError) throw new Error('Your bad =(');
   }
 
-  private async fetchCharacters(character: string) {
+  private async loadCharacters(character: string) {
     try {
       this.setState((prev) => ({
         searchValue: prev.searchValue.trim(),
         isLoading: true,
       }));
-      const url = new URL(BASE_URL);
 
-      if (character) {
-        url.searchParams.append('search', character);
-      }
-
-      const res = await fetch(url.toString());
-      if (!res.ok) {
-        throw new Error(`Error fetching characters: ${res.statusText}`);
-      }
-
-      this.setState((prev) => ({ ...prev, isLoading: false }));
-      const { results } = (await res.json()) as TResponse;
+      const { results } = await fetchItems<TResponse>(character);
 
       this.setState({ characters: results });
     } catch (error) {
       console.error('Failed to fetch characters:', error);
+    } finally {
       this.setState({ isLoading: false });
     }
   }
@@ -75,7 +64,7 @@ class App extends Component<object, AppState> {
         <Search
           value={this.state.searchValue}
           onChange={this.searchInputHandler}
-          onSubmit={this.fetchCharacters}
+          onSubmit={this.loadCharacters}
         />
 
         {this.state.isLoading ? (
