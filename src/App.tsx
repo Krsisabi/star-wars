@@ -1,83 +1,69 @@
-import { ChangeEvent, Component } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { fetchItems } from './services/api';
 import { Search } from './components/Search';
 import { Character, TResponse } from './types';
 import { List } from './components/List';
 import styles from './App.module.scss';
 
-type AppState = {
-  searchValue: string;
-  characters: Character[];
-  isLoading: boolean;
-  hasError: boolean;
-};
+const INIT_SEARCH_VALUE = localStorage.getItem('searchValue') ?? '';
 
-class App extends Component<object, AppState> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      isLoading: false,
-      searchValue: localStorage.getItem('searchValue') ?? '',
-      characters: [],
-      hasError: false,
-    };
+function App() {
+  const [searchValue, setSearchValue] = useState(INIT_SEARCH_VALUE);
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
-    this.loadCharacters = this.loadCharacters.bind(this);
-  }
+  useEffect(() => {
+    loadCharacters(INIT_SEARCH_VALUE);
+  }, []);
 
-  componentDidMount(): void {
-    this.loadCharacters(this.state.searchValue);
-  }
+  useEffect(() => {
+    if (hasError) throw new Error('Your bad =(');
+  }, [hasError]);
 
-  componentDidUpdate(): void {
-    if (this.state.hasError) throw new Error('Your bad =(');
-  }
-
-  private async loadCharacters(character: string) {
+  async function loadCharacters(character: string) {
     try {
-      this.setState((prev) => ({
-        searchValue: prev.searchValue.trim(),
-        isLoading: true,
-      }));
+      const trimmedValue = character.trim();
 
-      const { results } = await fetchItems<TResponse>(character);
+      setSearchValue(trimmedValue);
+      setIsLoading(true);
 
-      this.setState({ characters: results });
+      const { results } = await fetchItems<TResponse>(trimmedValue);
+
+      setCharacters(results);
     } catch (error) {
       console.error('Failed to fetch characters:', error);
     } finally {
-      this.setState({ isLoading: false });
+      setIsLoading(false);
     }
   }
 
-  private searchInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchValue: e.target.value });
+  const searchInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
   };
 
-  private throwError = () => {
-    this.setState({ hasError: true });
+  const throwError = () => {
+    setHasError(true);
   };
 
-  render() {
-    return (
-      <div className={styles.app}>
-        <Search
-          value={this.state.searchValue}
-          onChange={this.searchInputHandler}
-          onSubmit={this.loadCharacters}
-        />
+  return (
+    <div className={styles.app}>
+      <Search
+        value={searchValue}
+        onChange={searchInputHandler}
+        onSubmit={loadCharacters}
+      />
 
-        {this.state.isLoading ? (
-          <h2 style={{ marginTop: '32px' }}>Loading...</h2>
-        ) : (
-          <List data={this.state.characters} />
-        )}
-        <button className={styles.button} onClick={this.throwError}>
-          Generate error
-        </button>
-      </div>
-    );
-  }
+      {isLoading ? (
+        <h2 style={{ marginTop: '32px' }}>Loading...</h2>
+      ) : (
+        <List data={characters} />
+      )}
+      <button className={styles.button} onClick={throwError}>
+        Generate error
+      </button>
+    </div>
+  );
 }
 
 export default App;
