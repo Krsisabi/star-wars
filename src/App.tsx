@@ -1,42 +1,51 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { fetchItems } from './services/api';
 import { Search } from './components/Search';
 import { Character, TResponse } from './types';
 import { List } from './components/List';
+import { useLocalStorage } from './hooks';
+import { STORAGE_KEYS } from './hooks/useLocalStorage';
 import styles from './App.module.scss';
 
-const INIT_SEARCH_VALUE = localStorage.getItem('searchValue') ?? '';
-
 function App() {
-  const [searchValue, setSearchValue] = useState(INIT_SEARCH_VALUE);
+  const [searchValue, setSearchValue] = useLocalStorage(
+    STORAGE_KEYS.searchValue,
+    ''
+  );
+
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
+  const initSearchValue = useRef(searchValue);
+
+  const loadCharacters = useCallback(
+    async (character: string) => {
+      try {
+        const trimmedValue = character.trim();
+
+        setSearchValue(trimmedValue);
+        setIsLoading(true);
+
+        const { results } = await fetchItems<TResponse>(trimmedValue);
+
+        setCharacters(results);
+      } catch (error) {
+        console.error('Failed to fetch characters:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setSearchValue]
+  );
+
   useEffect(() => {
-    loadCharacters(INIT_SEARCH_VALUE);
-  }, []);
+    loadCharacters(initSearchValue.current);
+  }, [loadCharacters]);
 
   useEffect(() => {
     if (hasError) throw new Error('Your bad =(');
   }, [hasError]);
-
-  async function loadCharacters(character: string) {
-    try {
-      const trimmedValue = character.trim();
-
-      setSearchValue(trimmedValue);
-      setIsLoading(true);
-
-      const { results } = await fetchItems<TResponse>(trimmedValue);
-
-      setCharacters(results);
-    } catch (error) {
-      console.error('Failed to fetch characters:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   const searchInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
