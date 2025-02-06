@@ -1,7 +1,7 @@
 import { ChangeEventHandler } from 'react';
-import styles from './Search.module.scss';
 import { useLocalStorage } from '~/hooks';
 import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
+import styles from './Search.module.scss';
 
 type FormFields = {
   search: HTMLInputElement;
