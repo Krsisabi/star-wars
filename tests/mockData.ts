@@ -237,4 +237,4 @@ const mockData = [
   },
 ];
 
-export default mockData;
+export { mockData };

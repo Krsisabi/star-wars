@@ -9,8 +9,9 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "~/tests/*": ["tests/*"]
+      "@/tests/*": ["./tests/*"]
     },
+    "types": ["vitest/globals"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",
