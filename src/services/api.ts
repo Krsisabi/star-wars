@@ -1,12 +1,9 @@
-const BASE_URL = 'https://swapi.dev/api/people/';
+export const BASE_URL = 'https://swapi.dev/api/people/';
 
-export async function fetchItems<T>(character: string): Promise<T> {
+export async function fetchItems<T>(params: URLSearchParams): Promise<T> {
   try {
     const url = new URL(BASE_URL);
-
-    if (character) {
-      url.searchParams.append('search', character);
-    }
+    url.search = params.toString();
 
     const res = await fetch(url.toString());
     if (!res.ok) {

@@ -1,40 +1,97 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { Character } from '~/types';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useNavigate,
+  useOutletContext,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
+import { DetailsOutletContext } from '~/pages/Home';
+import { BASE_URL } from '~/services/api';
 import styles from './Details.module.scss';
-const BASE_URL = 'https://swapi.dev/api/people/';
+import { Character } from '~/types';
+
 export function Details() {
-  const [character, setCharacters] = useState<Character>();
+  const [character, setCharacter] = useState<Character>();
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
-  const fetchCharacter = useCallback(async () => {
-    setIsLoading(true);
-    const url = `${BASE_URL}/${id}`;
-    try {
-      const res = await fetch(url);
-      const data = (await res.json()) as Character;
-      setCharacters(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id]);
+  const [searchParams] = useSearchParams();
+  const { setActiveElement, wrapperRef } =
+    useOutletContext<DetailsOutletContext>();
+  const navigate = useNavigate();
+  const detailsRef = useRef<HTMLDivElement>(null);
+
+  const fetchCharacter = useCallback(
+    async (signal: AbortSignal) => {
+      setIsLoading(true);
+      const url = `${BASE_URL}${id}`;
+      try {
+        const res = await fetch(url, { signal });
+        const data = (await res.json()) as Character;
+        setCharacter(data);
+        setIsLoading(false);
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Failed to fetch character:', error);
+        }
+      }
+    },
+    [id]
+  );
+
   useEffect(() => {
-    fetchCharacter();
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    fetchCharacter(signal);
+
+    return () => {
+      controller.abort();
+    };
   }, [fetchCharacter, id]);
-  return (
-    <div className={styles.details}>
-      {isLoading ? (
+
+  const closeHandler = useCallback(() => {
+    setActiveElement('');
+    navigate(
+      { pathname: `..`, search: searchParams.toString() },
+      { replace: true }
+    );
+  }, [navigate, searchParams, setActiveElement]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        detailsRef.current &&
+        wrapperRef.current?.contains(e.target as Node) &&
+        !detailsRef.current?.contains(e.target as Node)
+      )
+        closeHandler();
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [wrapperRef, closeHandler]);
+
+  if (isLoading || !character)
+    return (
+      <div className={styles.details}>
         <div>Loading...</div>
-      ) : (
-        <>
-          <h2>name - {character?.name}</h2>
-          <span>eye color - {character?.eye_color}</span>
-          <div>mass - {character?.mass}</div>
-          <div>skin color - {character?.name}</div>
-        </>
-      )}
+      </div>
+    );
+
+  return (
+    <div className={styles.details} ref={detailsRef}>
+      <button className={styles.button} onClick={closeHandler}>
+        X
+      </button>
+      <>
+        <h2>name - {character.name}</h2>
+        <span>eye color - {character.eye_color}</span>
+        <div>mass - {character.mass}</div>
+        <div>skin color - {character.name}</div>
+      </>
     </div>
   );
 }

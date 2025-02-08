@@ -10,8 +10,9 @@
   --background-color: #242424;
   --text-color: #fff;
   --box-shadow-color: rgba(255, 255, 255, 0.7);
-  --error-color: #a08d8d;
+  --error-color: #fb2c36;
   --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
   font-family: var(--font-family);
 }
 
@@ -22,4 +23,9 @@ body {
 
 ul {
   list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
