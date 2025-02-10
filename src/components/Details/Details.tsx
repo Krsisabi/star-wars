@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   useNavigate,
   useOutletContext,
@@ -6,13 +6,10 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import { DetailsOutletContext } from '~/pages/Home';
-import { BASE_URL } from '~/services/api';
 import styles from './Details.module.scss';
-import { Character } from '~/types';
+import { useGetDetailsQuery } from '~/store/api/apiSlice';
 
 export function Details() {
-  const [character, setCharacter] = useState<Character>();
-  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const { setActiveElement, wrapperRef } =
@@ -20,34 +17,7 @@ export function Details() {
   const navigate = useNavigate();
   const detailsRef = useRef<HTMLDivElement>(null);
 
-  const fetchCharacter = useCallback(
-    async (signal: AbortSignal) => {
-      setIsLoading(true);
-      const url = `${BASE_URL}${id}`;
-      try {
-        const res = await fetch(url, { signal });
-        const data = (await res.json()) as Character;
-        setCharacter(data);
-        setIsLoading(false);
-      } catch (error) {
-        if ((error as Error).name !== 'AbortError') {
-          console.error('Failed to fetch character:', error);
-        }
-      }
-    },
-    [id]
-  );
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    fetchCharacter(signal);
-
-    return () => {
-      controller.abort();
-    };
-  }, [fetchCharacter, id]);
+  const { data: character, isLoading, error } = useGetDetailsQuery(id || '');
 
   const closeHandler = useCallback(() => {
     setActiveElement('');
@@ -78,6 +48,13 @@ export function Details() {
     return (
       <div className={styles.details}>
         <div>Loading...</div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className={styles.details}>
+        <div>Something went wrong...</div>
       </div>
     );
 
