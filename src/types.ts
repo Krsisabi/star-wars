@@ -23,3 +23,7 @@ export type Character = {
   edited: string;
   url: string;
 };
+
+export type CharacterNormilized = Character & {
+  id: number;
+};

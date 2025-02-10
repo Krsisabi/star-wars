@@ -1,19 +1,19 @@
 import {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
   Dispatch,
   SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
 } from 'react';
 import { Outlet } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 import { Header, List, Pagination } from '~/components';
-import { useLocalStorage } from '~/hooks';
-import { useLazyGetCharactersQuery } from '~/store/api/apiSlice';
-import styles from './Home.module.scss';
-import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
 import { ErrorButton } from '~/components/ErrorButton';
+import { useLocalStorage } from '~/hooks';
+import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
+import { useGetCharactersQuery } from '~/store/api/apiSlice';
+import styles from './Home.module.scss';
 
 export type DetailsOutletContext = {
   setActiveElement: Dispatch<SetStateAction<string>>;
@@ -30,19 +30,12 @@ export const Home = () => {
     STORAGE_KEYS.searchValue,
     ''
   );
-
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const [triggerGetCharacters, resultGetCharacters] =
-    useLazyGetCharactersQuery();
-  const { data, error, isLoading, isFetching } = resultGetCharacters;
-
-  useEffect(() => {
-    triggerGetCharacters({
-      name: searchValue,
-      page: currentPage,
-    });
-  }, [currentPage, searchValue, triggerGetCharacters]);
+  const { data, error, isLoading, isFetching } = useGetCharactersQuery({
+    name: searchValue,
+    page: currentPage,
+  });
 
   useEffect(() => {
     const pageFromUrl = Number(searchParams.get('page')) || 1;
@@ -73,8 +66,6 @@ export const Home = () => {
     [searchValue, updateSearchParams]
   );
 
-  const characters = data?.results || [];
-
   return (
     <div className={styles.home}>
       <Header />
@@ -83,7 +74,7 @@ export const Home = () => {
           <h2 style={{ margin: 'auto' }}>Loading...</h2>
         ) : (
           <List
-            data={characters}
+            data={data?.results}
             activeElement={activeElement}
             setActiveElement={setActiveElement}
             error={error}
