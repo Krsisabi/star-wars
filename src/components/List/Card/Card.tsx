@@ -57,13 +57,6 @@ export function Card({
     );
   };
 
-  const onSelectHandler = (
-    e: ChangeEvent<HTMLInputElement> | MouseEvent<HTMLSpanElement>
-  ) => {
-    onSelect(character);
-    e.stopPropagation();
-  };
-
   return (
     <li
       className={clsx(styles.card, {
@@ -79,14 +72,14 @@ export function Card({
         className={styles.checkboxContainer}
         onClick={(e) => e.stopPropagation()}
       >
-        <span className={styles.checkboxLabel} onClick={onSelectHandler}>
+        <span className={styles.checkboxLabel}>
           {isSelected ? 'Unselect' : 'Select'}
         </span>
         <input
           type="checkbox"
           checked={isSelected}
           className={styles.checkbox}
-          onChange={onSelectHandler}
+          onChange={() => onSelect(character)}
         />
       </label>
     </li>
