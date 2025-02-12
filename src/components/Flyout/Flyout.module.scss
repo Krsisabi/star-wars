@@ -1,0 +1,44 @@
+.flyout {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  min-width: 500px;
+  display: flex;
+  align-items: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  border: 1px solid #fff;
+  backdrop-filter: blur(8px);
+  filter: brightness(1.4);
+  box-shadow: 0 0 15px var(--box-shadow-color);
+
+  .buttonDelete {
+    margin-left: auto;
+    border-radius: 8px;
+    border: 1px solid #fff;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    color: #fff;
+    cursor: pointer;
+    background-color: transparent;
+
+    transition:
+      box-shadow 0.25s,
+      filter 0.25s ease,
+      transform 0.05s;
+
+    &:hover {
+      box-shadow: 0 0 15px var(--box-shadow-color);
+      filter: brightness(1.2);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}

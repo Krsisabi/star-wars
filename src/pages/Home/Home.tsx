@@ -14,6 +14,7 @@ import { useLocalStorage } from '~/hooks';
 import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
 import { useGetCharactersQuery } from '~/store/api/apiSlice';
 import styles from './Home.module.scss';
+import { Flyout } from '~/components/Flyout';
 
 export type DetailsOutletContext = {
   setActiveElement: Dispatch<SetStateAction<string>>;
@@ -97,6 +98,7 @@ export const Home = () => {
         />
       )}
       <ErrorButton />
+      <Flyout />
     </div>
   );
 };
