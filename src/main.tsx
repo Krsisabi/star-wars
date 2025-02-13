@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
 import { Error } from './components/Error';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { ThemeProvider } from './context/theme-provider.tsx';
 import { store } from './store';
 import './index.scss';
 
@@ -12,9 +13,11 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary fallback={<Error />}>
       <BrowserRouter>
-        <Provider store={store}>
-          <App />
-        </Provider>
+        <ThemeProvider>
+          <Provider store={store}>
+            <App />
+          </Provider>
+        </ThemeProvider>
       </BrowserRouter>
     </ErrorBoundary>
   </StrictMode>

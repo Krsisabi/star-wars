@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 
 export enum STORAGE_KEYS {
   searchValue = 'searchValue',
+  theme = 'theme',
 }
 
 export const useLocalStorage = <T>(key: STORAGE_KEYS, initialValue: T) => {
