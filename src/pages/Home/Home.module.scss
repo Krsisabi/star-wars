@@ -3,6 +3,11 @@
   min-height: 100dvh;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
 
   .wrapper {
     padding: 2rem 2rem 0 2rem;

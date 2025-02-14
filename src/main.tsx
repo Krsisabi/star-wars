@@ -7,7 +7,7 @@ import { Error } from './components/Error';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ThemeProvider } from './context/theme-provider.tsx';
 import { store } from './store';
-import './index.scss';
+import './styles/index.scss';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
