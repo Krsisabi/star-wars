@@ -6,3 +6,5 @@ export { Search } from './Search';
 export { Pagination } from './Pagination';
 export { Header } from './Header';
 export { ThemeSwitcher } from './ThemeSwitcher';
+export { ExportCSV } from './ExportCSV';
+export { Flyout } from './Flyout';
