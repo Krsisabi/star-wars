@@ -7,7 +7,9 @@ describe('List Item Component', () => {
   it('the card component renders the relevant card data', async () => {
     const cardData = mockData[0];
 
-    render(<Card {...cardData} />);
+    render(
+      <Card character={cardData} onSelect={() => {}} isSelected={false} />
+    );
 
     expect(screen.getByText(cardData.name)).toBeInTheDocument();
   });
