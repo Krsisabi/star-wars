@@ -24,6 +24,7 @@ export function List({
     (state) => state.selectedCharacters
   );
 
+  if (data && data.length === 0) return <div>No such characters =(</div>;
   if (!data || !!error) return <div>Something went wrong</div>;
 
   const isCharacterSelected = (id: number) =>
