@@ -52,10 +52,10 @@ This project was built for the [RS School React course](https://github.com/rolli
 where every task is developed in its own branch. The branches are kept as a record of
 how the app grew:
 
-| Branch | Stage |
-| --- | --- |
-| `class-components` | first version on class components, error boundary |
-| `hooks-and-routing` | rewritten with hooks, routing and the details panel |
+| Branch                 | Stage                                                    |
+| ---------------------- | -------------------------------------------------------- |
+| `class-components`     | first version on class components, error boundary        |
+| `hooks-and-routing`    | rewritten with hooks, routing and the details panel      |
 | `app-state-management` | Redux Toolkit, RTK Query, selection, CSV export, theming |
 
 `main` holds the final state of the app.
