@@ -1,14 +1,13 @@
 .details {
   position: relative;
+  align-self: start;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
   align-items: flex-start;
-  align-content: space-around;
+  gap: 8px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 8px;
+  padding: 72px 16px 16px;
 
   .button {
     position: absolute;

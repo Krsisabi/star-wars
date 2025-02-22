@@ -4,7 +4,7 @@ export const Error = () => {
   return (
     <div className={styles.error} id="error-page" data-testid="error-page">
       <h1>Oops!</h1>
-      <p>Sorry, an expected error has occurred.</p>
+      <p>Sorry, an unexpected error has occurred.</p>
     </div>
   );
 };

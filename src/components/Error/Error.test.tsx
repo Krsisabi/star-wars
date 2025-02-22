@@ -17,7 +17,7 @@ describe('Error Component', () => {
   test('displays error message', () => {
     render(<Error />);
     const messageElement = screen.getByText(
-      'Sorry, an expected error has occurred.'
+      'Sorry, an unexpected error has occurred.'
     );
     expect(messageElement).toBeInTheDocument();
   });
