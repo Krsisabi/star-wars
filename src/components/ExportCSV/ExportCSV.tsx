@@ -6,21 +6,33 @@ type ExportCSV = {
   fileName: string;
 };
 
+const COLUMNS = [
+  'id',
+  'Name',
+  'Skin color',
+  'Eye color',
+  'Birth year',
+  'Gender',
+  'URL',
+] as const;
+
+const escapeCell = (value: string) =>
+  /[";\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+
 export function ExportCSV({ data, fileName }: ExportCSV) {
   const downloadCSV = () => {
-    const csvString = [
-      ...data.map((item) => [
-        `id: ${item.id}`,
-        `Name: ${item.name}`,
-        `URL: ${item.url}`,
-        `Skin color: ${item.skin_color}`,
-        `Eye color: ${item.eye_color}`,
-        `Birth year: ${item.birth_year}`,
-        `Gender: ${item.gender}`,
-        `Url: ${item.url}`,
-      ]),
-    ]
-      .map((row) => row.join('; '))
+    const rows = data.map((item) => [
+      String(item.id),
+      item.name,
+      item.skin_color,
+      item.eye_color,
+      item.birth_year,
+      item.gender,
+      item.url,
+    ]);
+
+    const csvString = [[...COLUMNS], ...rows]
+      .map((row) => row.map(escapeCell).join(';'))
       .join('\n');
 
     const blob = new Blob([csvString], { type: 'text/csv' });
