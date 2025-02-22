@@ -44,17 +44,17 @@ export function Details() {
     };
   }, [wrapperRef, closeHandler]);
 
-  if (isLoading || !character)
-    return (
-      <div className={styles.details}>
-        <div>Loading...</div>
-      </div>
-    );
-
   if (error)
     return (
       <div className={styles.details}>
         <div>Something went wrong...</div>
+      </div>
+    );
+
+  if (isLoading || !character)
+    return (
+      <div className={styles.details}>
+        <div>Loading...</div>
       </div>
     );
 
