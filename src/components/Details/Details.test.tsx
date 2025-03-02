@@ -68,6 +68,16 @@ describe('Details', () => {
     expect(screen.getByText('Height')).toBeInTheDocument();
   });
 
+  it('holds the line under the name while loading, so the portrait above keeps its size', () => {
+    queryState({});
+
+    renderDetails();
+
+    expect(
+      screen.getByRole('heading', { level: 2 }).nextElementSibling
+    ).toBeInstanceOf(HTMLParagraphElement);
+  });
+
   it('renders the character once it arrives', () => {
     queryState({ currentData: mockData[0] });
 

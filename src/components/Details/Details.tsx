@@ -103,8 +103,14 @@ export function Details() {
             <h2 id="details-title" className={styles.title}>
               {title}
             </h2>
-            {character && (
-              <p className={styles.summary}>{summary(character)}</p>
+            {!error && (
+              <p className={styles.summary}>
+                {character ? (
+                  summary(character)
+                ) : (
+                  <span className={styles.placeholder} />
+                )}
+              </p>
             )}
           </div>
           <Button
