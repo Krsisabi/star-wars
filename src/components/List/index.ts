@@ -1,2 +1,2 @@
-export { List } from './List';
+export { List, ListSkeleton } from './List';
 export { Card } from './Card';

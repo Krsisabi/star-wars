@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 export const LocationProbe = () => {
   const { pathname, search } = useLocation();
-  return <output data-testid="location">{pathname + search}</output>;
+  return <div data-testid="location">{pathname + search}</div>;
 };
 
 export const BackButton = () => {

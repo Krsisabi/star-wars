@@ -1,79 +1,60 @@
-import { render as renderInRouter } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen } from '@/tests/setup';
 import { mockData } from '@/tests/mockData';
 import { LocationProbe } from '@/tests/router';
-import userEvent from '@testing-library/user-event';
-import { Card } from './Card';
+import { Card, CardProps } from './Card';
+
+const renderCard = (url: string, props: Partial<CardProps> = {}) =>
+  render(
+    <MemoryRouter initialEntries={[url]}>
+      <Card
+        character={mockData[0]}
+        isSelected={false}
+        onSelect={vi.fn()}
+        {...props}
+      />
+      <LocationProbe />
+    </MemoryRouter>
+  );
 
 describe('Card', () => {
-  it('should card clicked', async () => {
-    const setActiveElement = vi.fn();
-    const onSelect = vi.fn();
-
-    render(
-      <Card
-        character={mockData[0]}
-        activeElement={'1'}
-        setActiveElement={setActiveElement}
-        isSelected={true}
-        onSelect={onSelect}
-      />
-    );
-
-    const card = screen.getByText(/luke/i);
-    const checkbox = screen.getByRole('checkbox');
+  it('opens the details of its character, keeping the search and the page', async () => {
+    renderCard('/?search=luke&page=2');
 
     const user = userEvent.setup();
-    await user.click(card);
-    await user.click(checkbox);
+    await user.click(screen.getByRole('link', { name: /luke/i }));
 
-    expect(checkbox).toBeChecked();
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/details/1?search=luke&page=2'
+    );
   });
 
-  it('should card clicked checkbox', async () => {
-    const setActiveElement = vi.fn();
-    const onSelect = vi.fn();
+  it('closes on a second click, keeping the search and the page', async () => {
+    renderCard('/details/1?search=luke&page=2', { isActive: true });
 
-    render(
-      <Card
-        character={mockData[0]}
-        activeElement={'1'}
-        setActiveElement={setActiveElement}
-        isSelected={false}
-        onSelect={onSelect}
-      />
-    );
-
-    const card = screen.getByText(/luke/i);
-    const checkbox = screen.getByRole('checkbox');
+    const link = screen.getByRole('link', { name: /luke/i });
+    expect(link).toHaveAttribute('aria-current', 'true');
 
     const user = userEvent.setup();
-    await user.click(card);
-    await user.click(checkbox);
-
-    expect(checkbox).not.toBeChecked();
-  });
-
-  it('keeps the search and the page when an open card is closed', async () => {
-    renderInRouter(
-      <MemoryRouter initialEntries={['/details/1?search=luke&page=2']}>
-        <Card
-          character={mockData[0]}
-          activeElement={'1'}
-          setActiveElement={vi.fn()}
-          isSelected={false}
-          onSelect={vi.fn()}
-        />
-        <LocationProbe />
-      </MemoryRouter>
-    );
-
-    const user = userEvent.setup();
-    await user.click(screen.getByRole('heading', { name: /luke/i }));
+    await user.click(link);
 
     expect(screen.getByTestId('location')).toHaveTextContent(
       '/?search=luke&page=2'
     );
+  });
+
+  it('reports the checkbox without opening the card', async () => {
+    const onSelect = vi.fn();
+    renderCard('/?page=1', { isSelected: true, onSelect });
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).toBeChecked();
+
+    const user = userEvent.setup();
+    await user.click(checkbox);
+
+    expect(onSelect).toHaveBeenCalledWith(mockData[0]);
+    expect(screen.getByTestId('location')).toHaveTextContent('/?page=1');
   });
 });

@@ -1,18 +1,98 @@
 .home {
+  --bar-height: 72px;
+
   min-height: 100vh;
   min-height: 100dvh;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  transition:
-    background-color 0.5s ease,
-    color 0.5s ease;
+}
 
-  .wrapper {
-    padding: 2rem 2rem 0 2rem;
-    display: grid;
-    gap: 16px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+.content {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+
+  &.withDetails {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
   }
+
+  @media (max-width: 767px) {
+    padding: 1rem;
+
+    &.withDetails {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+// One bar for everything at the bottom. The side columns are equal, so the
+// pagination stays centred whatever appears next to it.
+.bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  min-height: var(--bar-height);
+  padding: 12px 2rem;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas: 'selection pages actions';
+  align-items: center;
+  gap: 12px 16px;
+  border-top: 1px solid color-mix(in srgb, var(--border-color) 20%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--background-color) 80%,
+    transparent
+  );
+  backdrop-filter: blur(8px);
+
+  // Too narrow for one row: the pagination takes the bottom row of its own,
+  // so a growing selection row pushes up and never moves it.
+  @media (max-width: 1199px) {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'selection actions'
+      'pages pages';
+  }
+
+  // A phone has room for one group per row. The pagination stays the last
+  // row; an empty selection takes no room at all.
+  @media (max-width: 767px) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 8px 1rem;
+
+    .selection:empty {
+      display: none;
+    }
+
+    .actions {
+      align-self: flex-end;
+    }
+
+    .pages {
+      order: 1;
+      align-self: center;
+    }
+  }
+}
+
+.selection {
+  grid-area: selection;
+  justify-self: start;
+  min-width: 0;
+}
+
+.pages {
+  grid-area: pages;
+  justify-self: center;
+}
+
+.actions {
+  grid-area: actions;
+  justify-self: end;
 }

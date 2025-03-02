@@ -1,25 +1,18 @@
 .flyout {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 16px;
-  min-width: 500px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  backdrop-filter: blur(8px);
-  filter: brightness(1.4);
-  box-shadow: 0 0 15px var(--box-shadow-color);
+  gap: 8px 12px;
+
+  .count {
+    font-weight: 500;
+    white-space: nowrap;
+  }
 
   .buttonDelete {
-    margin-left: auto;
     border-radius: 8px;
     border: 1px solid var(--border-color);
-    padding: 0.6em 1.2em;
+    padding: 0.5em 1em;
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
@@ -41,8 +34,4 @@
       transform: scale(0.98);
     }
   }
-}
-
-[data-theme='light'] .flyout {
-  filter: unset;
 }

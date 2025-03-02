@@ -1,5 +1,26 @@
 .list {
+  --card-height: 11rem;
+
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  align-content: start;
   gap: 16px;
+  transition: opacity 0.2s ease;
+
+  &.refreshing {
+    opacity: 0.5;
+  }
+}
+
+.placeholder {
+  height: var(--card-height);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  opacity: 0.25;
+}
+
+.message {
+  padding: 2rem 0;
+  font-size: 1.25rem;
+  text-align: center;
 }

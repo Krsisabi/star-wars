@@ -1,44 +1,108 @@
+// Sticks under the top edge while the list scrolls, and never grows
+// taller than the space between the top and the bottom bar.
 .details {
-  position: relative;
+  position: sticky;
+  top: 16px;
   align-self: start;
+  max-height: calc(100dvh - 32px - var(--bar-height, 0px));
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
+  gap: 20px;
+  padding: 16px 16px 20px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 72px 16px 16px;
+  background-color: var(--background-color);
+  box-shadow: 0 0 15px var(--box-shadow-color);
 
-  .button {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    border-radius: 50%;
-    height: 50px;
-    width: 50px;
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: var(--background-color);
-    border-color: var(--text-color);
-    cursor: pointer;
-    transition: border-color 0.25s;
-
-    transition:
-      box-shadow 0.25s,
-      filter 0.25s ease,
-      transform 0.05s;
-
-    &:hover {
-      box-shadow: 0 0 15px var(--box-shadow-color);
-      filter: brightness(1.2);
-    }
-
-    &:active {
-      transform: scale(0.98);
-    }
+  // No room beside the list on a phone: the panel takes the screen.
+  @media (max-width: 767px) {
+    position: fixed;
+    inset: 0;
+    // align-self: start would shrink a fixed box to its content.
+    align-self: stretch;
+    z-index: 20;
+    max-height: none;
+    padding: 16px;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
   }
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.close {
+  flex: none;
+  display: grid;
+  place-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  font-family: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  cursor: pointer;
+  transition:
+    box-shadow 0.25s,
+    filter 0.25s ease,
+    transform 0.05s;
+
+  &:hover {
+    box-shadow: 0 0 15px var(--box-shadow-color);
+    filter: brightness(1.2);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--text-color);
+    outline-offset: 2px;
+  }
+}
+
+.fields {
+  display: grid;
+  gap: 10px;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 12px;
+
+  dt {
+    opacity: 0.7;
+  }
+
+  dd {
+    overflow-wrap: anywhere;
+  }
+}
+
+// Same line height as a value, so the panel keeps its size when data arrives.
+.placeholder {
+  display: inline-block;
+  width: 60%;
+  height: 1em;
+  border-radius: 4px;
+  vertical-align: middle;
+  background-color: currentColor;
+  opacity: 0.15;
 }

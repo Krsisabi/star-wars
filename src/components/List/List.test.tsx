@@ -15,4 +15,10 @@ describe('ListCards Component', () => {
 
     expect(screen.getByText(/no such/i)).toBeInTheDocument();
   });
+  it('keeps the current page on screen while the next one loads', () => {
+    render(<List data={mockData} isRefreshing />);
+
+    expect(screen.getAllByRole('listitem')).toHaveLength(mockData.length);
+    expect(screen.getByRole('list')).toHaveAttribute('aria-busy', 'true');
+  });
 });

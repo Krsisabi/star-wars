@@ -18,3 +18,26 @@
 
   --box-shadow-color: rgba(255, 255, 255, 0.7);
 }
+
+// The gutter is kept even without a scrollbar, so the page does not
+// shift sideways when the content grows past the viewport.
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

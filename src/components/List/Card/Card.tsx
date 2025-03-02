@@ -1,5 +1,4 @@
-import { ChangeEvent, MouseEvent } from 'react';
-import { generatePath, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { CharacterNormalized } from '~/types';
 import styles from './Card.module.scss';
@@ -10,68 +9,48 @@ const localDate = new Intl.DateTimeFormat('en-GB', {
   year: 'numeric',
 });
 
-type CardProps = {
+export type CardProps = {
   character: CharacterNormalized;
-  activeElement?: string;
-  setActiveElement?: React.Dispatch<React.SetStateAction<string>>;
+  isActive?: boolean;
   onSelect: (character: CharacterNormalized) => void;
   isSelected: boolean;
 };
 
 export function Card({
-  activeElement,
-  setActiveElement,
+  isActive = false,
   onSelect,
   isSelected,
   character,
 }: CardProps) {
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const { name, created, mass, skin_color, url } = character;
+  const { id, name, created, mass, skin_color } = character;
 
   const joinedDate = localDate.format(new Date(created));
 
-  const urlObj = new URL(url);
-  const id = urlObj.pathname.split('/')[3];
-
-  const [searchParams] = useSearchParams();
-
-  const isActive = activeElement === id;
-
-  const onClickHandler = (
-    e: MouseEvent<HTMLLIElement> | ChangeEvent<HTMLInputElement>
-  ) => {
-    e.stopPropagation();
-    if (isActive) {
-      setActiveElement?.('');
-      navigate(
-        { pathname: '..', search: searchParams.toString() },
-        { replace: true }
-      );
-      return;
-    }
-    setActiveElement?.(id);
-    navigate(
-      `${generatePath('/details/:id', { id })}${searchParams ? `?${searchParams.toString()}` : ''}`,
-      { replace: true }
-    );
+  // A second click on the open card closes it; the query stays either way.
+  const query = searchParams.toString();
+  const to = {
+    pathname: isActive ? '/' : `/details/${id}`,
+    search: query ? `?${query}` : '',
   };
 
   return (
-    <li
-      className={clsx(styles.card, {
-        [styles.active]: isActive,
-      })}
-      onClick={onClickHandler}
-    >
-      <h2 className={styles.title}>{name}</h2>
-      <span>{joinedDate}</span>
-      <div>mass - {mass}</div>
-      <div>skin color - {skin_color}</div>
-      <label
-        className={styles.checkboxContainer}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <li className={clsx(styles.card, { [styles.active]: isActive })}>
+      <h2 className={styles.title} title={name}>
+        <Link
+          to={to}
+          replace
+          className={styles.link}
+          aria-current={isActive || undefined}
+        >
+          {name}
+        </Link>
+      </h2>
+      <span className={styles.line}>{joinedDate}</span>
+      <div className={styles.line}>mass - {mass}</div>
+      <div className={styles.line}>skin color - {skin_color}</div>
+      <label className={styles.checkboxContainer}>
         <span className={styles.checkboxLabel}>
           {isSelected ? 'Unselect' : 'Select'}
         </span>

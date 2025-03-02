@@ -1,31 +1,31 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
+import clsx from 'clsx';
 import { useAppDispatch, useAppSelector } from '~/hooks/redux';
 import { toggleChecked } from '~/store/charactersSlice';
 import { CharacterNormalized } from '~/types';
 import { Card } from './Card';
 import styles from './List.module.scss';
 
+const PAGE_SIZE = 10;
+
 type ListProps = {
   data?: CharacterNormalized[];
-  activeElement?: string;
-  setActiveElement?: React.Dispatch<React.SetStateAction<string>>;
+  activeId?: string;
   error?: FetchBaseQueryError | SerializedError;
+  isRefreshing?: boolean;
 };
 
-export function List({
-  data,
-  activeElement,
-  setActiveElement,
-  error,
-}: ListProps) {
+export function List({ data, activeId, error, isRefreshing }: ListProps) {
   const dispatch = useAppDispatch();
   const selectedCharacters = useAppSelector(
     (state) => state.selectedCharacters
   );
 
-  if (data && data.length === 0) return <div>No such characters =(</div>;
-  if (!data || !!error) return <div>Something went wrong</div>;
+  if (data && data.length === 0)
+    return <p className={styles.message}>No such characters =(</p>;
+  if (!data || !!error)
+    return <p className={styles.message}>Something went wrong</p>;
 
   const isCharacterSelected = (id: number) =>
     selectedCharacters.some((character) => character.id === id);
@@ -34,20 +34,39 @@ export function List({
     dispatch(toggleChecked(character));
   };
 
+  // While the next page loads, the current one stays in place, dimmed,
+  // instead of collapsing into a loader and jumping back.
   return (
-    <ul className={styles.list}>
+    <ul
+      className={clsx(styles.list, { [styles.refreshing]: isRefreshing })}
+      aria-busy={isRefreshing || undefined}
+    >
       {data.map((el) => {
         return (
           <Card
             key={el.id}
             character={el}
-            activeElement={activeElement}
-            setActiveElement={setActiveElement}
+            isActive={activeId === String(el.id)}
             isSelected={isCharacterSelected(el.id)}
             onSelect={onSelect}
           />
         );
       })}
     </ul>
+  );
+}
+
+export function ListSkeleton() {
+  return (
+    <div>
+      <p className="visually-hidden" role="status">
+        Loading...
+      </p>
+      <ul className={styles.list} aria-hidden="true">
+        {Array.from({ length: PAGE_SIZE }, (_, i) => (
+          <li key={i} className={styles.placeholder} />
+        ))}
+      </ul>
+    </div>
   );
 }

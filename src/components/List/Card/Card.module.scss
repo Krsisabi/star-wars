@@ -1,7 +1,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: var(--card-height);
   position: relative;
   border: 1px solid var(--border-color);
   padding: 8px 8px 0 8px;
@@ -26,31 +26,88 @@
     box-shadow: 0 0 20px var(--box-shadow-color);
   }
 
-  .title {
-    margin-bottom: 1rem;
+  &:has(.link:focus-visible) {
+    box-shadow: 0 0 15px var(--box-shadow-color);
+    outline: 2px solid var(--text-color);
+    outline-offset: 2px;
   }
 
+  // One line per field keeps every card the same height.
+  .title,
+  .line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .title {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+
+  // The name is the link; its overlay makes the whole card clickable.
   .link {
-    position: absolute;
-    display: block;
-    inset: 0;
+    outline: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
   }
 
   .checkboxContainer {
+    position: relative;
+    z-index: 1;
+    align-self: flex-end;
     display: flex;
-    align-items: baseline;
-    justify-content: flex-end;
-    cursor: pointer;
+    align-items: center;
+    gap: 8px;
     margin-top: auto;
-    padding-bottom: 8px;
+    padding: 8px 0 10px 8px;
+    cursor: pointer;
 
-    .checkbox {
-      cursor: pointer;
+    &:hover .checkbox {
+      box-shadow: 0 0 10px var(--box-shadow-color);
+    }
+  }
+
+  .checkbox {
+    appearance: none;
+    display: grid;
+    place-content: center;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--background-color);
+    cursor: pointer;
+    transition: box-shadow 0.25s;
+
+    &::before {
+      content: '';
+      width: 11px;
+      height: 11px;
+      background-color: var(--text-color);
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      transform: scale(0);
+      transition: transform 0.15s ease-in-out;
     }
 
-    .checkboxLabel {
-      margin-top: 16px;
-      margin-right: 8px;
+    &:checked {
+      box-shadow:
+        0 0 10px var(--box-shadow-color),
+        inset 0 0 4px var(--box-shadow-color);
+
+      &::before {
+        transform: scale(1);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--text-color);
+      outline-offset: 2px;
     }
   }
 }

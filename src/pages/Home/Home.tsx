@@ -1,21 +1,23 @@
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { useRef } from 'react';
+import { Navigate, useMatch, useOutlet } from 'react-router-dom';
+import clsx from 'clsx';
 import { Header, List, Pagination } from '~/components';
 import { ErrorButton } from '~/components/ErrorButton';
+import { ListSkeleton } from '~/components/List';
 import { useSearchQuery } from '~/hooks';
 import { useGetCharactersQuery } from '~/store/api/apiSlice';
 import styles from './Home.module.scss';
 import { Flyout } from '~/components/Flyout';
 
 export type DetailsOutletContext = {
-  setActiveElement: Dispatch<SetStateAction<string>>;
-  wrapperRef: React.RefObject<HTMLDivElement>;
+  wrapperRef: React.RefObject<HTMLElement>;
 };
 
 export const Home = () => {
   const { search, page, restoreTo } = useSearchQuery();
-  const [activeElement, setActiveElement] = useState('');
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLElement>(null);
+  const details = useOutlet({ wrapperRef } satisfies DetailsOutletContext);
+  const activeId = useMatch('/details/:id')?.params.id;
 
   const { data, error, isLoading, isFetching } = useGetCharactersQuery(
     { search, page },
@@ -29,31 +31,35 @@ export const Home = () => {
   return (
     <div className={styles.home}>
       <Header />
-      <div className={styles.wrapper} ref={wrapperRef}>
-        {isFetching ? (
-          <h2 style={{ margin: 'auto' }}>Loading...</h2>
+      <main
+        className={clsx(styles.content, { [styles.withDetails]: details })}
+        ref={wrapperRef}
+      >
+        {isLoading ? (
+          <ListSkeleton />
         ) : (
           <List
             data={data?.results}
-            activeElement={activeElement}
-            setActiveElement={setActiveElement}
+            activeId={activeId}
             error={error}
+            isRefreshing={isFetching}
           />
         )}
-        <Outlet
-          context={
-            {
-              setActiveElement,
-              wrapperRef,
-            } satisfies DetailsOutletContext
-          }
-        />
-      </div>
-      {data?.results && !isLoading && (
-        <Pagination currentPage={page} totalCount={data.count} />
-      )}
-      <ErrorButton />
-      <Flyout />
+        {details}
+      </main>
+      <footer className={styles.bar}>
+        <div className={styles.selection}>
+          <Flyout />
+        </div>
+        <nav className={styles.pages} aria-label="Pages">
+          {data && !isLoading && (
+            <Pagination currentPage={page} totalCount={data.count} />
+          )}
+        </nav>
+        <div className={styles.actions}>
+          <ErrorButton />
+        </div>
+      </footer>
     </div>
   );
 };

@@ -1,6 +1,12 @@
 .header {
   padding: 2rem 2rem 0 2rem;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
   gap: 8px;
+
+  @media (max-width: 767px) {
+    padding: 1rem 1rem 0;
+  }
 }

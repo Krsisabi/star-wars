@@ -14,9 +14,7 @@ describe('Flyout Component', () => {
 
     render(<Flyout />);
 
-    const heading = screen.getByRole('heading', { name: /items selected/i });
-    expect(heading).toBeInTheDocument();
-    expect(heading).toHaveTextContent('items selected: 2');
+    expect(screen.getByRole('status')).toHaveTextContent('2 items selected');
 
     expect(
       screen.getByRole('button', { name: /unselect all/i })

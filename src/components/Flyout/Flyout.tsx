@@ -16,8 +16,14 @@ export function Flyout() {
 
   return (
     <div className={styles.flyout}>
-      <h4>items selected: {selectedCount}</h4>
-      <button className={styles.buttonDelete} onClick={handleUnselectAll}>
+      <p className={styles.count} role="status">
+        {selectedCount} {selectedCount === 1 ? 'item' : 'items'} selected
+      </p>
+      <button
+        type="button"
+        className={styles.buttonDelete}
+        onClick={handleUnselectAll}
+      >
         Unselect all
       </button>
       <ExportCSV

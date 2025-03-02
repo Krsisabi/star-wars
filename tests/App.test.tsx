@@ -31,8 +31,7 @@ describe('App', () => {
 
   it('should rendering loader', async () => {
     renderApp();
-    const head = await screen.getByRole('heading');
-    expect(head).toHaveTextContent(/loading/i);
+    expect(screen.getByRole('status')).toHaveTextContent(/loading/i);
   });
 
   it('returns from the error page to the list', async () => {
