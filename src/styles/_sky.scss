@@ -1,3 +1,15 @@
+@use 'sass:math';
+
+$pulse-count: 32;
+
+@function frac($x) {
+  @return $x - math.floor($x);
+}
+
+@function round-to($x, $step) {
+  @return math.round(math.div($x, $step)) * $step;
+}
+
 @mixin star-tile($file) {
   background:
     url('../assets/#{$file}') 0 0 / 480px 480px,
@@ -111,6 +123,47 @@ html {
   animation-delay: -4.1s;
 }
 
+.sky-pulse {
+  position: absolute;
+  inset: 0;
+
+  i {
+    --star: 255 255 255;
+
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    margin: -4px;
+    border-radius: 50%;
+    background: radial-gradient(
+      rgb(var(--star)) 18%,
+      rgb(var(--star) / 35%) 40%,
+      transparent 70%
+    );
+    animation: sky-pulse ease-in-out infinite alternate;
+
+    &:nth-child(3n) {
+      --star: 255 233 196;
+    }
+  }
+
+  @for $i from 1 through $pulse-count {
+    i:nth-child(#{$i}) {
+      left: round-to(frac(0.5 + $i * 0.7548776662) * 100%, 0.1%);
+      top: round-to(frac(0.5 + $i * 0.569840291) * 100%, 0.1%);
+      animation-duration: round-to(4s + frac($i * 0.618034) * 3s, 0.1s);
+      animation-delay: round-to(-7s * frac($i * 0.4142136), 0.1s);
+    }
+  }
+}
+
+@keyframes sky-pulse {
+  to {
+    opacity: 0.4;
+    transform: scale(0.5);
+  }
+}
+
 @keyframes sky-twinkle {
   to {
     opacity: 0.4;
@@ -127,13 +180,14 @@ html {
   }
 }
 
-[data-theme='light'] .sky-twinkle {
+[data-theme='light'] :is(.sky-twinkle, .sky-pulse i) {
   animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .sky-haze,
-  .sky-twinkle {
+  .sky-twinkle,
+  .sky-pulse i {
     animation: none;
   }
 
