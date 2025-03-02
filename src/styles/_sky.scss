@@ -1,0 +1,160 @@
+// The sky behind the page. Its layers sit in index.html, outside the app:
+// they hold no state of their own, only follow the theme on <html>.
+//
+// Day: a gradient on the root with a soft light at the top centre, and two
+// strips of haze drifting right. Night: a layer over the day that fades in,
+// so a theme change is a dusk rather than a cut; stars in one tile at two
+// scales, two nebulae and a pink glow at the top centre. The glows are for
+// the glass: frosted surfaces blur them into colour.
+//
+// What moves only moves or fades whole layers, never repaints them: the
+// haze slides, a fifth of the stars twinkle in three groups, each group a
+// layer. Stars fading one by one inside the SVG made the browser repaint
+// the whole sky every frame. Hidden layers stand still, and with reduced
+// motion nothing moves at all.
+
+@mixin star-tile($file) {
+  background:
+    url('../assets/#{$file}') 0 0 / 480px 480px,
+    url('../assets/#{$file}') 170px 290px / 720px 720px;
+}
+
+html {
+  background:
+    radial-gradient(
+        45% 35% at 50% 10%,
+        rgba(200, 205, 255, 0.45),
+        transparent 70%
+      )
+      fixed,
+    linear-gradient(180deg, #c9dcf5 0%, #e4edf9 45%, #f8efe4 100%) fixed;
+}
+
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+// A strip repeats across and slides by exactly its own width, so the loop
+// has no seam.
+.sky-haze {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% + var(--strip));
+  height: 100%;
+  background-repeat: repeat-x;
+  background-size: var(--strip) 1000px;
+  animation-name: sky-drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.sky-haze-far {
+  --strip: 2400px;
+  background-image: url('../assets/haze-far.svg');
+  animation-duration: 320s;
+}
+
+.sky-haze-near {
+  --strip: 2800px;
+  background-image: url('../assets/haze-near.svg');
+  animation-duration: 220s;
+}
+
+@keyframes sky-drift {
+  from {
+    transform: translateX(calc(-1 * var(--strip)));
+  }
+}
+
+.sky-night {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      45% 35% at 50% 10%,
+      rgba(255, 92, 170, 0.22),
+      transparent 70%
+    ),
+    radial-gradient(
+      60% 50% at 85% 0%,
+      rgba(80, 96, 180, 0.28),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 45% at 0% 100%,
+      rgba(170, 70, 120, 0.16),
+      transparent 70%
+    ),
+    #0d0e14;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.sky-stars,
+.sky-twinkle {
+  position: absolute;
+  inset: 0;
+}
+
+.sky-stars {
+  @include star-tile('stars-base.svg');
+}
+
+.sky-twinkle {
+  animation-name: sky-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.sky-twinkle-1 {
+  @include star-tile('stars-twinkle-1.svg');
+  animation-duration: 3.1s;
+}
+
+.sky-twinkle-2 {
+  @include star-tile('stars-twinkle-2.svg');
+  animation-duration: 4.3s;
+  animation-delay: -2.2s;
+}
+
+.sky-twinkle-3 {
+  @include star-tile('stars-twinkle-3.svg');
+  animation-duration: 5.7s;
+  animation-delay: -4.1s;
+}
+
+@keyframes sky-twinkle {
+  to {
+    opacity: 0.4;
+  }
+}
+
+[data-theme='dark'] {
+  .sky-night {
+    opacity: 1;
+  }
+
+  .sky-haze {
+    animation-play-state: paused;
+  }
+}
+
+[data-theme='light'] .sky-twinkle {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-haze,
+  .sky-twinkle {
+    animation: none;
+  }
+
+  .sky-night {
+    transition: none;
+  }
+}

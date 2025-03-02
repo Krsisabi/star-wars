@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as *;
+
 .search {
   display: flex;
   flex: 1 1 240px;
@@ -7,17 +9,20 @@
   width: 100%;
   margin: 0 auto;
   overflow: hidden;
-  border: 1px solid var(--border-color);
+  border: 1px solid transparent;
   border-radius: 15px;
-  background-color: var(--background-color);
   box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.2);
-  transition:
-    box-shadow 0.25s,
-    background-color 0.8s ease,
-    border-color 0.8s ease;
+
+  @include frost;
+
+  @media (hover: hover) {
+    &:hover {
+      @include frost-hover;
+    }
+  }
 
   &:focus-within {
-    box-shadow: 0 0 15px var(--box-shadow-color);
+    @include frost-current;
   }
 }
 
@@ -71,25 +76,19 @@
   flex: none;
   padding: 0 20px;
   border: none;
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid
+    color-mix(in srgb, var(--border-color) 15%, transparent);
   font-family: inherit;
   font-weight: bold;
   font-size: 16px;
   color: var(--text-color);
-  background-color: color-mix(
-    in srgb,
-    var(--text-color) 7%,
-    var(--background-color)
-  );
+  // Tints the glass rather than covering it.
+  background-color: color-mix(in srgb, var(--text-color) 7%, transparent);
   cursor: pointer;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: color-mix(
-      in srgb,
-      var(--text-color) 14%,
-      var(--background-color)
-    );
+    background-color: color-mix(in srgb, var(--text-color) 14%, transparent);
   }
 
   &:focus-visible {

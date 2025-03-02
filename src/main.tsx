@@ -7,6 +7,9 @@ import { RouteErrorBoundary } from './components/ErrorBoundary';
 import { ThemeProvider } from './context/theme-provider.tsx';
 import { store } from './store';
 import './styles/index.scss';
+import { trackPointerLight } from './utils/pointer-light.ts';
+
+trackPointerLight();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

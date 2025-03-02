@@ -1,3 +1,5 @@
+@use 'sass:list';
+
 // A phone either way up: narrow, or too low for the list and the details
 // side by side (a phone on its side is 800-odd wide and under 450 high).
 // Everything a phone lays out its own way asks this one query.
@@ -15,6 +17,157 @@ $not-phone: '(min-width: 768px) and (min-height: 501px)';
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+}
+
+// Frosted glass, after variant 7 of the repo-explorer lab: a body over the
+// blurred sky, and a rim that lights up at the cursor. Under the body lies
+// a radial gradient at the cursor; the 1px border, a faint line in the
+// text's colour, lets it through as a lit edge, and a spot on top of the
+// body marks the cursor. Layers rather than a mask: a masked ring gave
+// steps on rounded corners.
+//
+// The cursor is one pair of variables on the root, --mx and --my, in
+// viewport coordinates (utils/pointer-light.ts), and the gradients that
+// read it are fixed to the viewport, so no element needs its own. Without
+// a mouse there is no rim at all, and no fixed layers to repaint on scroll.
+//
+// The colours are the theme's (index.scss); a component only says when a
+// surface is hovered or current. $rim is how far the rim's light reaches,
+// $also adds the component's own transitions. Include it after the
+// block's own declarations: it brings a nested rule.
+@mixin frost(
+  $rim: 80px,
+  $spot: 40px,
+  $also: (),
+  $body: var(--frost-rest),
+  $blur: blur(var(--frost-blur)) saturate(160%)
+) {
+  --body: #{$body};
+  --edge: var(--frost-edge);
+  // Who waits for whom (index.scss): at rest, the body for the rim to go
+  // out; the hover and the current state set their own.
+  --rim-wait: 0s;
+  --body-wait: var(--frost-body-wait);
+
+  border-color: var(--frost-border);
+  background:
+    linear-gradient(var(--body), var(--body)) padding-box,
+    linear-gradient(var(--edge), var(--edge)) border-box;
+  -webkit-backdrop-filter: $blur;
+  backdrop-filter: $blur;
+  transition: list.join(
+    (
+      --lit 0.2s var(--rim-wait),
+      --spot 0.2s var(--rim-wait),
+      --body var(--frost-body-time) var(--body-wait),
+      --edge 0.3s,
+      border-color 0.3s,
+      box-shadow 0.3s
+    ),
+    $also,
+    $separator: comma
+  );
+
+  @media (hover: hover) {
+    background:
+      radial-gradient(
+          circle $spot at var(--mx, -999px) var(--my, -999px),
+          rgb(var(--frost-spot) / calc(var(--frost-spot-alpha) * var(--spot))),
+          transparent
+        )
+        fixed padding-box,
+      linear-gradient(var(--body), var(--body)) padding-box,
+      radial-gradient(
+          $rim at var(--mx, -999px) var(--my, -999px),
+          rgb(var(--frost-rim) / var(--lit)),
+          rgb(var(--frost-rim) / var(--lit)),
+          rgb(255 255 255 / calc(0.3 * var(--lit))),
+          transparent 70%
+        )
+        fixed border-box,
+      linear-gradient(var(--edge), var(--edge)) border-box;
+  }
+}
+
+// The rim lies under the body, and while the body is still clearing or
+// filling, the rim showed through it as a smudge that came and went. So
+// the two take turns: on hover the body fills first and the rim waits for
+// it; on leaving, the body waits for the rim to go out. The day theme
+// takes turns on every surface (index.scss).
+@mixin frost-take-turns {
+  --frost-body-time: 0.15s;
+  --frost-rim-wait: 0.15s;
+  --frost-body-wait: 0.2s;
+}
+
+// A button that sits on a frosted surface already: no body of its own at
+// rest, and no second blur. With no body at rest, a rim that lit at once
+// flashed through it at night too, so a button takes turns in both themes.
+@mixin frost-button($rim: 80px) {
+  @include frost-take-turns;
+  @include frost($rim, $body: transparent, $blur: none);
+}
+
+// A button with a word on it: at night a faint white layer under its
+// see-through body, so the word reads as a button and not as a label, as
+// on meilisearch.com.
+@mixin frost-text-button {
+  :global([data-theme='dark']) & {
+    --edge: rgb(255 255 255 / 25%);
+  }
+}
+
+// The rim lights up once the body has filled.
+@mixin frost-hover($lit: 1) {
+  --body: var(--frost-hover);
+  --lit: #{$lit};
+  --spot: 1;
+  --rim-wait: var(--frost-rim-wait);
+  --body-wait: 0s;
+
+  box-shadow: var(--frost-glow-hover);
+}
+
+// Selected, open or focused: lit all round, wherever the cursor is.
+@mixin frost-current {
+  --body: var(--frost-current);
+  --edge: rgb(var(--frost-rim));
+  --body-wait: 0s;
+
+  border-color: rgb(var(--frost-rim));
+  box-shadow: var(--frost-glow-current);
+}
+
+// Borders that feel the cursor from afar: the edges of the nearest cards
+// catch its light as it passes over the grid; only the border does, the
+// rest waits for the hover. A ring of its own, masked to the edge, since
+// the rim layer under a see-through body showed through it as a smudge.
+// Its colour fades over the whole reach, so an edge far off still shows.
+@mixin frost-reach($reach, $radius) {
+  @media (hover: hover) {
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      border: 1px solid transparent;
+      border-radius: $radius;
+      background: radial-gradient(
+          circle $reach at var(--mx, -999px) var(--my, -999px),
+          rgb(var(--frost-rim)),
+          rgb(var(--frost-rim) / 0)
+        )
+        fixed border-box;
+      -webkit-mask:
+        linear-gradient(#000 0 0) padding-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask:
+        linear-gradient(#000 0 0) padding-box exclude,
+        linear-gradient(#000 0 0);
+    }
+  }
 }
 
 // A labelled button that shows only its icon, as a circle. The label

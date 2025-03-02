@@ -1,4 +1,6 @@
 @use 'reset';
+@use 'sky';
+@use 'mixins' as *;
 
 :root {
   color-scheme: light;
@@ -12,10 +14,28 @@
   --error-color: #fb2c36;
   --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
-  // Frosted glass for the floating bar.
-  --glass-color: color-mix(in srgb, var(--background-color) 55%, transparent);
-  --glass-edge: color-mix(in srgb, var(--border-color) 15%, transparent);
+  // Frosted glass on every surface (the frost mixin). By day: a white body
+  // with a white edge, and an indigo rim; no spot at the cursor, since
+  // nothing shows on a white body, and a white body when hovered, since
+  // the rim's colour showed through a see-through one as a smudge.
+  --frost-blur: 4px;
+  // A faint line in the text's colour round every surface, by day and by
+  // night: without it the glass ran together with the sky and with the
+  // card next to it. Set once here, it follows --border-color into the
+  // dark theme on the same element.
+  --frost-border: color-mix(in srgb, var(--border-color) 25%, transparent);
+  --frost-rest: rgb(255 255 255 / 32%);
+  --frost-hover: #fff;
+  --frost-current: #fff;
+  --frost-edge: rgb(255 255 255 / 70%);
+  --frost-rim: 88 86 214;
+  --frost-spot: 255 255 255;
+  --frost-spot-alpha: 0;
+  --frost-glow-hover: 0 0 14px rgb(88 86 214 / 35%);
+  --frost-glow-current: 0 0 20px rgb(88 86 214 / 55%);
   --glass-shadow: 0 12px 32px -12px rgba(30, 50, 90, 0.35);
+  // By day the body turns white before the rim lights up.
+  @include frost-take-turns;
 
   font-family: var(--font-family);
 }
@@ -28,18 +48,55 @@
   --border-color: #fff;
   --box-shadow-color: rgba(255, 255, 255, 0.7);
 
+  // By night: a dark body, no edge at rest, a pink rim and a white spot.
+  --frost-rest: rgb(36 36 36 / 32%);
+  --frost-hover: rgb(50 50 50 / 85%);
+  --frost-current: rgb(36 36 36 / 85%);
+  --frost-edge: transparent;
+  --frost-rim: 255 92 178;
+  --frost-spot-alpha: 0.15;
+  --frost-glow-hover: 0 0 12px rgb(255 255 255 / 35%);
+  --frost-glow-current: 0 0 20px rgb(255 255 255 / 70%);
   --glass-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.8);
+  // The rim is meant to show through a dark body, so nothing waits; a
+  // button with no body at rest still takes turns (frost-button).
+  --frost-body-time: 0.3s;
+  --frost-rim-wait: 0s;
+  --frost-body-wait: 0s;
 }
 
-// The day sky lives on the root; the night sky is a layer above it
-// that fades in, so a theme change is a dusk rather than a cut.
+// The frost mixin animates these, and only a registered property can be
+// animated.
+@property --lit {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --spot {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --body {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --edge {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}
+
+// The sky itself, day and night, is in _sky.scss.
 html {
   min-height: 100%;
   // A transparent track lets the sky run under the scrollbar too.
   scrollbar-color: color-mix(in srgb, var(--text-color) 30%, transparent)
     transparent;
-  background: linear-gradient(180deg, #c9dcf5 0%, #e4edf9 45%, #f8efe4 100%)
-    fixed;
 
   // Where the page can scroll, the gutter is kept even without a scrollbar,
   // so nothing shifts sideways when the scrollbar comes and goes: below
@@ -54,39 +111,10 @@ html {
 
 body {
   transition: color 0.5s ease;
-
-  &::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background:
-      url('../assets/stars.svg') 0 0 / 480px 480px,
-      url('../assets/stars.svg') 170px 290px / 720px 720px,
-      radial-gradient(
-        60% 50% at 85% 0%,
-        rgba(80, 96, 180, 0.28),
-        transparent 70%
-      ),
-      radial-gradient(
-        50% 45% at 0% 100%,
-        rgba(170, 70, 120, 0.16),
-        transparent 70%
-      ),
-      #0d0e14;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-  }
-}
-
-[data-theme='dark'] body::before {
-  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body,
-  body::before {
+  body {
     transition: none;
   }
 }
