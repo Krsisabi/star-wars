@@ -16,14 +16,16 @@ type AvatarProps = {
 const PICTURE_WIDTH = { medium: 240, large: 240 };
 
 // A portrait on a circle in a tint of the character's own; while it loads,
-// the circle stays empty. A monogram only stands in for a picture that is
-// missing or never loads: laid under one, it showed through the cut-outs
-// around the figure.
+// the circle is a skeleton. A monogram only stands in for a picture that
+// is missing or never loads: laid under one, it showed through the
+// cut-outs around the figure.
 export function Avatar({ id, name, size = 'medium', className }: AvatarProps) {
   const src = portraitOf(id, PICTURE_WIDTH[size]);
   const [loaded, setLoaded] = useState<string>();
   const [failed, setFailed] = useState<string>();
   const portraitRef = useRef<HTMLImageElement>(null);
+  const hasPortrait = Boolean(src) && src !== failed;
+  const loading = hasPortrait && src !== loaded;
 
   // A picture already in the browser's cache is complete the moment its
   // element is made. It is shown before the first paint, with no fade:
@@ -38,9 +40,10 @@ export function Avatar({ id, name, size = 'medium', className }: AvatarProps) {
     <span
       className={clsx(styles.avatar, styles[size], className)}
       style={toneStyle(id)}
+      data-loading={loading || undefined}
       aria-hidden="true"
     >
-      {src && src !== failed ? (
+      {hasPortrait ? (
         <img
           ref={portraitRef}
           className={styles.portrait}

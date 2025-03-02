@@ -2,6 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { Avatar } from './Avatar';
 
 const portraitIn = (container: HTMLElement) => container.querySelector('img');
+const circleIn = (container: HTMLElement) => container.firstElementChild;
 
 describe('Avatar', () => {
   afterEach(() => {
@@ -28,14 +29,17 @@ describe('Avatar', () => {
     const { container } = render(<Avatar id={1} name="Luke Skywalker" />);
 
     expect(portraitIn(container)).toHaveAttribute('data-loaded');
+    expect(circleIn(container)).not.toHaveAttribute('data-loading');
   });
 
-  it('waits for a portrait that is not in the cache', () => {
+  it('shows a skeleton while a portrait not in the cache loads', () => {
     const { container } = render(<Avatar id={1} name="Luke Skywalker" />);
 
     expect(portraitIn(container)).not.toHaveAttribute('data-loaded');
+    expect(circleIn(container)).toHaveAttribute('data-loading');
     fireEvent.load(portraitIn(container)!);
     expect(portraitIn(container)).toHaveAttribute('data-loaded');
+    expect(circleIn(container)).not.toHaveAttribute('data-loading');
   });
 
   it('falls back to the monogram when the portrait does not load', () => {
@@ -45,6 +49,7 @@ describe('Avatar', () => {
 
     expect(portraitIn(container)).toBeNull();
     expect(container).toHaveTextContent('LS');
+    expect(circleIn(container)).not.toHaveAttribute('data-loading');
   });
 
   it('shows only the monogram for a character without a portrait', () => {
@@ -52,5 +57,6 @@ describe('Avatar', () => {
 
     expect(portraitIn(container)).toBeNull();
     expect(container).toHaveTextContent('NO');
+    expect(circleIn(container)).not.toHaveAttribute('data-loading');
   });
 });

@@ -156,12 +156,14 @@ $band-from: 36.25rem;
   }
 }
 
+// The portrait's circle until the data comes, in the character's tint,
+// as the portrait's own circle is while its picture loads.
 .avatarPlaceholder {
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  background-color: currentColor;
-  opacity: 0.15;
+
+  @include skeleton(color-mix(in srgb, var(--tone) 16%, transparent));
 }
 
 // Centred in the band, which starts 24px above its grid row: the portrait
@@ -319,6 +321,6 @@ $band-from: 36.25rem;
   height: 1em;
   border-radius: 4px;
   vertical-align: middle;
-  background-color: currentColor;
-  opacity: 0.15;
+
+  @include skeleton(color-mix(in srgb, currentColor 15%, transparent));
 }

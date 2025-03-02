@@ -15,6 +15,10 @@
   color: color-mix(in srgb, var(--tone) 65%, var(--text-color));
   background-color: color-mix(in srgb, var(--tone) 16%, transparent);
   user-select: none;
+
+  &[data-loading] {
+    @include skeleton;
+  }
 }
 
 // Most pictures are cut-outs: the tint shows through around the figure.

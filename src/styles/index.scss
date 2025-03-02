@@ -12,6 +12,8 @@
   --border-color: #000;
   --box-shadow-color: rgba(36, 36, 36, 0.7);
   --error-color: #fb2c36;
+  // The shine that runs across whatever is still loading (skeleton mixin).
+  --skeleton-shine: rgb(255 255 255 / 60%);
   --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
   // Frosted glass on every surface (the frost mixin). By day: a white body
@@ -47,6 +49,7 @@
   --background-color: #242424;
   --border-color: #fff;
   --box-shadow-color: rgba(255, 255, 255, 0.7);
+  --skeleton-shine: rgb(255 255 255 / 10%);
 
   // By night: a dark body, no edge at rest, a pink rim and a white spot.
   --frost-rest: rgb(36 36 36 / 32%);
