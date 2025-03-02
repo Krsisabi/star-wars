@@ -46,11 +46,11 @@ describe('App', () => {
     expect(screen.getByText(/generate error/i)).toBeInTheDocument();
   });
 
-  it('shows the error page when a provider fails', () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
+  it('opens normally when the stored theme is corrupt', () => {
     localStorage.setItem(STORAGE_KEYS.theme, '{not json');
     renderApp();
 
-    expect(screen.getByText('Oops!')).toBeInTheDocument();
+    expect(screen.queryByText('Oops!')).not.toBeInTheDocument();
+    expect(screen.getByText(/generate error/i)).toBeInTheDocument();
   });
 });

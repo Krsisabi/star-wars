@@ -8,7 +8,12 @@ export enum STORAGE_KEYS {
 export const useLocalStorage = <T>(key: STORAGE_KEYS, initialValue: T) => {
   const [value, setStoredValue] = useState<T>(() => {
     const item = window.localStorage.getItem(key);
-    return item ? JSON.parse(item) : initialValue;
+    if (!item) return initialValue;
+    try {
+      return JSON.parse(item) as T;
+    } catch {
+      return initialValue;
+    }
   });
 
   const setValue = useCallback(
