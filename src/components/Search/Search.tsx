@@ -1,45 +1,35 @@
-import { ChangeEvent } from 'react';
-import { useLocalStorage } from '~/hooks';
+import { FormEvent, useState } from 'react';
+import { useSearchQuery } from '~/hooks';
 import styles from './Search.module.scss';
-import { useLazyGetCharactersQuery } from '~/store/api/apiSlice';
-import { useSearchParams } from 'react-router-dom';
-import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
-
-type FormFields = {
-  search: HTMLInputElement;
-};
 
 export function Search() {
-  const [value, setValue] = useLocalStorage(STORAGE_KEYS.searchValue, '');
+  const { search, submitSearch } = useSearchQuery();
+  const [draft, setDraft] = useState(search);
+  const [shownSearch, setShownSearch] = useState(search);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchInputHandler = (e: ChangeEvent<HTMLInputElement>) =>
-    setValue(e.target.value);
+  // The address can change without this form (Back, a shared link):
+  // the field follows it, so it never shows a term the list is not about.
+  if (search !== shownSearch) {
+    setShownSearch(search);
+    setDraft(search);
+  }
 
-  const [triggerGetCharacters] = useLazyGetCharactersQuery();
-
-  const handleSubmit = (
-    event: React.FormEvent<HTMLFormElement & FormFields>
-  ) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const text = event.currentTarget.search?.value.trim();
-    searchParams.set('search', text);
-    searchParams.set('page', '1');
-    setSearchParams(searchParams);
-    setValue(text);
-    triggerGetCharacters({ name: text, page: 1 });
+    setDraft(draft.trim());
+    submitSearch(draft);
   };
 
   return (
-    <form className={styles.search} onSubmit={handleSubmit}>
+    <form className={styles.search} onSubmit={handleSubmit} role="search">
       <input
         className={styles.textField}
-        value={value}
-        onChange={searchInputHandler}
+        value={draft}
+        onChange={(event) => setDraft(event.target.value)}
         type="text"
         name="search"
         placeholder="Search..."
+        aria-label="Search characters by name"
       />
       <button className={styles.button}>Search</button>
     </form>

@@ -1,5 +1,8 @@
+import { render as renderInRouter } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen } from '@/tests/setup';
 import { mockData } from '@/tests/mockData';
+import { LocationProbe } from '@/tests/router';
 import userEvent from '@testing-library/user-event';
 import { Card } from './Card';
 
@@ -50,5 +53,27 @@ describe('Card', () => {
     await user.click(checkbox);
 
     expect(checkbox).not.toBeChecked();
+  });
+
+  it('keeps the search and the page when an open card is closed', async () => {
+    renderInRouter(
+      <MemoryRouter initialEntries={['/details/1?search=luke&page=2']}>
+        <Card
+          character={mockData[0]}
+          activeElement={'1'}
+          setActiveElement={vi.fn()}
+          isSelected={false}
+          onSelect={vi.fn()}
+        />
+        <LocationProbe />
+      </MemoryRouter>
+    );
+
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('heading', { name: /luke/i }));
+
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/?search=luke&page=2'
+    );
   });
 });

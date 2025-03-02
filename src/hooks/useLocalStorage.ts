@@ -5,23 +5,31 @@ export enum STORAGE_KEYS {
   theme = 'theme',
 }
 
+export const readStoredValue = <T>(key: STORAGE_KEYS, initialValue: T): T => {
+  const item = window.localStorage.getItem(key);
+  if (!item) return initialValue;
+  try {
+    return JSON.parse(item) as T;
+  } catch {
+    return initialValue;
+  }
+};
+
+export const writeStoredValue = <T>(key: STORAGE_KEYS, value: T) => {
+  window.localStorage.setItem(key, JSON.stringify(value));
+};
+
 export const useLocalStorage = <T>(key: STORAGE_KEYS, initialValue: T) => {
-  const [value, setStoredValue] = useState<T>(() => {
-    const item = window.localStorage.getItem(key);
-    if (!item) return initialValue;
-    try {
-      return JSON.parse(item) as T;
-    } catch {
-      return initialValue;
-    }
-  });
+  const [value, setStoredValue] = useState<T>(() =>
+    readStoredValue(key, initialValue)
+  );
 
   const setValue = useCallback(
     (arg: T | React.SetStateAction<T>) => {
       setStoredValue((prev) => {
         const newValue =
           typeof arg === 'function' ? (arg as (prevState: T) => T)(prev) : arg;
-        window.localStorage.setItem(key, JSON.stringify(newValue));
+        writeStoredValue(key, newValue);
         return newValue;
       });
     },

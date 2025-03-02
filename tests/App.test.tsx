@@ -7,10 +7,11 @@ import { RouteErrorBoundary } from '~/components/ErrorBoundary';
 import { ThemeProvider } from '~/context/theme-provider';
 import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
 import { store } from '~/store';
+import { LocationProbe } from './router';
 
-const renderApp = () =>
+const renderApp = (url = '/') =>
   render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[url]}>
       <RouteErrorBoundary>
         <ThemeProvider>
           <Provider store={store}>
@@ -18,6 +19,7 @@ const renderApp = () =>
           </Provider>
         </ThemeProvider>
       </RouteErrorBoundary>
+      <LocationProbe />
     </MemoryRouter>
   );
 
@@ -44,6 +46,27 @@ describe('App', () => {
     await user.click(screen.getByText(/back to characters/i));
     expect(screen.queryByText('Oops!')).not.toBeInTheDocument();
     expect(screen.getByText(/generate error/i)).toBeInTheDocument();
+  });
+
+  it('restores the saved search into the address', async () => {
+    localStorage.setItem(STORAGE_KEYS.searchValue, JSON.stringify('yoda'));
+    renderApp('/');
+
+    expect(await screen.findByRole('textbox')).toHaveValue('yoda');
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/?search=yoda&page=1'
+    );
+    expect(localStorage.getItem(STORAGE_KEYS.searchValue)).toBe('"yoda"');
+  });
+
+  it('prefers the search in the address over the saved one', () => {
+    localStorage.setItem(STORAGE_KEYS.searchValue, JSON.stringify('yoda'));
+    renderApp('/?search=luke&page=2');
+
+    expect(screen.getByRole('textbox')).toHaveValue('luke');
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/?search=luke&page=2'
+    );
   });
 
   it('opens normally when the stored theme is corrupt', () => {

@@ -36,9 +36,6 @@ export function Card({
 
   const [searchParams] = useSearchParams();
 
-  const newSearchParams = new URLSearchParams(searchParams);
-  newSearchParams.set('id', id);
-
   const isActive = activeElement === id;
 
   const onClickHandler = (
@@ -47,7 +44,10 @@ export function Card({
     e.stopPropagation();
     if (isActive) {
       setActiveElement?.('');
-      navigate('..', { replace: true });
+      navigate(
+        { pathname: '..', search: searchParams.toString() },
+        { replace: true }
+      );
       return;
     }
     setActiveElement?.(id);

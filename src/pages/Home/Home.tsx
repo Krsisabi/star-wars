@@ -1,17 +1,8 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { Outlet } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 import { Header, List, Pagination } from '~/components';
 import { ErrorButton } from '~/components/ErrorButton';
-import { useLocalStorage } from '~/hooks';
-import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
+import { useSearchQuery } from '~/hooks';
 import { useGetCharactersQuery } from '~/store/api/apiSlice';
 import styles from './Home.module.scss';
 import { Flyout } from '~/components/Flyout';
@@ -22,50 +13,18 @@ export type DetailsOutletContext = {
 };
 
 export const Home = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(
-    Number(searchParams.get('page')) || 1
-  );
+  const { search, page, restoreTo } = useSearchQuery();
   const [activeElement, setActiveElement] = useState('');
-  const [searchValue, setSearchValue] = useLocalStorage(
-    STORAGE_KEYS.searchValue,
-    ''
-  );
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const { data, error, isLoading, isFetching } = useGetCharactersQuery({
-    name: searchValue,
-    page: currentPage,
-  });
-
-  useEffect(() => {
-    const pageFromUrl = Number(searchParams.get('page')) || 1;
-    if (pageFromUrl !== currentPage) {
-      setCurrentPage(pageFromUrl);
-    }
-    const searchFromUrl = searchParams.get('search') || '';
-    if (searchFromUrl !== searchValue) {
-      setSearchValue(searchFromUrl);
-    }
-  }, [searchParams, currentPage, searchValue, setSearchValue]);
-
-  const updateSearchParams = useCallback(
-    (name: string, page: number) => {
-      const params = new URLSearchParams(searchParams);
-      params.set('search', name);
-      params.set('page', page.toString());
-      setSearchParams(params);
-    },
-    [setSearchParams, searchParams]
+  const { data, error, isLoading, isFetching } = useGetCharactersQuery(
+    { search, page },
+    { skip: restoreTo !== null }
   );
 
-  const onPageChangeHandler = useCallback(
-    (page: number) => {
-      setCurrentPage(page);
-      updateSearchParams(searchValue, page);
-    },
-    [searchValue, updateSearchParams]
-  );
+  if (restoreTo !== null) {
+    return <Navigate to={{ search: restoreTo }} replace />;
+  }
 
   return (
     <div className={styles.home}>
@@ -91,11 +50,7 @@ export const Home = () => {
         />
       </div>
       {data?.results && !isLoading && (
-        <Pagination
-          currentPage={currentPage}
-          totalCount={data.count}
-          onPageChange={onPageChangeHandler}
-        />
+        <Pagination currentPage={page} totalCount={data.count} />
       )}
       <ErrorButton />
       <Flyout />

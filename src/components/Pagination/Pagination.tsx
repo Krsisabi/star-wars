@@ -3,23 +3,18 @@ import clsx from 'clsx';
 import { usePagination, DOTS } from '~/hooks/usePagination';
 
 import styles from './Pagination.module.scss';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 export type PaginationProps = {
   totalCount: number;
   pageSize?: number;
   siblingCount?: number;
   currentPage: number;
-  onPageChange:
-    | React.Dispatch<React.SetStateAction<number>>
-    | ((value: number) => void);
 };
 
 export const Pagination = (props: PaginationProps) => {
-  const { onPageChange, totalCount, siblingCount, currentPage, pageSize } =
-    props;
+  const { totalCount, siblingCount, currentPage, pageSize } = props;
 
-  const { id } = useParams();
   const [searchParams] = useSearchParams();
 
   const paginationRange = usePagination({
@@ -37,7 +32,12 @@ export const Pagination = (props: PaginationProps) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const searchFromUrl = searchParams.get('search');
+  // Only the query changes, so an open details panel stays open.
+  const linkTo = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page.toString());
+    return { search: `?${params}` };
+  };
 
   return (
     <ul className={styles.paginationContainer}>
@@ -53,17 +53,17 @@ export const Pagination = (props: PaginationProps) => {
           );
         }
 
+        const isCurrent = +pageNumber === currentPage;
+
         return (
           <li key={pageNumber}>
             <Link
-              to={`${id ? `/details/${id}` : ''}?${searchFromUrl ? `search=${searchFromUrl}&` : ''}page=${pageNumber}`}
+              to={linkTo(+pageNumber)}
               className={clsx(styles.paginationItem, {
-                [styles.selected]: +pageNumber === currentPage,
+                [styles.selected]: isCurrent,
               })}
-              onClick={() => {
-                onTop();
-                onPageChange(+pageNumber);
-              }}
+              aria-current={isCurrent ? 'page' : undefined}
+              onClick={onTop}
             >
               {pageNumber}
             </Link>

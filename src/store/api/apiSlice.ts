@@ -16,19 +16,12 @@ export const swApi = createApi({
   endpoints: (builder) => ({
     getCharacters: builder.query<
       TransformedResponse,
-      { name: string; page?: number }
+      { search: string; page: number }
     >({
-      query: ({ name, page }) => {
-        const searchParams = new URLSearchParams(window.location.search);
-        const currentPage = page ?? (Number(searchParams.get('page')) || 1);
-        searchParams.set('page', currentPage.toString());
-
-        if (name) {
-          searchParams.set('search', name);
-          searchParams.set('page', '1');
-        }
-        return `?${searchParams.toString()}`;
-      },
+      query: ({ search, page }) => ({
+        url: '',
+        params: { search: search || undefined, page },
+      }),
       transformResponse: (response: TResponse): TransformedResponse => {
         const usersWithCheck: CharacterNormalized[] = response.results.map(
           (character) => {
@@ -57,8 +50,4 @@ export const swApi = createApi({
   }),
 });
 
-export const {
-  useGetCharactersQuery,
-  useLazyGetCharactersQuery,
-  useGetDetailsQuery,
-} = swApi;
+export const { useGetCharactersQuery, useGetDetailsQuery } = swApi;

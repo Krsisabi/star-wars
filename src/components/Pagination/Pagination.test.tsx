@@ -1,27 +1,37 @@
 import userEvent from '@testing-library/user-event';
-import { render, screen } from '@/tests/setup';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { BackButton, LocationProbe } from '@/tests/router';
 import { Pagination, PaginationProps } from './Pagination';
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useParams: vi.fn().mockReturnValue({ id: '1' }),
-  };
-});
-
 describe('Pagination Component', () => {
-  const renderPagination = (props: Partial<PaginationProps> = {}) => {
+  const renderPagination = (
+    url = '/?page=1',
+    props: Partial<PaginationProps> = {}
+  ) => {
     const defaultProps: PaginationProps = {
       totalCount: 100,
       pageSize: 10,
       siblingCount: 2,
       currentPage: 1,
-      onPageChange: vi.fn(),
     };
 
-    return render(<Pagination {...defaultProps} {...props} />);
+    return render(
+      <MemoryRouter initialEntries={['/', url]} initialIndex={1}>
+        <Pagination {...defaultProps} {...props} />
+        <LocationProbe />
+        <BackButton />
+      </MemoryRouter>
+    );
   };
+
+  beforeEach(() => {
+    vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   test('renders correct number of pages', () => {
     renderPagination();
@@ -40,14 +50,39 @@ describe('Pagination Component', () => {
     });
   });
 
-  test('reports the clicked page', async () => {
-    vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
-    const onPageChange = vi.fn();
-    renderPagination({ onPageChange });
+  test('marks the current page', () => {
+    renderPagination('/?page=3', { currentPage: 3 });
+
+    expect(screen.getByRole('link', { name: '3' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
+    expect(screen.getByRole('link', { name: '2' })).not.toHaveAttribute(
+      'aria-current'
+    );
+  });
+
+  test('changes only the page, keeping the encoded search and open details', () => {
+    renderPagination('/details/5?search=r2 d2&page=1');
+
+    expect(screen.getByRole('link', { name: '2' })).toHaveAttribute(
+      'href',
+      '/details/5?search=r2+d2&page=2'
+    );
+  });
+
+  test('takes one step in history per click', async () => {
+    renderPagination('/?search=a&page=1');
 
     const user = userEvent.setup();
     await user.click(screen.getByRole('link', { name: '2' }));
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/?search=a&page=2'
+    );
 
-    expect(onPageChange).toHaveBeenCalledWith(2);
+    await user.click(screen.getByRole('button', { name: 'Back' }));
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/?search=a&page=1'
+    );
   });
 });
