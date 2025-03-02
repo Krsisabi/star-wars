@@ -1,23 +1,20 @@
-import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
 
 import { App } from '~/App';
 import { AppProviders } from '~/AppProviders';
 import { makeStore } from '~/store/store';
+import { currentLocation, render, screen } from '~/test/render';
 import { STORAGE_KEYS } from '~/utils/storage';
 
-import { LocationProbe } from './router';
-
-const renderApp = (url = '/') =>
-  render(
-    <MemoryRouter initialEntries={[url]}>
-      <AppProviders store={makeStore()}>
-        <App />
-      </AppProviders>
-      <LocationProbe />
-    </MemoryRouter>
+const renderApp = (url = '/') => {
+  const store = makeStore();
+  return render(
+    <AppProviders store={store}>
+      <App />
+    </AppProviders>,
+    { store, history: [url] }
   );
+};
 
 describe('App', () => {
   afterEach(() => {
@@ -25,7 +22,7 @@ describe('App', () => {
     vi.restoreAllMocks();
   });
 
-  it('should rendering loader', async () => {
+  it('shows a loading list first', () => {
     renderApp();
     expect(screen.getByRole('status')).toHaveTextContent(/loading/i);
   });
@@ -48,9 +45,7 @@ describe('App', () => {
     renderApp('/');
 
     expect(await screen.findByRole('textbox')).toHaveValue('yoda');
-    expect(screen.getByTestId('location')).toHaveTextContent(
-      '/?search=yoda&page=1'
-    );
+    expect(currentLocation()).toHaveTextContent('/?search=yoda&page=1');
     expect(localStorage.getItem(STORAGE_KEYS.searchValue)).toBe('"yoda"');
   });
 
@@ -59,9 +54,7 @@ describe('App', () => {
     renderApp('/?search=luke&page=2');
 
     expect(screen.getByRole('textbox')).toHaveValue('luke');
-    expect(screen.getByTestId('location')).toHaveTextContent(
-      '/?search=luke&page=2'
-    );
+    expect(currentLocation()).toHaveTextContent('/?search=luke&page=2');
   });
 
   it('opens normally when the stored theme is corrupt', () => {

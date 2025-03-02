@@ -23,7 +23,7 @@ const sparkle = (x: number, y: number, size: number) =>
   `M${x} ${y - size}Q${x} ${y} ${x + size} ${y}Q${x} ${y} ${x} ${y + size}` +
   `Q${x} ${y} ${x - size} ${y}Q${x} ${y} ${x} ${y - size}Z`;
 
-export const ThemeSwitcher = () => {
+export function ThemeSwitcher() {
   const { theme, toggleTheme } = useTheme();
   // The sunset plays only after a click; on load the icon just shows
   // where the day is, instead of replaying the last change.
@@ -101,4 +101,4 @@ export const ThemeSwitcher = () => {
       </svg>
     </button>
   );
-};
+}

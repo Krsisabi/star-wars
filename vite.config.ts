@@ -6,12 +6,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '~': '/src',
-      '@/tests': '/tests',
     },
   },
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: 'tests/setup.tsx',
+    setupFiles: 'src/test/setup.ts',
   },
 });

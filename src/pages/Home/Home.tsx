@@ -14,7 +14,7 @@ import { useGetCharactersQuery } from '~/store/api/apiSlice';
 
 import styles from './Home.module.scss';
 
-export const Home = () => {
+export function Home() {
   const { search, page, restoreTo } = useSearchQuery();
   const wrapperRef = useRef<HTMLElement>(null);
   const details = useOutlet({ wrapperRef } satisfies DetailsOutletContext);
@@ -66,4 +66,4 @@ export const Home = () => {
       </footer>
     </div>
   );
-};
+}

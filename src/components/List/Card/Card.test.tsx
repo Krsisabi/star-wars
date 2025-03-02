@@ -1,24 +1,20 @@
-import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
 
-import { mockData } from '@/tests/mockData';
-import { LocationProbe } from '@/tests/router';
+import { mockData } from '~/test/mockData';
+import { currentLocation, render, screen } from '~/test/render';
 
 import type { CardProps } from './Card';
 import { Card } from './Card';
 
 const renderCard = (url: string, props: Partial<CardProps> = {}) =>
   render(
-    <MemoryRouter initialEntries={[url]}>
-      <Card
-        character={mockData[0]}
-        isSelected={false}
-        onSelect={vi.fn()}
-        {...props}
-      />
-      <LocationProbe />
-    </MemoryRouter>
+    <Card
+      character={mockData[0]}
+      isSelected={false}
+      onSelect={vi.fn()}
+      {...props}
+    />,
+    { history: [url] }
   );
 
 describe('Card', () => {
@@ -28,7 +24,7 @@ describe('Card', () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole('link', { name: /luke/i }));
 
-    expect(screen.getByTestId('location')).toHaveTextContent(
+    expect(currentLocation()).toHaveTextContent(
       '/details/1?search=luke&page=2'
     );
   });
@@ -42,9 +38,7 @@ describe('Card', () => {
     const user = userEvent.setup();
     await user.click(link);
 
-    expect(screen.getByTestId('location')).toHaveTextContent(
-      '/?search=luke&page=2'
-    );
+    expect(currentLocation()).toHaveTextContent('/?search=luke&page=2');
   });
 
   it('reports the checkbox without opening the card', async () => {
@@ -58,6 +52,6 @@ describe('Card', () => {
     await user.click(checkbox);
 
     expect(onSelect).toHaveBeenCalledWith(mockData[0]);
-    expect(screen.getByTestId('location')).toHaveTextContent('/?page=1');
+    expect(currentLocation()).toHaveTextContent('/?page=1');
   });
 });

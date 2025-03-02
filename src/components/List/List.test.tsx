@@ -1,18 +1,16 @@
-import { screen } from '@testing-library/react';
-
-import { mockData } from '@/tests/mockData';
-import { render } from '@/tests/setup';
+import { mockData } from '~/test/mockData';
+import { render, screen } from '~/test/render';
 
 import { List } from './List';
 
-describe('ListCards Component', () => {
-  it('renders the specified number of cards', async () => {
+describe('List', () => {
+  it('shows a card per character', () => {
     render(<List data={mockData} />);
 
     const cards = screen.getAllByRole('listitem');
     expect(cards).toHaveLength(mockData.length);
   });
-  it('renders "No such characters" message when data is an empty array', () => {
+  it('says so when no character matches', () => {
     render(<List data={[]} />);
 
     expect(screen.getByText(/no such/i)).toBeInTheDocument();

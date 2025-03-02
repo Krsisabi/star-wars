@@ -1,4 +1,4 @@
-import { mockData } from '@/tests/mockData';
+import { mockData } from '~/test/mockData';
 
 import { initials, summary, swatches, withUnit } from './character';
 

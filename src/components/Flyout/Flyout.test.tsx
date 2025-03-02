@@ -1,6 +1,6 @@
 import { makeStore } from '~/store/store';
-import { mockData } from '@/tests/mockData';
-import { fireEvent, render, screen } from '@/tests/setup';
+import { mockData } from '~/test/mockData';
+import { fireEvent, render, screen } from '~/test/render';
 
 import { Flyout } from './Flyout';
 

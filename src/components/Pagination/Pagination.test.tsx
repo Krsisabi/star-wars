@@ -1,13 +1,11 @@
-import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
 
-import { BackButton, LocationProbe } from '@/tests/router';
+import { currentLocation, render, screen } from '~/test/render';
 
 import type { PaginationProps } from './Pagination';
 import { Pagination } from './Pagination';
 
-describe('Pagination Component', () => {
+describe('Pagination', () => {
   const renderPagination = (
     url = '/?page=1',
     props: Partial<PaginationProps> = {}
@@ -19,13 +17,9 @@ describe('Pagination Component', () => {
       currentPage: 1,
     };
 
-    return render(
-      <MemoryRouter initialEntries={['/', url]} initialIndex={1}>
-        <Pagination {...defaultProps} {...props} />
-        <LocationProbe />
-        <BackButton />
-      </MemoryRouter>
-    );
+    return render(<Pagination {...defaultProps} {...props} />, {
+      history: ['/', url],
+    });
   };
 
   beforeEach(() => {
@@ -36,14 +30,14 @@ describe('Pagination Component', () => {
     vi.restoreAllMocks();
   });
 
-  test('renders correct number of pages', () => {
+  it('offers the pages around the current one', () => {
     renderPagination();
 
     const pageItems = screen.getAllByRole('listitem');
     expect(pageItems.length).toBeGreaterThanOrEqual(5);
   });
 
-  test('keeps every page link inside a list item', () => {
+  it('keeps every page link inside a list item', () => {
     renderPagination();
 
     const links = screen.getAllByRole('link');
@@ -53,7 +47,7 @@ describe('Pagination Component', () => {
     });
   });
 
-  test('marks the current page', () => {
+  it('marks the current page', () => {
     renderPagination('/?page=3', { currentPage: 3 });
 
     expect(screen.getByRole('link', { name: '3' })).toHaveAttribute(
@@ -65,7 +59,7 @@ describe('Pagination Component', () => {
     );
   });
 
-  test('changes only the page, keeping the encoded search and open details', () => {
+  it('changes only the page, keeping the encoded search and open details', () => {
     renderPagination('/details/5?search=r2 d2&page=1');
 
     expect(screen.getByRole('link', { name: '2' })).toHaveAttribute(
@@ -74,18 +68,14 @@ describe('Pagination Component', () => {
     );
   });
 
-  test('takes one step in history per click', async () => {
+  it('takes one step in history per click', async () => {
     renderPagination('/?search=a&page=1');
 
     const user = userEvent.setup();
     await user.click(screen.getByRole('link', { name: '2' }));
-    expect(screen.getByTestId('location')).toHaveTextContent(
-      '/?search=a&page=2'
-    );
+    expect(currentLocation()).toHaveTextContent('/?search=a&page=2');
 
     await user.click(screen.getByRole('button', { name: 'Back' }));
-    expect(screen.getByTestId('location')).toHaveTextContent(
-      '/?search=a&page=1'
-    );
+    expect(currentLocation()).toHaveTextContent('/?search=a&page=1');
   });
 });

@@ -1,6 +1,6 @@
+import { mockData } from '~/test/mockData';
+import { fireEvent, render, screen } from '~/test/render';
 import { downloadFile } from '~/utils/download';
-import { mockData } from '@/tests/mockData';
-import { fireEvent, render, screen } from '@/tests/setup';
 
 import { ExportCSV } from './ExportCSV';
 

@@ -1,13 +1,12 @@
-import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRef } from 'react';
-import { Link, MemoryRouter, Outlet, Route, Routes } from 'react-router-dom';
+import { Link, Outlet, Route, Routes } from 'react-router-dom';
 
 import { ROUTES } from '~/routes';
 import type * as ApiSlice from '~/store/api/apiSlice';
 import { useGetDetailsQuery } from '~/store/api/apiSlice';
-import { mockData } from '@/tests/mockData';
-import { LocationProbe } from '@/tests/router';
+import { mockData } from '~/test/mockData';
+import { currentLocation, render, screen } from '~/test/render';
 
 import type { DetailsOutletContext } from './Details';
 import { Details } from './Details';
@@ -29,7 +28,7 @@ const queryState = (state: Partial<QueryResult>) =>
     ...state,
   } as QueryResult);
 
-const ListArea = () => {
+function ListArea() {
   const wrapperRef = useRef<HTMLElement>(null);
   return (
     <main ref={wrapperRef}>
@@ -38,21 +37,17 @@ const ListArea = () => {
       <Outlet context={{ wrapperRef } satisfies DetailsOutletContext} />
     </main>
   );
-};
+}
 
 const renderDetails = () =>
   render(
-    <MemoryRouter initialEntries={['/details/1?search=luke&page=2']}>
-      <Routes>
-        <Route path={ROUTES.home} element={<ListArea />}>
-          <Route path={ROUTES.details} element={<Details />} />
-        </Route>
-      </Routes>
-      <LocationProbe />
-    </MemoryRouter>
+    <Routes>
+      <Route path={ROUTES.home} element={<ListArea />}>
+        <Route path={ROUTES.details} element={<Details />} />
+      </Route>
+    </Routes>,
+    { history: ['/details/1?search=luke&page=2'] }
   );
-
-const location = () => screen.getByTestId('location');
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -104,7 +99,7 @@ describe('Details', () => {
     renderDetails();
     await user.click(screen.getByRole('button', { name: 'Close details' }));
 
-    expect(location()).toHaveTextContent('/?search=luke&page=2');
+    expect(currentLocation()).toHaveTextContent('/?search=luke&page=2');
   });
 
   it('closes on Escape', async () => {
@@ -114,7 +109,7 @@ describe('Details', () => {
     renderDetails();
     await user.keyboard('{Escape}');
 
-    expect(location()).toHaveTextContent('/?search=luke&page=2');
+    expect(currentLocation()).toHaveTextContent('/?search=luke&page=2');
   });
 
   it('closes on a click in the list', async () => {
@@ -124,7 +119,7 @@ describe('Details', () => {
     renderDetails();
     await user.click(screen.getByText('the list'));
 
-    expect(location()).toHaveTextContent('/?search=luke&page=2');
+    expect(currentLocation()).toHaveTextContent('/?search=luke&page=2');
   });
 
   it('closes on a tap on the dim behind the sheet', async () => {
@@ -136,7 +131,7 @@ describe('Details', () => {
     const backdrop = screen.getByRole('complementary').previousElementSibling;
     await user.click(backdrop!);
 
-    expect(location()).toHaveTextContent('/?search=luke&page=2');
+    expect(currentLocation()).toHaveTextContent('/?search=luke&page=2');
   });
 
   it('lets a link in the list do its own job', async () => {
@@ -146,6 +141,8 @@ describe('Details', () => {
     renderDetails();
     await user.click(screen.getByRole('link', { name: 'another card' }));
 
-    expect(location()).toHaveTextContent('/details/2?search=luke&page=2');
+    expect(currentLocation()).toHaveTextContent(
+      '/details/2?search=luke&page=2'
+    );
   });
 });

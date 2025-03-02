@@ -1,14 +1,12 @@
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-
-import { render, screen } from '@/tests/setup';
+import { render, screen } from '~/test/render';
 
 import { ErrorBoundary } from './ErrorBoundary';
 
-const ThrowError: React.FC = () => {
+function ThrowError(): never {
   throw new Error('Test error');
-};
+}
 
-describe('ErrorBoundary Component', () => {
+describe('ErrorBoundary', () => {
   beforeAll(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -17,7 +15,7 @@ describe('ErrorBoundary Component', () => {
     vi.restoreAllMocks();
   });
 
-  it('renders children without error', () => {
+  it('shows its children while nothing throws', () => {
     render(
       <ErrorBoundary fallback={<p>Fallback</p>}>
         <div>Child Component</div>
@@ -26,7 +24,7 @@ describe('ErrorBoundary Component', () => {
     expect(screen.getByText('Child Component')).toBeInTheDocument();
   });
 
-  it('catches error and displays fallback UI', () => {
+  it('shows the fallback once a child throws', () => {
     render(
       <ErrorBoundary fallback={<p>Fallback</p>}>
         <ThrowError />
@@ -36,7 +34,7 @@ describe('ErrorBoundary Component', () => {
     expect(screen.getByText('Fallback')).toBeInTheDocument();
   });
 
-  it('renders children again once resetKey changes', () => {
+  it('shows the children again once the reset key changes', () => {
     let shouldThrow = true;
     const MaybeThrow = () => {
       if (shouldThrow) throw new Error('Test error');

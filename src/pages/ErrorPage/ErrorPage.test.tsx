@@ -1,4 +1,4 @@
-import { render, screen } from '@/tests/setup';
+import { render, screen } from '~/test/render';
 
 import { ErrorPage } from './ErrorPage';
 

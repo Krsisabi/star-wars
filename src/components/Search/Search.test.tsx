@@ -1,21 +1,12 @@
-import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
 
 import { Search } from '~/components/Search';
+import { currentLocation, render, screen } from '~/test/render';
 import { STORAGE_KEYS } from '~/utils/storage';
-import { BackButton, LocationProbe } from '@/tests/router';
 
-const renderSearch = (entries: string[]) =>
-  render(
-    <MemoryRouter initialEntries={entries} initialIndex={entries.length - 1}>
-      <Search />
-      <LocationProbe />
-      <BackButton />
-    </MemoryRouter>
-  );
+const renderSearch = (history: string[]) => render(<Search />, { history });
 
-describe('Search Component', () => {
+describe('Search', () => {
   afterEach(() => {
     localStorage.clear();
   });
@@ -27,9 +18,7 @@ describe('Search Component', () => {
     await user.type(screen.getByRole('textbox'), '  luke  ');
     await user.click(screen.getByRole('button', { name: 'Search' }));
 
-    expect(screen.getByTestId('location')).toHaveTextContent(
-      '/?search=luke&page=1'
-    );
+    expect(currentLocation()).toHaveTextContent('/?search=luke&page=1');
     expect(localStorage.getItem(STORAGE_KEYS.searchValue)).toBe('"luke"');
     expect(screen.getByRole('textbox')).toHaveValue('luke');
   });
@@ -41,7 +30,7 @@ describe('Search Component', () => {
     await user.clear(screen.getByRole('textbox'));
     await user.click(screen.getByRole('button', { name: 'Search' }));
 
-    expect(screen.getByTestId('location')).toHaveTextContent('/?page=1');
+    expect(currentLocation()).toHaveTextContent('/?page=1');
     expect(localStorage.getItem(STORAGE_KEYS.searchValue)).toBe('""');
   });
 
