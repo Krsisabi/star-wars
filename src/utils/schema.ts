@@ -6,7 +6,10 @@ import { IMAGE_TYPES, MAX_FILE_SIZE } from '~/constants/constants';
 export const schema = object({
   name: string()
     .required('Name is required')
-    .matches(/^[A-Z]/, { message: 'First letter must be in uppercase' }),
+    .matches(/^[A-Z]/, {
+      message: 'First letter must be in uppercase',
+      excludeEmptyString: true,
+    }),
   age: number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .required('Age is required')
@@ -20,15 +23,16 @@ export const schema = object({
       'Country must be a valid country'
     ),
   image: mixed<FileList>()
-    .transform((value: FileList) => (value[0] ? value : undefined))
+    // an untouched <input type="file"> still yields a nameless File
+    .transform((value: FileList) => (value?.[0]?.name ? value : undefined))
     .required('Image is required')
     .test('File type', 'Image must be .png or .jpeg', (value: FileList) =>
-      IMAGE_TYPES.includes(value[0]?.type)
+      IMAGE_TYPES.includes(value?.[0]?.type)
     )
     .test(
       'File size',
       'Image size must be less than 1mb',
-      (value: FileList) => value[0]?.size < MAX_FILE_SIZE
+      (value: FileList) => (value?.[0]?.size ?? 0) < MAX_FILE_SIZE
     ),
   email: string()
     .required('Email is required')

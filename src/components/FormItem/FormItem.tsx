@@ -17,7 +17,6 @@ const FormItem = ({ form, isHighlighted }: FormThumbnailProps) => (
     <div className={styles.text}>Gender: {form.gender}</div>
     <div className={styles.text}>Age: {form.age}</div>
     <div className={styles.text}>Country: {form.country}</div>
-    <div className={styles.text}>Password: {form.password}</div>
   </li>
 );
 

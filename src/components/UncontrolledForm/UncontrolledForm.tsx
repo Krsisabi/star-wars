@@ -147,15 +147,15 @@ export const UncontrolledForm = () => {
           <label>Gender:</label>
           <div className={styles.genderList}>
             <label className={styles.genderItem}>
-              <input type="radio" name="gender" />
+              <input type="radio" name="gender" value="male" />
               &nbsp;Male
             </label>
             <label className={styles.genderItem}>
-              <input type="radio" name="gender" />
+              <input type="radio" name="gender" value="female" />
               &nbsp;Female
             </label>
             <label className={styles.genderItem}>
-              <input type="radio" name="gender" />
+              <input type="radio" name="gender" value="other" />
               &nbsp;Other
             </label>
           </div>
