@@ -74,9 +74,8 @@ export const ControlledForm = () => {
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <div className={styles.formItemWrapper}>
           <div className={styles.formItem}>
-            {' '}
             <label htmlFor="name">Name:</label>
-            <input type="text" {...register('name')} />
+            <input type="text" id="name" {...register('name')} />
           </div>
           {errors.name && (
             <span className={styles.error}>{errors.name.message}</span>
@@ -85,9 +84,8 @@ export const ControlledForm = () => {
 
         <div className={styles.formItemWrapper}>
           <div className={styles.formItem}>
-            {' '}
             <label htmlFor="age">Age:</label>
-            <input type="number" {...register('age')} />
+            <input type="number" id="age" {...register('age')} />
           </div>
           {errors.age && (
             <span className={styles.error}>{errors.age.message}</span>
@@ -97,7 +95,7 @@ export const ControlledForm = () => {
         <div className={styles.formItemWrapper}>
           <div className={styles.formItem}>
             <label htmlFor="email">Email:</label>
-            <input type="text" {...register('email')} />
+            <input type="text" id="email" {...register('email')} />
           </div>
           {errors.email && (
             <span className={styles.error}>{errors.email.message}</span>
@@ -107,7 +105,7 @@ export const ControlledForm = () => {
         <div className={styles.formItemWrapper}>
           <div className={styles.formItem}>
             <label htmlFor="password">Password:</label>
-            <input type="password" {...register('password')} />
+            <input type="password" id="password" {...register('password')} />
           </div>
           {errors.password && (
             <div className={styles.error}>{errors.password.message}</div>
@@ -117,7 +115,11 @@ export const ControlledForm = () => {
         <div className={styles.formItemWrapper}>
           <div className={styles.formItem}>
             <label htmlFor="passwordConfirm">Confirm Password:</label>
-            <input type="password" {...register('passwordConfirm')} />
+            <input
+              type="password"
+              id="passwordConfirm"
+              {...register('passwordConfirm')}
+            />
           </div>
           {errors.passwordConfirm && (
             <span className={styles.error}>
