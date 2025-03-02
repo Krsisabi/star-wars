@@ -1,5 +1,7 @@
 # Star Wars — character explorer
 
+[![CI](https://github.com/Krsisabi/star-wars/actions/workflows/ci.yml/badge.svg)](https://github.com/Krsisabi/star-wars/actions/workflows/ci.yml)
+
 A single-page app for browsing Star Wars characters from [SWAPI](https://swapi.dev):
 search, pagination, a details panel, multi-select with CSV export, and a light/dark theme.
 
