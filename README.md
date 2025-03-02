@@ -11,7 +11,7 @@ search, pagination, a details panel, multi-select with CSV export, and a light/d
 
 - **Search** by character name, with the query kept in the URL and restored from local storage
 - **Pagination** with sibling/ellipsis logic, also reflected in the URL — any page is a shareable link
-- **Details panel** opened as a nested route (`/details/:id`), closes on click outside
+- **Details panel** opened as a nested route (`/details/:id`), closes on a click outside or Escape
 - **Multi-select** across pages, with a flyout showing the current selection
 - **CSV export** of the selected characters, built with native browser APIs only (`Blob`, `URL.createObjectURL`) — no third-party packages
 - **Light/dark theme** via Context API, persisted between visits
@@ -36,17 +36,25 @@ npm run lint       # eslint
 
 ```
 src/
-  components/   presentational components, each with its styles and tests
-  pages/        route-level components (Home, NotFound)
-  store/        Redux store, RTK Query api slice, selected-characters slice
-  hooks/        useLocalStorage, usePagination, useTheme, typed redux hooks
-  context/      theme context and provider
-  styles/       global styles and reset
-tests/          test setup, shared providers, mock data
+  App.tsx           routes; routes.ts holds their paths
+  AppProviders.tsx  error boundary, theme and store, shared by the app and its tests
+  components/       components with their styles and tests: shared ones (Button, Icon,
+                    Avatar, StatusPage) and the parts of the page (List, Details, ...)
+  pages/            route-level screens: Home, NotFound, ErrorPage
+  store/            store factory, RTK Query API slice, selection slice
+  hooks/            typed redux hooks, the search in the address, links that keep it,
+                    closing the details panel, the theme
+  context/          theme context and provider
+  utils/            plain functions: character facts, pagination, CSV, storage
+  styles/           global styles, the sky, shared Sass mixins
+  data/, assets/    portrait links and the sky's pictures, made by scripts/
+  test/             test setup, a render helper with a router and a store, mock data
+scripts/            generators for src/data and src/assets
 ```
 
 Data fetching and caching go through RTK Query; the selected characters live in a
-regular slice, so selection survives navigation between pages and routes.
+regular slice, so selection survives navigation between pages and routes. Every
+test gets a store of its own from the same factory the app uses.
 
 ## Branches
 
