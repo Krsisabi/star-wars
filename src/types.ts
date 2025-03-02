@@ -24,6 +24,6 @@ export type Character = {
   url: string;
 };
 
-export type CharacterNormilized = Character & {
+export type CharacterNormalized = Character & {
   id: number;
 };

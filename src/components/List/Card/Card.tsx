@@ -1,7 +1,7 @@
 import { ChangeEvent, MouseEvent } from 'react';
 import { generatePath, useNavigate, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
-import { CharacterNormilized } from '~/types';
+import { CharacterNormalized } from '~/types';
 import styles from './Card.module.scss';
 
 const localDate = new Intl.DateTimeFormat('en-GB', {
@@ -11,10 +11,10 @@ const localDate = new Intl.DateTimeFormat('en-GB', {
 });
 
 type CardProps = {
-  character: CharacterNormilized;
+  character: CharacterNormalized;
   activeElement?: string;
   setActiveElement?: React.Dispatch<React.SetStateAction<string>>;
-  onSelect: (character: CharacterNormilized) => void;
+  onSelect: (character: CharacterNormalized) => void;
   isSelected: boolean;
 };
 

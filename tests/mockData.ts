@@ -1,6 +1,6 @@
-import { CharacterNormilized } from '~/types';
+import { CharacterNormalized } from '~/types';
 
-const mockData: CharacterNormilized[] = [
+const mockData: CharacterNormalized[] = [
   {
     id: 1,
     name: 'Luke Skywalker',

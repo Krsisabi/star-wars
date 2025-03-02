@@ -2,12 +2,12 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
 import { useAppDispatch, useAppSelector } from '~/hooks/redux';
 import { toggleChecked } from '~/store/charactersSlice';
-import { CharacterNormilized } from '~/types';
+import { CharacterNormalized } from '~/types';
 import { Card } from './Card';
 import styles from './List.module.scss';
 
 type ListProps = {
-  data?: CharacterNormilized[];
+  data?: CharacterNormalized[];
   activeElement?: string;
   setActiveElement?: React.Dispatch<React.SetStateAction<string>>;
   error?: FetchBaseQueryError | SerializedError;
@@ -30,7 +30,7 @@ export function List({
   const isCharacterSelected = (id: number) =>
     selectedCharacters.some((character) => character.id === id);
 
-  const onSelect = (character: CharacterNormilized) => {
+  const onSelect = (character: CharacterNormalized) => {
     dispatch(toggleChecked(character));
   };
 
