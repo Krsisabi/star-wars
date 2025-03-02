@@ -63,10 +63,11 @@ $looks-from: 15.5rem;
     }
 
     grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
     grid-template-areas:
       'avatar title title'
-      'meta meta select';
+      'avatar summary summary'
+      'stats stats select';
     column-gap: 10px;
     row-gap: 6px;
   }
@@ -85,29 +86,26 @@ $looks-from: 15.5rem;
 
 .avatar {
   grid-area: avatar;
+  align-self: center;
+  width: auto;
+  aspect-ratio: 1;
 
   @container (height >= #{$full-from}) {
     grid-column: 1 / -1;
     justify-self: center;
-    align-self: center;
-    width: auto;
-    height: clamp(3rem, 100% - 1rem, 8rem);
-    aspect-ratio: 1;
+    height: clamp(3rem, 85% - 1rem, 7rem);
     margin-top: -16px;
     font-size: clamp(1rem, (100cqh - 12.5rem) / 3, 2.5rem);
   }
 
   @container (#{$row-below} <= height < #{$full-from}) {
-    width: 32px;
-    height: 32px;
-    font-size: 0.75rem;
+    height: 100%;
+    font-size: 1rem;
   }
 
   @container (height < #{$row-below}) {
-    align-self: center;
-    width: 40px;
-    height: 40px;
-    font-size: 0.875rem;
+    height: clamp(40px, min(100cqh - 32px, 17cqw), 96px);
+    font-size: clamp(0.875rem, min(100cqh - 32px, 17cqw) / 3, 2rem);
   }
 }
 
@@ -154,8 +152,8 @@ $looks-from: 15.5rem;
     flex-shrink: 0;
   }
 
-  @container (height < #{$full-from}) {
-    gap: 4px;
+  @container (#{$row-below} <= height < #{$full-from}) {
+    display: contents;
   }
 
   @container (height < #{$row-below}) {
@@ -170,6 +168,7 @@ $looks-from: 15.5rem;
 }
 
 .summary {
+  grid-area: summary;
   min-height: 1lh;
   margin-top: -6px;
   color: var(--muted-color);
@@ -210,6 +209,7 @@ $looks-from: 15.5rem;
 }
 
 .stats {
+  grid-area: stats;
   margin-top: auto;
   padding-top: 12px;
   display: grid;

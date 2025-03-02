@@ -7,6 +7,8 @@ $two-row-bar: '(max-width: 1279px)';
 
 $control-height: 46px;
 
+$frost-rim-color: rgb(var(--frost-rim) / var(--frost-rim-alpha));
+
 @mixin visually-hidden {
   position: absolute;
   width: 1px;
@@ -130,8 +132,8 @@ $control-height: 46px;
       linear-gradient(var(--body), var(--body)) padding-box,
       radial-gradient(
           $rim at var(--mx, -999px) var(--my, -999px),
-          rgb(var(--frost-rim) / var(--lit)),
-          rgb(var(--frost-rim) / var(--lit)),
+          rgb(var(--frost-rim) / calc(var(--frost-rim-alpha) * var(--lit))),
+          rgb(var(--frost-rim) / calc(var(--frost-rim-alpha) * var(--lit))),
           rgb(255 255 255 / calc(0.3 * var(--lit))),
           transparent 70%
         )
@@ -169,10 +171,10 @@ $control-height: 46px;
 
 @mixin frost-current {
   --body: var(--frost-current);
-  --edge: rgb(var(--frost-rim));
+  --edge: #{$frost-rim-color};
   --body-wait: 0s;
 
-  border-color: rgb(var(--frost-rim));
+  border-color: $frost-rim-color;
   box-shadow: var(--frost-glow-current);
 }
 
@@ -188,7 +190,7 @@ $control-height: 46px;
       border-radius: $radius;
       background: radial-gradient(
           circle $reach at var(--mx, -999px) var(--my, -999px),
-          rgb(var(--frost-rim)),
+          $frost-rim-color,
           rgb(var(--frost-rim) / 0)
         )
         fixed border-box;

@@ -21,6 +21,7 @@
   --frost-current: #fff;
   --frost-edge: rgb(255 255 255 / 70%);
   --frost-rim: 88 86 214;
+  --frost-rim-alpha: 1;
   --frost-spot: 255 255 255;
   --frost-spot-alpha: 0;
   --frost-glow-hover: 0 0 14px rgb(88 86 214 / 35%);
@@ -40,12 +41,14 @@
   --box-shadow-color: rgba(255, 255, 255, 0.7);
   --skeleton-shine: rgb(255 255 255 / 10%);
 
+  --frost-border: color-mix(in srgb, var(--border-color) 10%, transparent);
   --frost-rest: rgb(36 36 36 / 32%);
   --frost-hover: rgb(50 50 50 / 85%);
   --frost-current: rgb(36 36 36 / 85%);
   --frost-edge: transparent;
-  --frost-rim: 255 92 178;
-  --frost-spot-alpha: 0.15;
+  --frost-rim: 255 255 255;
+  --frost-rim-alpha: 0.7;
+  --frost-spot-alpha: 0.1;
   --frost-glow-hover: 0 0 12px rgb(255 255 255 / 35%);
   --frost-glow-current: 0 0 20px rgb(255 255 255 / 70%);
   --glass-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.8);

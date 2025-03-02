@@ -1,13 +1,16 @@
 @use '../../styles/mixins' as *;
 
+$card-least: 220px;
+$gap: 16px;
+
 .list {
   --card-height: clamp(14rem, calc((100dvh - 16rem) / 2), 24rem);
-  --gap: 16px;
+  --gap: #{$gap};
 
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
-    minmax(max(220px, (100% - 4 * var(--gap)) / 5), 1fr)
+    minmax(max($card-least, (100% - 4 * var(--gap)) / 5), 1fr)
   );
   align-content: start;
   gap: var(--gap);
@@ -49,6 +52,12 @@
 
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
+    }
+
+    @container (width >= #{5 * $card-least + 4 * $gap}) {
+      --rows: 2;
+
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
   }
 }

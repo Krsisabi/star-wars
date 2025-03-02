@@ -21,6 +21,8 @@
   margin-top: 1rem;
   font-weight: bold;
   color: rgb(var(--frost-rim));
+  text-decoration: underline color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 0.2em;
 
   @include focus-ring;
 }
