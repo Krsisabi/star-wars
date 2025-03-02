@@ -100,7 +100,9 @@ $frost-rim-color: rgb(var(--frost-rim) / var(--frost-rim-alpha));
   --body: #{$body};
   --edge: var(--frost-edge);
   --rim-wait: 0s;
+  --rim-ease: var(--frost-lead);
   --body-wait: var(--frost-body-wait);
+  --body-ease: var(--frost-trail);
 
   border-color: var(--frost-border);
   background:
@@ -110,9 +112,9 @@ $frost-rim-color: rgb(var(--frost-rim) / var(--frost-rim-alpha));
   backdrop-filter: $blur;
   transition: list.join(
     (
-      --lit 0.2s var(--rim-wait),
-      --spot 0.2s var(--rim-wait),
-      --body var(--frost-body-time) var(--body-wait),
+      --lit var(--frost-rim-time) var(--rim-ease) var(--rim-wait),
+      --spot 0.2s ease-out,
+      --body var(--frost-body-time) var(--body-ease) var(--body-wait),
       --edge 0.3s,
       border-color 0.3s,
       box-shadow 0.3s
@@ -142,14 +144,7 @@ $frost-rim-color: rgb(var(--frost-rim) / var(--frost-rim-alpha));
   }
 }
 
-@mixin frost-take-turns {
-  --frost-body-time: 0.15s;
-  --frost-rim-wait: 0.15s;
-  --frost-body-wait: 0.2s;
-}
-
 @mixin frost-button($rim: 80px) {
-  @include frost-take-turns;
   @include frost($rim, $body: transparent, $blur: none);
 }
 
@@ -164,7 +159,9 @@ $frost-rim-color: rgb(var(--frost-rim) / var(--frost-rim-alpha));
   --lit: #{$lit};
   --spot: 1;
   --rim-wait: var(--frost-rim-wait);
+  --rim-ease: var(--frost-trail);
   --body-wait: 0s;
+  --body-ease: var(--frost-lead);
 
   box-shadow: var(--frost-glow-hover);
 }

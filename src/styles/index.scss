@@ -27,7 +27,12 @@
   --frost-glow-hover: 0 0 14px rgb(88 86 214 / 35%);
   --frost-glow-current: 0 0 20px rgb(88 86 214 / 55%);
   --glass-shadow: 0 12px 32px -12px rgba(30, 50, 90, 0.35);
-  @include frost-take-turns;
+  --frost-body-time: 0.15s;
+  --frost-rim-time: 0.2s;
+  --frost-rim-wait: 0.15s;
+  --frost-body-wait: 0.2s;
+  --frost-lead: ease;
+  --frost-trail: ease;
 
   font-family: var(--font-family);
 }
@@ -53,8 +58,11 @@
   --frost-glow-current: 0 0 20px rgb(255 255 255 / 70%);
   --glass-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.8);
   --frost-body-time: 0.3s;
+  --frost-rim-time: 0.3s;
   --frost-rim-wait: 0s;
   --frost-body-wait: 0s;
+  --frost-lead: ease-out;
+  --frost-trail: ease-in;
 }
 
 @property --lit {
