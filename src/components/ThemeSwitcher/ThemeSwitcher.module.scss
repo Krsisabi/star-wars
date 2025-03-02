@@ -12,7 +12,7 @@ $sunset: #e8492a;
 
   @include round($control-height);
 
-  @include frost(
+  @include frost-apart(
     $also: (
       color 0.8s ease,
       transform 0.05s,

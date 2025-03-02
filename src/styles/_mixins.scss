@@ -144,6 +144,17 @@ $frost-rim-color: rgb(var(--frost-rim) / var(--frost-rim-alpha));
   }
 }
 
+@mixin frost-apart($args...) {
+  @include frost(
+    $body: color-mix(in srgb, var(--background-color) 50%, transparent),
+    $args...
+  );
+
+  :global([data-theme='dark']) & {
+    --frost-border: color-mix(in srgb, var(--border-color) 18%, transparent);
+  }
+}
+
 @mixin frost-button($rim: 80px) {
   @include frost($rim, $body: transparent, $blur: none);
 }
