@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '~/store';
 import FormItem from '../FormItem/FormItem';
 import { useEffect, useState } from 'react';
+import { HIGHLIGHT_DURATION } from '~/constants/constants';
 
 export const Home = () => {
   const forms = useSelector((state: RootState) => state.form.forms);
@@ -15,7 +16,7 @@ export const Home = () => {
 
       const timer = setTimeout(() => {
         setHighlightedId(null);
-      }, 2000);
+      }, HIGHLIGHT_DURATION);
 
       return () => clearTimeout(timer);
     }

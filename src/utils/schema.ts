@@ -1,7 +1,7 @@
 import { boolean, number, object, ref, string, mixed } from 'yup';
 import type { InferType, ValidationError } from 'yup';
 import { countries } from '~/data/countries.ts';
-import { IMAGE_TYPES, MAX_FILE_SIZE } from '~/constansts/constants';
+import { IMAGE_TYPES, MAX_FILE_SIZE } from '~/constants/constants';
 
 export const schema = object({
   name: string()

@@ -22,14 +22,10 @@ export type Country = {
 
 export interface FormState {
   forms: FormValues[];
-  formData: FormValues | null;
-  formImage: string | null;
   countries: Country[];
 }
 
 const initialState: FormState = {
-  formData: null,
-  formImage: null,
   countries,
   forms: [],
 };
@@ -41,20 +37,10 @@ const formSlice = createSlice({
     addFormData: (state, action: PayloadAction<FormValues>) => {
       state.forms.push(action.payload);
     },
-    setFormImage: (state, action: PayloadAction<{ image: string | null }>) => {
-      state.formImage = action.payload.image;
-    },
-    setCountries: (state, action: PayloadAction<Country[]>) => {
-      state.countries = action.payload;
-    },
   },
 });
 
-export const { addFormData, setFormImage, setCountries } = formSlice.actions;
-export const selectFormData = (state: { form: FormState }) =>
-  state.form.formData;
-export const selectFormImage = (state: { form: FormState }) =>
-  state.form.formImage;
+export const { addFormData } = formSlice.actions;
 export const selectCountries = (state: { form: FormState }) =>
   state.form.countries;
 export default formSlice.reducer;
