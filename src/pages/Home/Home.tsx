@@ -9,6 +9,7 @@ import { Header } from '~/components/Header';
 import { List, ListSkeleton } from '~/components/List';
 import { Pagination } from '~/components/Pagination';
 import { useSearchQuery } from '~/hooks/useSearchQuery';
+import { MissingPage } from '~/pages/MissingPage';
 import { ROUTES } from '~/routes';
 import { useGetCharactersQuery } from '~/store/api/apiSlice';
 
@@ -27,6 +28,10 @@ export function Home() {
 
   if (restoreTo !== null) {
     return <Navigate to={{ search: restoreTo }} replace />;
+  }
+
+  if (error && 'status' in error && error.status === 404) {
+    return <MissingPage page={page} />;
   }
 
   return (

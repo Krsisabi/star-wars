@@ -5,7 +5,7 @@ export function ErrorPage() {
     <StatusPage
       title="Oops!"
       text="Sorry, an unexpected error has occurred."
-      homeLink="Back to characters"
+      linkText="Back to characters"
     />
   );
 }
