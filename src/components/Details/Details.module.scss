@@ -156,16 +156,6 @@ $band-from: 36.25rem;
   }
 }
 
-// The portrait's circle until the data comes, in the character's tint,
-// as the portrait's own circle is while its picture loads.
-.avatarPlaceholder {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-
-  @include skeleton(color-mix(in srgb, var(--tone) 16%, transparent));
-}
-
 // Centred in the band, which starts 24px above its grid row: the portrait
 // grows with the band, keeping a margin that grows too, up to the width
 // the picture is fetched at.
@@ -201,41 +191,6 @@ $band-from: 36.25rem;
 .close {
   flex: none;
   align-self: start;
-  display: grid;
-  place-content: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid transparent;
-  border-radius: 50%;
-  padding: 0;
-  color: var(--text-color);
-  cursor: pointer;
-
-  @include frost-button;
-
-  @media (hover: hover) {
-    &:hover {
-      @include frost-hover;
-    }
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--text-color);
-    outline-offset: 2px;
-  }
-}
-
-.closeIcon {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
 }
 
 .section {
@@ -244,11 +199,9 @@ $band-from: 36.25rem;
 }
 
 .sectionTitle {
-  font-size: 0.75rem;
+  @include caption(0.08em);
+
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted-color);
 }
 
 // Big numbers: height and mass, and how often the character appears.
@@ -266,10 +219,7 @@ $band-from: 36.25rem;
   }
 
   dt {
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted-color);
+    @include caption;
   }
 
   dd {
@@ -277,9 +227,8 @@ $band-from: 36.25rem;
     font-size: 1.75rem;
     font-weight: 600;
     line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+    @include truncate;
   }
 }
 

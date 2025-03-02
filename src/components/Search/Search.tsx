@@ -1,6 +1,7 @@
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 
+import { Icon } from '~/components/Icon';
 import { useSearchQuery } from '~/hooks/useSearchQuery';
 
 import styles from './Search.module.scss';
@@ -27,15 +28,7 @@ export function Search() {
     <form className={styles.search} onSubmit={handleSubmit} role="search">
       {/* The label makes the icon a part of the field: a click on it focuses the input. */}
       <label className={styles.field}>
-        <svg
-          className={styles.icon}
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <circle cx="10.5" cy="10.5" r="6.5" />
-          <path d="M15.5 15.5 20 20" />
-        </svg>
+        <Icon name="search" className={styles.icon} />
         <input
           className={styles.textField}
           value={draft}

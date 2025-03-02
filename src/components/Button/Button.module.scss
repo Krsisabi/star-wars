@@ -1,0 +1,76 @@
+@use '../../styles/mixins' as *;
+
+.button {
+  border: 1px solid transparent;
+  color: var(--text-color);
+  cursor: pointer;
+
+  @include frost-button;
+
+  @media (hover: hover) {
+    &:hover {
+      @include frost-hover;
+    }
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  @include focus-ring;
+}
+
+// A word on it; on a phone, where the bar has room only for icons, a
+// circle with the icon.
+.text {
+  border-radius: 8px;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+
+  @include frost-text-button;
+
+  .icon {
+    display: none;
+  }
+
+  @media #{$phone} {
+    @include round(36px);
+
+    .label {
+      @include visually-hidden;
+    }
+
+    .icon {
+      display: block;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.round {
+  @include round(40px);
+
+  .label {
+    @include visually-hidden;
+  }
+}
+
+// Glass like the other buttons, in the colour of an error: a red word, a
+// red line round it, and a red rim at the cursor. The word is mixed with
+// the text's colour, darker by day and lighter by night, so it reads on
+// the white body as well as on the dark one. At night the faint layer
+// under the see-through body is red rather than white: a red glass.
+.danger {
+  --frost-rim: 251 44 54;
+  --frost-border: color-mix(in srgb, var(--error-color) 45%, transparent);
+  --frost-glow-hover: 0 0 14px rgb(251 44 54 / 40%);
+
+  color: color-mix(in srgb, var(--error-color) 80%, var(--text-color));
+
+  :global([data-theme='dark']) & {
+    --edge: rgb(251 44 54 / 22%);
+  }
+}

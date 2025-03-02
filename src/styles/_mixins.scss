@@ -6,6 +6,10 @@
 $phone: '(max-width: 767px), (max-height: 500px)';
 $not-phone: '(min-width: 768px) and (min-height: 501px)';
 
+// The height of the controls in the header: the search field and the
+// theme switch. The content below starts under them.
+$control-height: 46px;
+
 // Out of sight, still read by screen readers: the global .visually-hidden
 // for elements styled inside a module.
 @mixin visually-hidden {
@@ -17,6 +21,33 @@ $not-phone: '(min-width: 768px) and (min-height: 501px)';
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+}
+
+// The ring the keyboard's focus draws, the same on every control.
+@mixin focus-outline($offset: 2px) {
+  outline: 2px solid var(--text-color);
+  outline-offset: $offset;
+}
+
+@mixin focus-ring($offset: 2px) {
+  &:focus-visible {
+    @include focus-outline($offset);
+  }
+}
+
+// A small label in capitals over a value: a stat, a count, a section.
+@mixin caption($spacing: 0.06em) {
+  font-size: 0.75rem;
+  letter-spacing: $spacing;
+  text-transform: uppercase;
+  color: var(--muted-color);
+}
+
+// One line, cut with an ellipsis where it does not fit.
+@mixin truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // A character's own tint, made from the --hue its component sets
@@ -224,29 +255,12 @@ $not-phone: '(min-width: 768px) and (min-height: 501px)';
   }
 }
 
-// A labelled button that shows only its icon, as a circle. The label
-// stays for screen readers, so the button keeps its name. The module
-// hides .icon by default.
-@mixin icon-only($size) {
+// A round control with its content in the middle.
+@mixin round($size) {
   display: grid;
   place-content: center;
   width: $size;
   height: $size;
   padding: 0;
   border-radius: 50%;
-
-  .label {
-    @include visually-hidden;
-  }
-
-  .icon {
-    display: block;
-    width: 18px;
-    height: 18px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
 }

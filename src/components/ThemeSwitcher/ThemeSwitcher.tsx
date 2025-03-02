@@ -44,12 +44,7 @@ export const ThemeSwitcher = () => {
         setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
       }}
     >
-      <svg
-        className={styles.icon}
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
+      <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true">
         <defs>
           <clipPath id={`${id}-sky`}>
             <rect width="24" height="17" />

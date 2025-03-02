@@ -1,6 +1,5 @@
+import { Button } from '~/components/Button';
 import type { CharacterNormalized } from '~/types';
-
-import styles from './ExportCSV.module.scss';
 
 type ExportCSV = {
   data: CharacterNormalized[];
@@ -48,21 +47,5 @@ export function ExportCSV({ data, fileName }: ExportCSV) {
     URL.revokeObjectURL(url);
   };
 
-  return (
-    <button
-      type="button"
-      className={styles.buttonDownload}
-      onClick={downloadCSV}
-    >
-      <svg
-        className={styles.icon}
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path d="M12 3v12M7 10l5 5 5-5M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      </svg>
-      <span className={styles.label}>Download</span>
-    </button>
-  );
+  return <Button icon="download" label="Download" onClick={downloadCSV} />;
 }

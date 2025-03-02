@@ -53,6 +53,14 @@ describe('Avatar', () => {
     expect(circleIn(container)).not.toHaveAttribute('data-loading');
   });
 
+  it('waits as a skeleton until the character is known', () => {
+    const { container } = render(<Avatar id={1} />);
+
+    expect(portraitIn(container)).toBeNull();
+    expect(circleIn(container)).toBeEmptyDOMElement();
+    expect(circleIn(container)).toHaveAttribute('data-loading');
+  });
+
   it('shows only the monogram for a character without a portrait', () => {
     const { container } = render(<Avatar id={9999} name="Nobody" />);
 

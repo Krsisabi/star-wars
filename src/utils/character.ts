@@ -9,6 +9,24 @@ export const isKnown = (value: string) => !UNKNOWN.has(value);
 export const withUnit = (value: string, unit: string) =>
   /^[\d.,]+$/.test(value) ? `${value} ${unit}` : value;
 
+type Fact = {
+  label: string;
+  value: (character: Character) => string;
+};
+
+// Height and mass, with a unit where SWAPI gives a number.
+export const MEASURES: Fact[] = [
+  { label: 'Height', value: ({ height }) => withUnit(height, 'cm') },
+  { label: 'Mass', value: ({ mass }) => withUnit(mass, 'kg') },
+];
+
+// Hair, skin and eyes, in SWAPI's own words.
+export const LOOKS: Fact[] = [
+  { label: 'Hair', value: ({ hair_color }) => hair_color },
+  { label: 'Skin', value: ({ skin_color }) => skin_color },
+  { label: 'Eyes', value: ({ eye_color }) => eye_color },
+];
+
 // "male · 19BBY". Droids have no gender, some characters no birth year.
 export const summary = ({ gender, birth_year }: Character) =>
   [gender, birth_year].filter(isKnown).join(' · ');

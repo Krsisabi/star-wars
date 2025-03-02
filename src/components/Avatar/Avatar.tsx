@@ -8,7 +8,8 @@ import styles from './Avatar.module.scss';
 
 type AvatarProps = {
   id: number;
-  name: string;
+  // Not known yet while the character loads: the circle waits as a skeleton.
+  name?: string;
   size?: 'medium' | 'large';
   className?: string;
 };
@@ -26,8 +27,9 @@ export function Avatar({ id, name, size = 'medium', className }: AvatarProps) {
   const [loaded, setLoaded] = useState<string>();
   const [failed, setFailed] = useState<string>();
   const portraitRef = useRef<HTMLImageElement>(null);
-  const hasPortrait = Boolean(src) && src !== failed;
-  const loading = hasPortrait && src !== loaded;
+  const known = name !== undefined;
+  const hasPortrait = known && Boolean(src) && src !== failed;
+  const loading = !known || (hasPortrait && src !== loaded);
 
   // A picture already in the browser's cache is complete the moment its
   // element is made. It is shown before the first paint, with no fade:
@@ -58,7 +60,7 @@ export function Avatar({ id, name, size = 'medium', className }: AvatarProps) {
           onError={() => setFailed(src)}
         />
       ) : (
-        initials(name)
+        known && initials(name)
       )}
     </span>
   );

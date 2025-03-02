@@ -21,36 +21,4 @@
       margin-right: auto;
     }
   }
-
-  .icon {
-    display: none;
-  }
-
-  .buttonDelete {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.5em 1em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    color: var(--text-color);
-    cursor: pointer;
-
-    @include frost-button;
-    @include frost-text-button;
-
-    @media (hover: hover) {
-      &:hover {
-        @include frost-hover;
-      }
-    }
-
-    &:active {
-      transform: scale(0.98);
-    }
-
-    @media #{$phone} {
-      @include icon-only(36px);
-    }
-  }
 }

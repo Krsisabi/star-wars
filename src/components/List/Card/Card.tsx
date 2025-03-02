@@ -4,7 +4,13 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Avatar } from '~/components/Avatar';
 import { Swatches } from '~/components/Swatches';
 import type { CharacterNormalized } from '~/types';
-import { isKnown, summary, toneStyle, withUnit } from '~/utils/character';
+import {
+  isKnown,
+  LOOKS,
+  MEASURES,
+  summary,
+  toneStyle,
+} from '~/utils/character';
 
 import styles from './Card.module.scss';
 
@@ -23,14 +29,13 @@ export function Card({
 }: CardProps) {
   const [searchParams] = useSearchParams();
 
-  const { id, name, height, mass } = character;
+  const { id, name } = character;
   const facts = summary(character);
   // "blond hair, fair skin, blue eyes", without the parts SWAPI lacks.
-  const looks = [
-    ['hair', character.hair_color],
-    ['skin', character.skin_color],
-    ['eyes', character.eye_color],
-  ].filter(([, value]) => isKnown(value));
+  const looks = LOOKS.map(({ label, value }) => [
+    label.toLowerCase(),
+    value(character),
+  ]).filter(([, value]) => isKnown(value));
 
   // A second click on the open card closes it; the query stays either way.
   const query = searchParams.toString();
@@ -70,14 +75,12 @@ export function Card({
             ))}
           </p>
           <dl className={styles.stats}>
-            <div className={styles.stat}>
-              <dt>Height</dt>
-              <dd>{withUnit(height, 'cm')}</dd>
-            </div>
-            <div className={styles.stat}>
-              <dt>Mass</dt>
-              <dd>{withUnit(mass, 'kg')}</dd>
-            </div>
+            {MEASURES.map(({ label, value }) => (
+              <div key={label} className={styles.stat}>
+                <dt>{label}</dt>
+                <dd>{value(character)}</dd>
+              </div>
+            ))}
           </dl>
         </div>
         <label

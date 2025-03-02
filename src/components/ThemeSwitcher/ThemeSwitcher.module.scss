@@ -10,15 +10,11 @@ $sunset: #e8492a;
 
 .switcher {
   flex: none;
-  display: grid;
-  place-content: center;
-  width: 46px;
-  height: 46px;
-  padding: 0;
   border: 1px solid transparent;
-  border-radius: 50%;
   color: var(--text-color);
   cursor: pointer;
+
+  @include round($control-height);
 
   // The colour changes at the page background's pace, so the icon changes
   // with the sky.
@@ -39,10 +35,7 @@ $sunset: #e8492a;
     transform: scale(0.96);
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--text-color);
-    outline-offset: 2px;
-  }
+  @include focus-ring;
 
   &[data-state='light'] {
     --glow: #ffb36b;
@@ -265,25 +258,16 @@ $sunset: #e8492a;
 }
 
 // Two names for one curve: a changed name is what restarts the animation.
-@keyframes dusk {
-  0%,
-  100% {
-    opacity: 0;
-  }
+@each $name in dusk, dawn {
+  @keyframes #{$name} {
+    0%,
+    100% {
+      opacity: 0;
+    }
 
-  45% {
-    opacity: 1;
-  }
-}
-
-@keyframes dawn {
-  0%,
-  100% {
-    opacity: 0;
-  }
-
-  45% {
-    opacity: 1;
+    45% {
+      opacity: 1;
+    }
   }
 }
 

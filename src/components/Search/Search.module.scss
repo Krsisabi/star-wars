@@ -44,18 +44,13 @@
 
 .icon {
   flex: none;
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
 }
 
 .textField {
   flex: 1;
   min-width: 0;
-  height: 44px;
+  // The field's border adds the rest of the control's height.
+  height: $control-height - 2px;
   border: none;
   font-family: inherit;
   font-size: 16px;
@@ -91,8 +86,5 @@
     background-color: color-mix(in srgb, var(--text-color) 14%, transparent);
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--text-color);
-    outline-offset: -4px;
-  }
+  @include focus-ring(-4px);
 }

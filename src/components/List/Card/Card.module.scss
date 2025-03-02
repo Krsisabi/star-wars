@@ -1,5 +1,10 @@
 @use '../../../styles/mixins' as *;
 
+// The heights at which a card changes its layout, see .body.
+$full-from: 13.5rem;
+$row-below: 9.5rem;
+$looks-from: 15.5rem;
+
 // The card is a container for its own content: the layout follows the
 // height the list gives it, from a full card down to a phone row.
 .card {
@@ -31,9 +36,7 @@
 
   &:has(.link:focus-visible) {
     @include frost-current;
-
-    outline: 2px solid var(--text-color);
-    outline-offset: 2px;
+    @include focus-outline;
   }
 }
 
@@ -68,7 +71,7 @@
 
   // Less room: a small portrait moves into the name's line, and the
   // checkbox goes down beside height and mass to leave the name the width.
-  @container (height < 13.5rem) {
+  @container (height < #{$full-from}) {
     &::before {
       display: none;
     }
@@ -83,7 +86,7 @@
   }
 
   // A row: monogram, the name over one line of facts, the checkbox.
-  @container (height < 9.5rem) {
+  @container (height < #{$row-below}) {
     padding: 0 12px;
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-rows: 1fr 1fr;
@@ -100,7 +103,7 @@
 
   // Centred in the band, which starts 16px above its grid row: the
   // portrait grows with the band, keeping a margin that grows too.
-  @container (height >= 13.5rem) {
+  @container (height >= #{$full-from}) {
     grid-column: 1 / -1;
     justify-self: center;
     align-self: center;
@@ -111,13 +114,13 @@
     font-size: clamp(1rem, (100cqh - 12.5rem) / 3, 2.5rem);
   }
 
-  @container (9.5rem <= height < 13.5rem) {
+  @container (#{$row-below} <= height < #{$full-from}) {
     width: 32px;
     height: 32px;
     font-size: 0.75rem;
   }
 
-  @container (height < 9.5rem) {
+  @container (height < #{$row-below}) {
     align-self: center;
     width: 40px;
     height: 40px;
@@ -129,9 +132,7 @@
 .title,
 .summary,
 .stat dd {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  @include truncate;
 }
 
 .title {
@@ -139,12 +140,12 @@
   font-size: 1.25rem;
   line-height: 1.3;
 
-  @container (height < 13.5rem) {
+  @container (height < #{$full-from}) {
     align-self: center;
     font-size: 1.125rem;
   }
 
-  @container (height < 9.5rem) {
+  @container (height < #{$row-below}) {
     align-self: end;
     font-size: 1.0625rem;
   }
@@ -173,11 +174,11 @@
     flex-shrink: 0;
   }
 
-  @container (height < 13.5rem) {
+  @container (height < #{$full-from}) {
     gap: 4px;
   }
 
-  @container (height < 9.5rem) {
+  @container (height < #{$row-below}) {
     align-self: start;
     flex-direction: row;
     gap: 0;
@@ -193,11 +194,11 @@
   margin-top: -6px;
   color: var(--muted-color);
 
-  @container (height < 13.5rem) {
+  @container (height < #{$full-from}) {
     margin-top: 0;
   }
 
-  @container (height < 9.5rem) {
+  @container (height < #{$row-below}) {
     flex: none;
     color: inherit;
   }
@@ -218,7 +219,7 @@
   line-height: var(--line);
   color: var(--muted-color);
 
-  @container (height < 15.5rem) {
+  @container (height < #{$looks-from}) {
     display: none;
   }
 }
@@ -239,11 +240,11 @@
   gap: 12px;
   border-top: 1px solid color-mix(in srgb, var(--border-color) 15%, transparent);
 
-  @container (height < 13.5rem) {
+  @container (height < #{$full-from}) {
     padding-top: 6px;
   }
 
-  @container (height < 9.5rem) {
+  @container (height < #{$row-below}) {
     margin: 0;
     padding: 0;
     display: flex;
@@ -256,10 +257,7 @@
   min-width: 0;
 
   dt {
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted-color);
+    @include caption;
   }
 
   dd {
@@ -267,16 +265,11 @@
     font-weight: 600;
   }
 
-  @container (height < 9.5rem) {
+  @container (height < #{$row-below}) {
     flex: none;
 
     dt {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
+      @include visually-hidden;
     }
 
     dd {
@@ -308,12 +301,12 @@
     box-shadow: 0 0 10px var(--box-shadow-color);
   }
 
-  @container (height < 13.5rem) {
+  @container (height < #{$full-from}) {
     align-self: end;
     margin: 0 -10px -10px 0;
   }
 
-  @container (height < 9.5rem) {
+  @container (height < #{$row-below}) {
     align-self: center;
     margin: 0 -10px 0 0;
   }
@@ -331,6 +324,8 @@
   background-color: var(--background-color);
   cursor: pointer;
   transition: box-shadow 0.25s;
+
+  @include focus-ring;
 
   &::before {
     content: '';
@@ -350,10 +345,5 @@
     &::before {
       transform: scale(1);
     }
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--text-color);
-    outline-offset: 2px;
   }
 }
