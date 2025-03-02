@@ -1,6 +1,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { addFormData, selectCountries } from '~/store/formReducer';
 import { FormValues } from '~/store/formReducer';
 import { schema } from '~/utils/schema';
@@ -37,31 +38,9 @@ export const ControlledForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({
-    resolver: async (data: FormValues) => {
-      try {
-        await schema.validate(data, { abortEarly: false });
-        return {
-          values: data,
-          errors: {},
-        };
-      } catch (error) {
-        const validationErrors = error as IValidationErrors;
-        return {
-          values: {} as FormValues,
-          errors: validationErrors.inner.reduce(
-            (
-              acc: Record<keyof FormValues, string>,
-              error: IValidationError
-            ) => {
-              acc[error.path as keyof FormValues] = error.message;
-              return acc;
-            },
-            {} as Record<keyof FormValues, string>
-          ),
-        };
-      }
-    },
+  } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(schema),
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
@@ -131,7 +110,7 @@ export const ControlledForm = () => {
             <input type="password" {...register('password')} />
           </div>
           {errors.password && (
-            <span className={styles.error}>{errors.password.message}</span>
+            <div className={styles.error}>{errors.password.message}</div>
           )}
         </div>
 
