@@ -1,0 +1,45 @@
+// A phone either way up: narrow, or too low for the list and the details
+// side by side (a phone on its side is 800-odd wide and under 450 high).
+// Everything a phone lays out its own way asks this one query.
+$phone: '(max-width: 767px), (max-height: 500px)';
+$not-phone: '(min-width: 768px) and (min-height: 501px)';
+
+// Out of sight, still read by screen readers: the global .visually-hidden
+// for elements styled inside a module.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// A labelled button that shows only its icon, as a circle. The label
+// stays for screen readers, so the button keeps its name. The module
+// hides .icon by default.
+@mixin icon-only($size) {
+  display: grid;
+  place-content: center;
+  width: $size;
+  height: $size;
+  padding: 0;
+  border-radius: 50%;
+
+  .label {
+    @include visually-hidden;
+  }
+
+  .icon {
+    display: block;
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}

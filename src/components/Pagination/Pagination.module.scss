@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as *;
+
 .paginationContainer {
   list-style-type: none;
   padding: 0;
@@ -16,13 +18,21 @@
     align-items: center;
     justify-content: center;
     border: 1px solid var(--border-color);
-    // A circle: the padding only matters for a two-digit page.
-    height: 40px;
-    min-width: 40px;
+    // A circle: the padding only matters for a two-digit page. On a phone
+    // it shares the row with the error button. Wider, the pages sit centred
+    // between two equal sides of the bar, and at the full size the side
+    // has room for the button only from 800px, see Home.
+    height: 36px;
+    min-width: 36px;
     padding: 0 8px;
     border-radius: 32px;
 
-    @media (min-width: 767px) {
+    @media #{$not-phone} {
+      height: 40px;
+      min-width: 40px;
+    }
+
+    @media (min-width: 800px) and (min-height: 501px) {
       height: 48px;
       min-width: 48px;
     }

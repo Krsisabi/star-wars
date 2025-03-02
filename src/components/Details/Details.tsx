@@ -106,60 +106,65 @@ export function Details() {
   );
 
   return (
-    <aside
-      className={styles.details}
-      ref={detailsRef}
-      aria-labelledby="details-title"
-      aria-busy={!character && !error}
-    >
-      <header className={styles.header}>
-        {character ? (
-          <Avatar id={Number(id)} name={character.name} size="large" />
-        ) : (
-          <span className={styles.avatarPlaceholder} />
-        )}
-        <div className={styles.heading}>
-          <h2 id="details-title" className={styles.title}>
-            {title}
-          </h2>
-          {character && <p className={styles.summary}>{summary(character)}</p>}
-        </div>
-        <button
-          type="button"
-          className={styles.close}
-          onClick={closeHandler}
-          aria-label="Close details"
-        >
-          {/* A drawn cross: the × glyph sits wherever the font puts it. */}
-          <svg
-            className={styles.closeIcon}
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
+    <>
+      <div className={styles.backdrop} />
+      <aside
+        className={styles.details}
+        ref={detailsRef}
+        aria-labelledby="details-title"
+        aria-busy={!character && !error}
+      >
+        <header className={styles.header}>
+          {character ? (
+            <Avatar id={Number(id)} name={character.name} size="large" />
+          ) : (
+            <span className={styles.avatarPlaceholder} />
+          )}
+          <div className={styles.heading}>
+            <h2 id="details-title" className={styles.title}>
+              {title}
+            </h2>
+            {character && (
+              <p className={styles.summary}>{summary(character)}</p>
+            )}
+          </div>
+          <button
+            type="button"
+            className={styles.close}
+            onClick={closeHandler}
+            aria-label="Close details"
           >
-            <path d="M7 7l10 10M17 7 7 17" />
-          </svg>
-        </button>
-      </header>
-      {error ? (
-        <p>Something went wrong...</p>
-      ) : (
-        <>
-          {renderFields(STATS, styles.tiles)}
-          <section className={styles.section} aria-labelledby="appearance">
-            <h3 id="appearance" className={styles.sectionTitle}>
-              Appearance
-            </h3>
-            {renderFields(APPEARANCE, styles.rows)}
-          </section>
-          <section className={styles.section} aria-labelledby="appears-in">
-            <h3 id="appears-in" className={styles.sectionTitle}>
-              Appears in
-            </h3>
-            {renderFields(APPEARS_IN, styles.counts)}
-          </section>
-        </>
-      )}
-    </aside>
+            {/* A drawn cross: the × glyph sits wherever the font puts it. */}
+            <svg
+              className={styles.closeIcon}
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path d="M7 7l10 10M17 7 7 17" />
+            </svg>
+          </button>
+        </header>
+        {error ? (
+          <p>Something went wrong...</p>
+        ) : (
+          <>
+            {renderFields(STATS, styles.tiles)}
+            <section className={styles.section} aria-labelledby="appearance">
+              <h3 id="appearance" className={styles.sectionTitle}>
+                Appearance
+              </h3>
+              {renderFields(APPEARANCE, styles.rows)}
+            </section>
+            <section className={styles.section} aria-labelledby="appears-in">
+              <h3 id="appears-in" className={styles.sectionTitle}>
+                Appears in
+              </h3>
+              {renderFields(APPEARS_IN, styles.counts)}
+            </section>
+          </>
+        )}
+      </aside>
+    </>
   );
 }

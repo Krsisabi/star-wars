@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as *;
+
 // Stands still between the header and the bottom bar while the list
 // scrolls beside it; a long card scrolls inside.
 .details {
@@ -18,25 +20,54 @@
   box-shadow: 0 0 15px var(--box-shadow-color);
   animation: slide-in 0.25s ease-out;
 
-  // No room beside the list on a phone: the card takes the screen.
-  @media (max-width: 767px) {
+  // No room beside the list on a phone: the card comes up from the bottom
+  // as a sheet as tall as its content, over the dimmed list.
+  @media #{$phone} {
     position: fixed;
-    inset: 0;
-    // align-self: start would shrink a fixed box to its content.
-    align-self: stretch;
+    inset: auto 0 0;
     z-index: 20;
+    // A phone on its side is wide: the sheet keeps to the middle.
+    max-width: 36rem;
+    margin-inline: auto;
     height: auto;
+    max-height: calc(100dvh - 3rem);
     min-height: 0;
     gap: 24px;
-    padding: 16px 16px 32px;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    animation-name: slide-up;
+    padding: 20px 16px calc(24px + env(safe-area-inset-bottom));
+    border-width: 1px 0 0;
+    border-radius: 20px 20px 0 0;
+    animation: sheet-up 0.3s ease-out;
   }
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
+  }
+}
+
+// The dim behind the sheet. A tap on it lands inside the list's wrapper
+// and closes the card like any click on the list; elsewhere it is not shown.
+.backdrop {
+  display: none;
+
+  @media #{$phone} {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-tap-highlight-color: transparent;
+    animation: fade-in 0.3s ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+// While the sheet is up, the page under it stays still.
+:global(html):has(.backdrop) {
+  @media #{$phone} {
+    overflow: hidden;
   }
 }
 
@@ -47,10 +78,15 @@
   }
 }
 
-@keyframes slide-up {
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(24px);
   }
 }
 

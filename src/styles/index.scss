@@ -31,18 +31,25 @@
   --glass-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.8);
 }
 
-// The gutter is kept even without a scrollbar, so the page does not
-// shift sideways when the content grows past the viewport.
 // The day sky lives on the root; the night sky is a layer above it
 // that fades in, so a theme change is a dusk rather than a cut.
 html {
   min-height: 100%;
-  scrollbar-gutter: stable;
   // A transparent track lets the sky run under the scrollbar too.
   scrollbar-color: color-mix(in srgb, var(--text-color) 30%, transparent)
     transparent;
   background: linear-gradient(180deg, #c9dcf5 0%, #e4edf9 45%, #f8efe4 100%)
     fixed;
+
+  // Where the page can scroll, the gutter is kept even without a scrollbar,
+  // so nothing shifts sideways when the scrollbar comes and goes: below
+  // 1280px the list takes three rows and the bar a second one, below 704px
+  // two rows of cards at their minimum height do not fit. Elsewhere nothing
+  // scrolls, and a kept gutter is only an empty strip down the right edge:
+  // Chrome paints it itself, the sky does not run under it.
+  @media (max-width: 1279px), (max-height: 703px) {
+    scrollbar-gutter: stable;
+  }
 }
 
 body {

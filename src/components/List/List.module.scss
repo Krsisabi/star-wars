@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as *;
+
 .list {
   // Two rows of cards fill the screen between the header and the bar;
   // the height depends on the window, never on how many cards came.
@@ -19,11 +21,12 @@
     opacity: 0.5;
   }
 
-  @media (max-width: 767px) {
+  // Rows on a phone; two side by side where it is wide enough, on its side.
+  @media #{$phone} {
     --card-height: 4.5rem;
     --gap: 8px;
 
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
   }
 }
 
@@ -36,7 +39,7 @@
 // More columns only where the window is tall enough for the cards to stay
 // cards (9.5rem + border each, see Card): 4 rows need 898px, 3 need 728px.
 .fit {
-  @media (min-width: 768px) {
+  @media #{$not-phone} {
     --card-height: auto;
     --rows: 5;
 

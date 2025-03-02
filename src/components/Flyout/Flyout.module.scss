@@ -1,12 +1,29 @@
+@use '../../styles/mixins' as *;
+
 .flyout {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 12px;
 
+  // One line on a phone: the count, and the buttons at the far end,
+  // over the error button.
+  @media #{$phone} {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
   .count {
     font-weight: 500;
     white-space: nowrap;
+
+    @media #{$phone} {
+      margin-right: auto;
+    }
+  }
+
+  .icon {
+    display: none;
   }
 
   .buttonDelete {
@@ -32,6 +49,10 @@
 
     &:active {
       transform: scale(0.98);
+    }
+
+    @media #{$phone} {
+      @include icon-only(36px);
     }
   }
 }

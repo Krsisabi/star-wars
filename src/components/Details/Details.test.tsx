@@ -123,6 +123,18 @@ describe('Details', () => {
     expect(location()).toHaveTextContent('/?search=luke&page=2');
   });
 
+  it('closes on a tap on the dim behind the sheet', async () => {
+    queryState({ currentData: mockData[0] });
+    const user = userEvent.setup();
+
+    renderDetails();
+    // The dim has nothing to find it by: it comes right before the card.
+    const backdrop = screen.getByRole('complementary').previousElementSibling;
+    await user.click(backdrop!);
+
+    expect(location()).toHaveTextContent('/?search=luke&page=2');
+  });
+
   it('lets a link in the list do its own job', async () => {
     queryState({ currentData: mockData[0] });
     const user = userEvent.setup();

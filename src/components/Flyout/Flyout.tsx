@@ -24,7 +24,16 @@ export function Flyout() {
         className={styles.buttonDelete}
         onClick={handleUnselectAll}
       >
-        Unselect all
+        {/* A phone keeps the selection to one line: icons, no words. */}
+        <svg
+          className={styles.icon}
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M7 7l10 10M17 7 7 17" />
+        </svg>
+        <span className={styles.label}>Unselect all</span>
       </button>
       <ExportCSV
         data={selectedItems}
