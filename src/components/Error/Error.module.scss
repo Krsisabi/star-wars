@@ -4,4 +4,12 @@
   height: 100vh;
   background-color: var(--background-color);
   color: var(--text-color);
+
+  .link {
+    display: inline-block;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 1rem;
+  }
 }

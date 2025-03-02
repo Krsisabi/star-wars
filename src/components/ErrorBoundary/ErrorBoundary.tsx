@@ -3,6 +3,7 @@ import { Component, ErrorInfo, ReactNode } from 'react';
 type ErrorBoundaryProps = {
   fallback: ReactNode;
   children: ReactNode;
+  resetKey?: unknown;
 };
 
 interface ErrorBoundaryState {
@@ -24,6 +25,12 @@ export class ErrorBoundary extends Component<
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error(error, info.componentStack);
+  }
+
+  componentDidUpdate(prevProps: ErrorBoundaryProps) {
+    if (this.state.hasError && prevProps.resetKey !== this.props.resetKey) {
+      this.setState({ hasError: false });
+    }
   }
 
   render() {
