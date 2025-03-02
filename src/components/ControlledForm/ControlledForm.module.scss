@@ -1,0 +1,56 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 20px;
+}
+
+.title {
+  color: var(--primary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+
+.formItem {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.formItemWrapper {
+  height: 80px;
+}
+
+.genderList {
+  margin-top: 10px;
+}
+
+.genderItem {
+  &:not(:first-child) {
+    margin-left: 10px;
+  }
+}
+
+.error {
+  color: var(--error);
+  font-size: 14px;
+}
+
+.button {
+  margin: 0 60px 0 60px;
+  padding: 10px;
+  font-size: 20px;
+  border-radius: 8px;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
