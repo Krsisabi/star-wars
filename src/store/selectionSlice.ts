@@ -3,8 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import type { CharacterNormalized } from '~/types';
 
-// The characters picked for export. They are kept whole, not by id, so a
-// selection outlives the page they were picked on.
 const initialState: CharacterNormalized[] = [];
 
 export const selectionSlice = createSlice({

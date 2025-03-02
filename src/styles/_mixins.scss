@@ -1,17 +1,12 @@
 @use 'sass:list';
 
-// A phone either way up: narrow, or too low for the list and the details
-// side by side (a phone on its side is 800-odd wide and under 450 high).
-// Everything a phone lays out its own way asks this one query.
 $phone: '(max-width: 767px), (max-height: 500px)';
 $not-phone: '(min-width: 768px) and (min-height: 501px)';
 
-// The height of the controls in the header: the search field and the
-// theme switch. The content below starts under them.
+$two-row-bar: '(max-width: 1279px)';
+
 $control-height: 46px;
 
-// Out of sight, still read by screen readers: the global .visually-hidden
-// for elements styled inside a module.
 @mixin visually-hidden {
   position: absolute;
   width: 1px;
@@ -23,7 +18,6 @@ $control-height: 46px;
   border: 0;
 }
 
-// The ring the keyboard's focus draws, the same on every control.
 @mixin focus-outline($offset: 2px) {
   outline: 2px solid var(--text-color);
   outline-offset: $offset;
@@ -35,7 +29,6 @@ $control-height: 46px;
   }
 }
 
-// A small label in capitals over a value: a stat, a count, a section.
 @mixin caption($spacing: 0.06em) {
   font-size: 0.75rem;
   letter-spacing: $spacing;
@@ -43,22 +36,16 @@ $control-height: 46px;
   color: var(--muted-color);
 }
 
-// One line, cut with an ellipsis where it does not fit.
 @mixin truncate {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-// A character's own tint, made from the --hue its component sets
-// (toneStyle in utils/character.ts). Declared on each element that sets
-// --hue: made on the root, it would read no hue at all.
 @mixin character-tone {
   --tone: hsl(var(--hue) 70% 55%);
 }
 
-// The band a full card and the details panel open with: the character's
-// tint, strongest under the portrait, and a line along its foot.
 @mixin tone-band {
   border-bottom: 1px solid color-mix(in srgb, var(--tone) 30%, transparent);
   background: radial-gradient(
@@ -68,9 +55,6 @@ $control-height: 46px;
   );
 }
 
-// Something still loading: a shine runs across it over its own background,
-// or over $base when given. The shine is the theme's (index.scss); with
-// reduced motion it stands still, and the shape alone keeps the place.
 @mixin skeleton($base: null) {
   @if $base {
     background-color: $base;
@@ -104,22 +88,6 @@ $control-height: 46px;
   }
 }
 
-// Frosted glass, after variant 7 of the repo-explorer lab: a body over the
-// blurred sky, and a rim that lights up at the cursor. Under the body lies
-// a radial gradient at the cursor; the 1px border, a faint line in the
-// text's colour, lets it through as a lit edge, and a spot on top of the
-// body marks the cursor. Layers rather than a mask: a masked ring gave
-// steps on rounded corners.
-//
-// The cursor is one pair of variables on the root, --mx and --my, in
-// viewport coordinates (utils/pointerLight.ts), and the gradients that
-// read it are fixed to the viewport, so no element needs its own. Without
-// a mouse there is no rim at all, and no fixed layers to repaint on scroll.
-//
-// The colours are the theme's (index.scss); a component only says when a
-// surface is hovered or current. $rim is how far the rim's light reaches,
-// $also adds the component's own transitions. Include it after the
-// block's own declarations: it brings a nested rule.
 @mixin frost(
   $rim: 80px,
   $spot: 40px,
@@ -129,8 +97,6 @@ $control-height: 46px;
 ) {
   --body: #{$body};
   --edge: var(--frost-edge);
-  // Who waits for whom (index.scss): at rest, the body for the rim to go
-  // out; the hover and the current state set their own.
   --rim-wait: 0s;
   --body-wait: var(--frost-body-wait);
 
@@ -174,35 +140,23 @@ $control-height: 46px;
   }
 }
 
-// The rim lies under the body, and while the body is still clearing or
-// filling, the rim showed through it as a smudge that came and went. So
-// the two take turns: on hover the body fills first and the rim waits for
-// it; on leaving, the body waits for the rim to go out. The day theme
-// takes turns on every surface (index.scss).
 @mixin frost-take-turns {
   --frost-body-time: 0.15s;
   --frost-rim-wait: 0.15s;
   --frost-body-wait: 0.2s;
 }
 
-// A button that sits on a frosted surface already: no body of its own at
-// rest, and no second blur. With no body at rest, a rim that lit at once
-// flashed through it at night too, so a button takes turns in both themes.
 @mixin frost-button($rim: 80px) {
   @include frost-take-turns;
   @include frost($rim, $body: transparent, $blur: none);
 }
 
-// A button with a word on it: at night a faint white layer under its
-// see-through body, so the word reads as a button and not as a label, as
-// on meilisearch.com.
 @mixin frost-text-button {
   :global([data-theme='dark']) & {
     --edge: rgb(255 255 255 / 25%);
   }
 }
 
-// The rim lights up once the body has filled.
 @mixin frost-hover($lit: 1) {
   --body: var(--frost-hover);
   --lit: #{$lit};
@@ -213,7 +167,6 @@ $control-height: 46px;
   box-shadow: var(--frost-glow-hover);
 }
 
-// Selected, open or focused: lit all round, wherever the cursor is.
 @mixin frost-current {
   --body: var(--frost-current);
   --edge: rgb(var(--frost-rim));
@@ -223,11 +176,6 @@ $control-height: 46px;
   box-shadow: var(--frost-glow-current);
 }
 
-// Borders that feel the cursor from afar: the edges of the nearest cards
-// catch its light as it passes over the grid; only the border does, the
-// rest waits for the hover. A ring of its own, masked to the edge, since
-// the rim layer under a see-through body showed through it as a smudge.
-// Its colour fades over the whole reach, so an edge far off still shows.
 @mixin frost-reach($reach, $radius) {
   @media (hover: hover) {
     &::before {
@@ -255,7 +203,6 @@ $control-height: 46px;
   }
 }
 
-// A round control with its content in the middle.
 @mixin round($size) {
   display: grid;
   place-content: center;

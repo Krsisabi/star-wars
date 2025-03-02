@@ -3,6 +3,11 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react()],
+  css: {
+    preprocessorOptions: {
+      scss: { fatalDeprecations: ['mixed-decls'] },
+    },
+  },
   resolve: {
     alias: {
       '~': '/src',

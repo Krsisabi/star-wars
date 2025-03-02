@@ -1,4 +1,3 @@
-// One page of a SWAPI list, with the size of the whole list.
 export type Page<T> = {
   count: number;
   results: T[];

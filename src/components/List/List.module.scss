@@ -1,14 +1,10 @@
 @use '../../styles/mixins' as *;
 
 .list {
-  // Two rows of cards fill the screen between the header and the bar;
-  // the height depends on the window, never on how many cards came.
   --card-height: clamp(14rem, calc((100dvh - 16rem) / 2), 24rem);
   --gap: 16px;
 
   display: grid;
-  // A page is ten characters: at most five columns, so a wide screen
-  // shows two full rows instead of eight cards and a stray pair.
   grid-template-columns: repeat(
     auto-fill,
     minmax(max(220px, (100% - 4 * var(--gap)) / 5), 1fr)
@@ -21,7 +17,6 @@
     opacity: 0.5;
   }
 
-  // Rows on a phone; two side by side where it is wide enough, on its side.
   @media #{$phone} {
     --card-height: 4.5rem;
     --gap: 8px;
@@ -30,14 +25,6 @@
   }
 }
 
-// With the details panel open the list takes exactly the panel's height,
-// so the page does not scroll. The rows are counted for a full page of ten,
-// never for the cards that came, and each card picks the layout its
-// share of the height allows. A phone shows the panel over everything.
-//
-// Two columns by default: a card squeezed into a row needs the width.
-// More columns only where the window is tall enough for the cards to stay
-// cards (9.5rem + border each, see Card): 4 rows need 898px, 3 need 728px.
 .fit {
   @media #{$not-phone} {
     --card-height: auto;

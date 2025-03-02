@@ -4,11 +4,8 @@ import type { Character, CharacterNormalized, Page } from '~/types';
 
 const BASE_URL = 'https://swapi.dev/api/people/';
 
-// SWAPI serves ten characters a page.
 export const PAGE_SIZE = 10;
 
-// SWAPI gives a character no id of its own: it is the last part of the
-// character's url.
 const withId = (character: Character): CharacterNormalized => {
   const parts = character.url.split('/').filter(Boolean);
   return { ...character, id: parseInt(parts[parts.length - 1], 10) };

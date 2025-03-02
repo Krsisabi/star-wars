@@ -11,7 +11,6 @@ import { currentLocation, render, screen } from '~/test/render';
 import type { DetailsOutletContext } from './Details';
 import { Details } from './Details';
 
-// the component is tested on its own; the request itself belongs to apiSlice
 vi.mock('~/store/api/apiSlice', async (importOriginal) => ({
   ...(await importOriginal<typeof ApiSlice>()),
   useGetDetailsQuery: vi.fn(),
@@ -127,7 +126,6 @@ describe('Details', () => {
     const user = userEvent.setup();
 
     renderDetails();
-    // The dim has nothing to find it by: it comes right before the card.
     const backdrop = screen.getByRole('complementary').previousElementSibling;
     await user.click(backdrop!);
 

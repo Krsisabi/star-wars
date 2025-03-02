@@ -14,8 +14,6 @@ import { LOOKS, MEASURES, summary, toneStyle } from '~/utils/character';
 
 import styles from './Details.module.scss';
 
-// What the page around the panel hands it: the list's wrapper, where a
-// click closes the panel.
 export type DetailsOutletContext = {
   wrapperRef: RefObject<HTMLElement>;
 };
@@ -35,7 +33,6 @@ const APPEARANCE: Field[] = LOOKS.map(({ label, value }) => ({
   ),
 }));
 
-// The lists are links to other resources; their length needs no request.
 const APPEARS_IN: Field[] = [
   { label: 'Films', value: ({ films }) => films.length },
   { label: 'Starships', value: ({ starships }) => starships.length },
@@ -48,8 +45,6 @@ type FieldsProps = {
   className: string;
 };
 
-// Until the data comes, every value keeps its place with a placeholder
-// of the same height, so the panel does not grow when it arrives.
 function Fields({ fields, character, className }: FieldsProps) {
   return (
     <dl className={className}>
@@ -77,15 +72,12 @@ export function Details() {
   const navigate = useNavigate();
   const detailsRef = useRef<HTMLElement>(null);
 
-  // currentData, not data: while the next character loads, the previous
-  // one must not be shown under the new selection.
   const { currentData: character, error } = useGetDetailsQuery(id);
 
   const close = useCallback(() => {
     navigate(toPath(ROUTES.home), { replace: true });
   }, [navigate, toPath]);
 
-  // A click on the list closes the panel, as Escape does.
   useDismiss(close, { area: wrapperRef, except: detailsRef });
 
   const title = character?.name ?? (error ? 'Not available' : 'Loading...');

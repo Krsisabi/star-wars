@@ -14,24 +14,20 @@ type Fact = {
   value: (character: Character) => string;
 };
 
-// Height and mass, with a unit where SWAPI gives a number.
 export const MEASURES: Fact[] = [
   { label: 'Height', value: ({ height }) => withUnit(height, 'cm') },
   { label: 'Mass', value: ({ mass }) => withUnit(mass, 'kg') },
 ];
 
-// Hair, skin and eyes, in SWAPI's own words.
 export const LOOKS: Fact[] = [
   { label: 'Hair', value: ({ hair_color }) => hair_color },
   { label: 'Skin', value: ({ skin_color }) => skin_color },
   { label: 'Eyes', value: ({ eye_color }) => eye_color },
 ];
 
-// "male · 19BBY". Droids have no gender, some characters no birth year.
 export const summary = ({ gender, birth_year }: Character) =>
   [gender, birth_year].filter(isKnown).join(' · ');
 
-// "Luke Skywalker" → LS, "C-3PO" → C3, "R2-D2" → R2.
 export const initials = (name: string) => {
   const words = name.split(/\s+/).filter(Boolean);
   if (words.length > 1)
@@ -42,15 +38,13 @@ export const initials = (name: string) => {
     .toUpperCase();
 };
 
-// The golden angle spreads neighbouring ids far apart on the colour wheel.
-const hueOf = (id: number) => Math.round((id * 137.508) % 360);
+const GOLDEN_ANGLE = 137.508;
 
-// The character's tint for an element's style: --hue here, and --tone made
-// from it by the character-tone mixin (styles/_mixins.scss).
+const hueOf = (id: number) => Math.round((id * GOLDEN_ANGLE) % 360);
+
 export const toneStyle = (id: number) =>
   ({ '--hue': hueOf(id) }) as CSSProperties;
 
-// Every colour word SWAPI uses for hair, skin and eyes.
 const COLORS: Record<string, string> = {
   auburn: '#922724',
   black: '#1c1c1c',
@@ -77,8 +71,6 @@ const COLORS: Record<string, string> = {
   yellow: '#f0c93a',
 };
 
-// "white, blue" gives two swatches; "mottled green" and "green-tan"
-// fall back to the first word the table knows.
 export const swatches = (value: string) =>
   value
     .split(/,\s*/)

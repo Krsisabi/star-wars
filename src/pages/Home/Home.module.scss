@@ -1,26 +1,18 @@
 @use '../../styles/mixins' as *;
 
 .home {
-  // Pagination 48 + padding 24 + border 2, with a little to spare.
   --bar-height: 76px;
   --bar-gap: 16px;
-  // Room under the content: its bottom padding, the bar, the gap below.
-  // A list or a panel this much shorter than the window never scrolls it.
   --bar-space: calc(2rem + var(--bar-height) + var(--bar-gap));
-  // Where the content starts: header padding, search field, content padding.
   --content-top: calc(4rem + #{$control-height});
 
   min-height: 100vh;
   min-height: 100dvh;
   display: grid;
-  // minmax(0, …): no child can push the page wider than the screen.
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
 
-  // The bar takes a second row here once cards are selected, see below.
-  // The room is kept for it all the time: selecting a card never resizes
-  // the list beside the details.
-  @media (max-width: 1279px) {
+  @media #{$two-row-bar} {
     --bar-height: 132px;
   }
 
@@ -49,15 +41,11 @@
   }
 }
 
-// The list lays out its columns by the width it gets, not the window's.
 .listArea {
   min-width: 0;
   container-type: inline-size;
 }
 
-// One floating bar for everything at the bottom. It is glass, as every
-// surface is: whatever lies behind it, the sky or the list, shows through
-// blurred. The side columns are equal, so the pagination stays centred.
 .bar {
   position: sticky;
   bottom: var(--bar-gap);
@@ -78,11 +66,7 @@
 
   @include frost;
 
-  // Too narrow for all three in one row: the selection, when there is one,
-  // takes a row above. The bar grows upwards, so the pagination and the
-  // button in the bottom row never move; an empty selection takes no room.
-  // The selection needs about 370px beside the pagination: from 1280px.
-  @media (max-width: 1279px) {
+  @media #{$two-row-bar} {
     grid-template-areas:
       'selection selection selection'
       '. pages actions';
@@ -96,8 +80,6 @@
     }
   }
 
-  // A phone: the error button is an icon beside the pagination, and the
-  // selection is one line with its icons over it.
   @media #{$phone} {
     min-height: 0;
     margin: 0 8px var(--bar-gap);

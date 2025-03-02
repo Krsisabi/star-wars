@@ -5,26 +5,16 @@
 :root {
   color-scheme: light;
 
-  // Surfaces: cards, panels, buttons. The page itself is the sky below.
   --background-color: #fff;
   --text-color: #000;
   --muted-color: color-mix(in srgb, var(--text-color) 60%, transparent);
   --border-color: #000;
   --box-shadow-color: rgba(36, 36, 36, 0.7);
   --error-color: #fb2c36;
-  // The shine that runs across whatever is still loading (skeleton mixin).
   --skeleton-shine: rgb(255 255 255 / 60%);
   --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
-  // Frosted glass on every surface (the frost mixin). By day: a white body
-  // with a white edge, and an indigo rim; no spot at the cursor, since
-  // nothing shows on a white body, and a white body when hovered, since
-  // the rim's colour showed through a see-through one as a smudge.
   --frost-blur: 4px;
-  // A faint line in the text's colour round every surface, by day and by
-  // night: without it the glass ran together with the sky and with the
-  // card next to it. Set once here, it follows --border-color into the
-  // dark theme on the same element.
   --frost-border: color-mix(in srgb, var(--border-color) 25%, transparent);
   --frost-rest: rgb(255 255 255 / 32%);
   --frost-hover: #fff;
@@ -36,7 +26,6 @@
   --frost-glow-hover: 0 0 14px rgb(88 86 214 / 35%);
   --frost-glow-current: 0 0 20px rgb(88 86 214 / 55%);
   --glass-shadow: 0 12px 32px -12px rgba(30, 50, 90, 0.35);
-  // By day the body turns white before the rim lights up.
   @include frost-take-turns;
 
   font-family: var(--font-family);
@@ -51,7 +40,6 @@
   --box-shadow-color: rgba(255, 255, 255, 0.7);
   --skeleton-shine: rgb(255 255 255 / 10%);
 
-  // By night: a dark body, no edge at rest, a pink rim and a white spot.
   --frost-rest: rgb(36 36 36 / 32%);
   --frost-hover: rgb(50 50 50 / 85%);
   --frost-current: rgb(36 36 36 / 85%);
@@ -61,15 +49,11 @@
   --frost-glow-hover: 0 0 12px rgb(255 255 255 / 35%);
   --frost-glow-current: 0 0 20px rgb(255 255 255 / 70%);
   --glass-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.8);
-  // The rim is meant to show through a dark body, so nothing waits; a
-  // button with no body at rest still takes turns (frost-button).
   --frost-body-time: 0.3s;
   --frost-rim-wait: 0s;
   --frost-body-wait: 0s;
 }
 
-// The frost mixin animates these, and only a registered property can be
-// animated.
 @property --lit {
   syntax: '<number>';
   inherits: false;
@@ -94,20 +78,12 @@
   initial-value: transparent;
 }
 
-// The sky itself, day and night, is in _sky.scss.
 html {
   min-height: 100%;
-  // A transparent track lets the sky run under the scrollbar too.
   scrollbar-color: color-mix(in srgb, var(--text-color) 30%, transparent)
     transparent;
 
-  // Where the page can scroll, the gutter is kept even without a scrollbar,
-  // so nothing shifts sideways when the scrollbar comes and goes: below
-  // 1280px the list takes three rows and the bar a second one, below 704px
-  // two rows of cards at their minimum height do not fit. Elsewhere nothing
-  // scrolls, and a kept gutter is only an empty strip down the right edge:
-  // Chrome paints it itself, the sky does not run under it.
-  @media (max-width: 1279px), (max-height: 703px) {
+  @media #{$two-row-bar}, (max-height: 703px) {
     scrollbar-gutter: stable;
   }
 }

@@ -6,8 +6,6 @@
   align-items: center;
   gap: 8px 12px;
 
-  // One line on a phone: the count, and the buttons at the far end,
-  // over the error button.
   @media #{$phone} {
     flex-wrap: nowrap;
     gap: 8px;

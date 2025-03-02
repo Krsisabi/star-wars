@@ -5,7 +5,6 @@ import { useTheme } from '~/hooks/useTheme';
 
 import styles from './ThemeSwitcher.module.scss';
 
-// A 24×24 scene: the sun or the moon above a horizon at y = 17.
 const CENTER = { x: 12, y: 9.5 };
 
 const point = (angle: number, radius: number) =>
@@ -25,8 +24,6 @@ const sparkle = (x: number, y: number, size: number) =>
 
 export function ThemeSwitcher() {
   const { theme, toggleTheme } = useTheme();
-  // The sunset plays only after a click; on load the icon just shows
-  // where the day is, instead of replaying the last change.
   const [hasToggled, setHasToggled] = useState(false);
   const id = useId().replace(/:/g, '');
 

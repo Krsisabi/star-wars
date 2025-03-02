@@ -1,6 +1,4 @@
 // @vitest-environment node
-// Node's own fetch, Request and AbortSignal: under jsdom the request
-// is rejected before it reaches fetch, and there is nothing to inspect.
 
 import { makeStore } from '~/store/store';
 

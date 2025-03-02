@@ -53,6 +53,12 @@ describe('Avatar', () => {
     expect(circleIn(container)).not.toHaveAttribute('data-loading');
   });
 
+  it('keeps the referrer that Fandom asks of a portrait request', () => {
+    const { container } = render(<Avatar id={1} name="Luke Skywalker" />);
+
+    expect(portraitIn(container)).not.toHaveAttribute('referrerpolicy');
+  });
+
   it('waits as a skeleton until the character is known', () => {
     const { container } = render(<Avatar id={1} />);
 

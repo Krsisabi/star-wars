@@ -1,18 +1,3 @@
-// The sky behind the page. Its layers sit in index.html, outside the app:
-// they hold no state of their own, only follow the theme on <html>.
-//
-// Day: a gradient on the root with a soft light at the top centre, and two
-// strips of haze drifting right. Night: a layer over the day that fades in,
-// so a theme change is a dusk rather than a cut; stars in one tile at two
-// scales, two nebulae and a pink glow at the top centre. The glows are for
-// the glass: frosted surfaces blur them into colour.
-//
-// What moves only moves or fades whole layers, never repaints them: the
-// haze slides, a fifth of the stars twinkle in three groups, each group a
-// layer. Stars fading one by one inside the SVG made the browser repaint
-// the whole sky every frame. Hidden layers stand still, and with reduced
-// motion nothing moves at all.
-
 @mixin star-tile($file) {
   background:
     url('../assets/#{$file}') 0 0 / 480px 480px,
@@ -38,8 +23,6 @@ html {
   pointer-events: none;
 }
 
-// A strip repeats across and slides by exactly its own width, so the loop
-// has no seam.
 .sky-haze {
   position: absolute;
   top: 0;

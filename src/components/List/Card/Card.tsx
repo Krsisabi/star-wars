@@ -33,13 +33,11 @@ export function Card({
 
   const { id, name } = character;
   const facts = summary(character);
-  // "blond hair, fair skin, blue eyes", without the parts SWAPI lacks.
   const looks = LOOKS.map(({ label, value }) => [
     label.toLowerCase(),
     value(character),
   ]).filter(([, value]) => isKnown(value));
 
-  // A second click on the open card closes it.
   const to = toPath(isActive ? ROUTES.home : detailsPath(id));
 
   return (
@@ -60,8 +58,6 @@ export function Card({
           </Link>
         </h2>
         <div className={styles.meta}>
-          {/* Both lines stay when SWAPI has nothing for them, so the
-              names in a row of cards stand at one height. */}
           <p className={styles.summary}>{facts}</p>
           <p className={styles.looks}>
             {looks.map(([part, value], i) => (

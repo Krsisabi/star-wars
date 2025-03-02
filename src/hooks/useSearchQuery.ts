@@ -20,9 +20,6 @@ const firstPageOf = (term: string) => {
   return params;
 };
 
-// The address is the only source of truth for the search term and the page.
-// Local storage just remembers the last submitted term between visits: it is
-// written on submit and read only when the address has no search in it.
 export function useSearchQuery() {
   const [searchParams, setSearchParams] = useSearchParams();
 

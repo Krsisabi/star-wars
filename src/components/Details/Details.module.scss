@@ -1,13 +1,8 @@
 @use '../../styles/mixins' as *;
 
-// The portrait band at its least, and the panel height from which the band
-// and everything under it fit: 576px measured in Chrome, with a one-line
-// name, and a few pixels to spare.
 $band-least: 7rem;
 $band-from: 36.25rem;
 
-// Stands still between the header and the bottom bar while the list
-// scrolls beside it; a long card scrolls inside.
 .details {
   position: sticky;
   top: var(--content-top, 16px);
@@ -27,16 +22,10 @@ $band-from: 36.25rem;
 
   @include frost;
 
-  // Beside the list the panel is as tall as the window lets it be, and the
-  // header, knowing that height, gives the room over to the portrait.
   @media #{$not-phone} {
     container: details / size;
   }
 
-  // No room beside the list on a phone: the card comes up from the bottom
-  // as a sheet as tall as its content, over the dimmed list. There the
-  // glass lies over text, not over the sky, so it is the dense kind, and
-  // blurred as much as in variant 7: at 4px the rows showed through.
   @media #{$phone} {
     --body: var(--frost-current);
 
@@ -45,7 +34,6 @@ $band-from: 36.25rem;
     position: fixed;
     inset: auto 0 0;
     z-index: 20;
-    // A phone on its side is wide: the sheet keeps to the middle.
     max-width: 36rem;
     margin-inline: auto;
     height: auto;
@@ -63,8 +51,6 @@ $band-from: 36.25rem;
   }
 }
 
-// The dim behind the sheet. A tap on it lands inside the list's wrapper
-// and closes the card like any click on the list; elsewhere it is not shown.
 .backdrop {
   display: none;
 
@@ -83,7 +69,6 @@ $band-from: 36.25rem;
   }
 }
 
-// While the sheet is up, the page under it stays still.
 :global(html):has(.backdrop) {
   @media #{$phone} {
     overflow: hidden;
@@ -112,10 +97,6 @@ $band-from: 36.25rem;
 .header {
   @include character-tone;
 
-  // The header takes whatever height the panel has over its content, so
-  // no gap is left under the last line; a lower panel only centres the
-  // portrait and the name in it. On a phone the sheet is as tall as its
-  // content, and there is nothing to take.
   flex: 1 0 auto;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -123,10 +104,6 @@ $band-from: 36.25rem;
   align-items: center;
   gap: 16px;
 
-  // A panel with room to spare opens with a band in the character's tint,
-  // edge to edge, with the portrait in the middle, as a full card does:
-  // the picture, not a gap under the last line, takes the spare height.
-  // A lower panel keeps the portrait beside the name.
   @container details (height >= #{$band-from}) {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: minmax($band-least, 1fr) auto;
@@ -156,9 +133,6 @@ $band-from: 36.25rem;
   }
 }
 
-// Centred in the band, which starts 24px above its grid row: the portrait
-// grows with the band, keeping a margin that grows too, up to the width
-// the picture is fetched at.
 .portrait {
   @container details (height >= #{$band-from}) {
     grid-row: 1;
@@ -204,7 +178,6 @@ $band-from: 36.25rem;
   font-weight: 600;
 }
 
-// Big numbers: height and mass, and how often the character appears.
 .tiles,
 .counts {
   display: grid;
@@ -263,7 +236,6 @@ $band-from: 36.25rem;
   }
 }
 
-// Same line height as a value, so the panel keeps its size when data arrives.
 .placeholder {
   display: inline-block;
   width: 60%;

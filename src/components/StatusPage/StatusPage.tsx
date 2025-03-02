@@ -10,8 +10,6 @@ type StatusPageProps = {
   homeLink: string;
 };
 
-// A page with nothing but a message and the way back to the list: the
-// error screen and the page that does not exist.
 export function StatusPage({ title, text, homeLink }: StatusPageProps) {
   return (
     <main className={styles.page}>

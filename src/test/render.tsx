@@ -14,13 +14,9 @@ import { BackButton, LocationProbe } from './router';
 
 type Options = Omit<RenderOptions, 'wrapper'> & {
   store?: AppStore;
-  // The addresses visited so far, the current one last. With them come a
-  // probe that shows the address and a Back button.
   history?: string[];
 };
 
-// Renders inside a router and a store of its own, the store filled
-// beforehand where the test passes one.
 export function render(
   ui: ReactElement,
   { store = makeStore(), history, ...options }: Options = {}

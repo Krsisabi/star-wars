@@ -33,7 +33,6 @@ export function Pagination({
     <ul className={styles.paginationContainer}>
       {pages.map((page, i) => {
         if (page === DOTS) {
-          // Drawn dots: the … glyph sits on the baseline, below the centre.
           return (
             <li
               className={clsx(styles.paginationItem, styles.dots)}

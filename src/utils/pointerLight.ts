@@ -1,9 +1,3 @@
-// Where the mouse is, for the frosted glass: the rims light up around it
-// (the frost mixin in styles/_mixins.scss). One pair of variables on the
-// root, in viewport coordinates, rather than one per element: the
-// gradients that read them are fixed to the viewport. Written once a
-// frame at most, and taken away when the mouse leaves the page. A finger
-// has no hover to light anything with, so touch is ignored.
 export const trackPointerLight = (root = document.documentElement) => {
   let frame = 0;
   let x = 0;

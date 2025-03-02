@@ -34,6 +34,15 @@ describe('Search', () => {
     expect(localStorage.getItem(STORAGE_KEYS.searchValue)).toBe('""');
   });
 
+  it('focuses the field on a click on the magnifier', async () => {
+    const { container } = renderSearch(['/']);
+
+    const user = userEvent.setup();
+    await user.click(container.querySelector('svg')!);
+
+    expect(screen.getByRole('textbox')).toHaveFocus();
+  });
+
   it('shows the term from the address', () => {
     localStorage.setItem(STORAGE_KEYS.searchValue, JSON.stringify('yoda'));
     renderSearch(['/?search=luke&page=1']);

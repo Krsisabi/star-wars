@@ -16,7 +16,6 @@ type ListProps = {
   activeId?: string;
   error?: FetchBaseQueryError | SerializedError;
   isRefreshing?: boolean;
-  // Fit the list into the window height (the details panel is open).
   fit?: boolean;
 };
 
@@ -36,8 +35,6 @@ export function List({ data, activeId, error, isRefreshing, fit }: ListProps) {
     dispatch(toggleSelected(character));
   };
 
-  // While the next page loads, the current one stays in place, dimmed,
-  // instead of collapsing into a loader and jumping back.
   return (
     <ul
       className={clsx(styles.list, {

@@ -33,6 +33,16 @@ describe('ThemeSwitcher', () => {
     ).toBeInTheDocument();
   });
 
+  it('plays the sunset only after a click, not on load', async () => {
+    const user = userEvent.setup();
+
+    renderSwitcher();
+    expect(screen.getByRole('button')).not.toHaveAttribute('data-animated');
+
+    await user.click(screen.getByRole('button'));
+    expect(screen.getByRole('button')).toHaveAttribute('data-animated');
+  });
+
   it('switches the whole document and remembers the choice', async () => {
     const user = userEvent.setup();
 

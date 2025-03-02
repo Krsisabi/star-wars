@@ -1,7 +1,5 @@
 const SEPARATOR = ';';
 
-// A cell holding the separator, a quote or a line break goes in quotes,
-// with its own quotes doubled.
 const escapeCell = (value: string) =>
   /[";\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
 

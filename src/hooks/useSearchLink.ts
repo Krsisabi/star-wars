@@ -1,9 +1,6 @@
 import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-// Links that keep the search and the page in the address: to another
-// path, or to another page of the same list, which leaves an open details
-// panel open.
 export function useSearchLink() {
   const [searchParams] = useSearchParams();
 

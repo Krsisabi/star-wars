@@ -2,9 +2,8 @@ import { STORAGE_KEYS } from '~/utils/storage';
 
 import html from '../index.html?raw';
 
-// The inline script in index.html decides the theme before the bundle
-// loads. It is run here as the browser runs it.
-const script = html.match(/<script>([\s\S]*?)<\/script>/)![1];
+const page = new DOMParser().parseFromString(html, 'text/html');
+const script = page.querySelector('script:not([src])')!.textContent!;
 
 const root = document.documentElement;
 
@@ -40,5 +39,21 @@ describe('the theme script in index.html', () => {
   it('follows the system when the saved value is broken or unknown', () => {
     expect(themeFor({ saved: '{not json', systemDark: true })).toBe('dark');
     expect(themeFor({ saved: '"blue"', systemDark: true })).toBe('dark');
+  });
+});
+
+describe('the head of index.html', () => {
+  it('opens both kinds of connection to Fandom before the portraits are asked for', () => {
+    const preconnects = page.querySelectorAll(
+      'link[rel="preconnect"][href="https://static.wikia.nocookie.net"]'
+    );
+
+    expect(
+      [...preconnects].map((link) => link.hasAttribute('crossorigin'))
+    ).toEqual([false, true]);
+  });
+
+  it('keeps the referrer that Fandom asks of a portrait request', () => {
+    expect(page.querySelector('meta[name="referrer"]')).toBeNull();
   });
 });

@@ -1,12 +1,9 @@
 @use '../../../styles/mixins' as *;
 
-// The heights at which a card changes its layout, see .body.
 $full-from: 13.5rem;
 $row-below: 9.5rem;
 $looks-from: 15.5rem;
 
-// The card is a container for its own content: the layout follows the
-// height the list gives it, from a full card down to a phone row.
 .card {
   @include character-tone;
 
@@ -20,7 +17,6 @@ $looks-from: 15.5rem;
   user-select: none;
 
   @include frost(200px, 100px);
-  // The edges of the cards near the cursor catch its light from 220px.
   @include frost-reach(220px, 11px);
 
   @media (hover: hover) {
@@ -40,11 +36,6 @@ $looks-from: 15.5rem;
   }
 }
 
-// Each threshold is the height the next layout needs, measured in Chrome
-// with a few pixels to spare: a full card 241px with the appearance line
-// and 211 without, a card with a small portrait 145, a row 47. The full
-// card counts its portrait band at its least, 48px; the band takes any
-// height the card has over that.
 .body {
   height: 100%;
   padding: 16px;
@@ -57,9 +48,6 @@ $looks-from: 15.5rem;
     'meta meta';
   row-gap: 12px;
 
-  // A full card opens with a band in the character's tint, edge to edge,
-  // with the portrait in the middle: the picture, not a gap in the text,
-  // takes the room a tall card has to spare.
   &::before {
     content: '';
     grid-row: 1;
@@ -69,8 +57,6 @@ $looks-from: 15.5rem;
     @include tone-band;
   }
 
-  // Less room: a small portrait moves into the name's line, and the
-  // checkbox goes down beside height and mass to leave the name the width.
   @container (height < #{$full-from}) {
     &::before {
       display: none;
@@ -85,7 +71,6 @@ $looks-from: 15.5rem;
     row-gap: 6px;
   }
 
-  // A row: monogram, the name over one line of facts, the checkbox.
   @container (height < #{$row-below}) {
     padding: 0 12px;
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -101,8 +86,6 @@ $looks-from: 15.5rem;
 .avatar {
   grid-area: avatar;
 
-  // Centred in the band, which starts 16px above its grid row: the
-  // portrait grows with the band, keeping a margin that grows too.
   @container (height >= #{$full-from}) {
     grid-column: 1 / -1;
     justify-self: center;
@@ -128,7 +111,6 @@ $looks-from: 15.5rem;
   }
 }
 
-// One line per field keeps every card the same height.
 .title,
 .summary,
 .stat dd {
@@ -151,7 +133,6 @@ $looks-from: 15.5rem;
   }
 }
 
-// The name is the link; its overlay makes the whole card clickable.
 .link {
   outline: none;
 
@@ -169,7 +150,6 @@ $looks-from: 15.5rem;
   flex-direction: column;
   gap: 10px;
 
-  // Nothing here shrinks: a line that does not fit is removed whole.
   > * {
     flex-shrink: 0;
   }
@@ -204,8 +184,6 @@ $looks-from: 15.5rem;
   }
 }
 
-// Hair, skin and eyes: the middle of a tall card, the first to go.
-// One line only; the parts that wrap to a second one stay hidden.
 .looks {
   --line: 1.25rem;
 
@@ -231,7 +209,6 @@ $looks-from: 15.5rem;
   white-space: nowrap;
 }
 
-// Height and mass sit at the bottom, under a hairline.
 .stats {
   margin-top: auto;
   padding-top: 12px;
@@ -277,7 +254,6 @@ $looks-from: 15.5rem;
       font-weight: inherit;
     }
 
-    // The facts read as one line: "male · 19BBY · 172 cm · 77 kg".
     .summary:not(:empty) ~ .stats &:first-child dd::before,
     & + & dd::before {
       content: '·';
@@ -286,7 +262,6 @@ $looks-from: 15.5rem;
   }
 }
 
-// The label is wider than the box, so the checkbox is easy to hit.
 .select {
   grid-area: select;
   position: relative;

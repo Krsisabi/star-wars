@@ -12,9 +12,6 @@ type PageRangeOptions = {
 const range = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
-// The pages to offer: the first and the last, the current one with its
-// siblings, and dots for whatever lies between. The row keeps one length
-// wherever the current page is.
 export function pageRange({
   totalCount,
   pageSize,

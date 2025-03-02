@@ -8,7 +8,6 @@ type RouteErrorBoundaryProps = {
   children: ReactNode;
 };
 
-// The fallback gives way to the page again once the address changes.
 export function RouteErrorBoundary({
   fallback,
   children,

@@ -20,8 +20,6 @@
   @include focus-ring;
 }
 
-// A word on it; on a phone, where the bar has room only for icons, a
-// circle with the icon.
 .text {
   border-radius: 8px;
   padding: 0.5em 1em;
@@ -58,11 +56,6 @@
   }
 }
 
-// Glass like the other buttons, in the colour of an error: a red word, a
-// red line round it, and a red rim at the cursor. The word is mixed with
-// the text's colour, darker by day and lighter by night, so it reads on
-// the white body as well as on the dark one. At night the faint layer
-// under the see-through body is red rather than white: a red glass.
 .danger {
   --frost-rim: 251 44 54;
   --frost-border: color-mix(in srgb, var(--error-color) 45%, transparent);

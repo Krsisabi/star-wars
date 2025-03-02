@@ -5,8 +5,6 @@ export const STORAGE_KEYS = {
 
 type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];
 
-// Values are kept as JSON. What comes back is unknown: it may have been
-// written by an older version, or by hand, and the reader checks it.
 export const readStored = (key: StorageKey): unknown => {
   const item = window.localStorage.getItem(key);
   if (item === null) return undefined;

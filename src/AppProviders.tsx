@@ -11,8 +11,6 @@ type AppProvidersProps = {
   children: ReactNode;
 };
 
-// Everything the app runs inside but the router: the browser's in the
-// app, one in memory in tests.
 export function AppProviders({ store, children }: AppProvidersProps) {
   return (
     <RouteErrorBoundary fallback={<ErrorPage />}>

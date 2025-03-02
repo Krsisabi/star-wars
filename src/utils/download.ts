@@ -1,4 +1,3 @@
-// Hands the browser a file made on the page, as a download.
 export const downloadFile = (
   content: string,
   fileName: string,

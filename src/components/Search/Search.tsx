@@ -11,8 +11,6 @@ export function Search() {
   const [draft, setDraft] = useState(search);
   const [shownSearch, setShownSearch] = useState(search);
 
-  // The address can change without this form (Back, a shared link):
-  // the field follows it, so it never shows a term the list is not about.
   if (search !== shownSearch) {
     setShownSearch(search);
     setDraft(search);
@@ -26,7 +24,6 @@ export function Search() {
 
   return (
     <form className={styles.search} onSubmit={handleSubmit} role="search">
-      {/* The label makes the icon a part of the field: a click on it focuses the input. */}
       <label className={styles.field}>
         <Icon name="search" className={styles.icon} />
         <input

@@ -16,10 +16,6 @@
     align-items: center;
     justify-content: center;
     border: 1px solid transparent;
-    // A circle: the padding only matters for a two-digit page. On a phone
-    // it shares the row with the error button. Wider, the pages sit centred
-    // between two equal sides of the bar, and at the full size the side
-    // has room for the button only from 800px, see Home.
     height: 36px;
     min-width: 36px;
     padding: 0 8px;
@@ -37,8 +33,6 @@
       min-width: 48px;
     }
 
-    // A page button lights less than a card: it is small, and sits on the
-    // bar's glass.
     @media (hover: hover) {
       &:hover {
         @include frost-hover(0.45);
