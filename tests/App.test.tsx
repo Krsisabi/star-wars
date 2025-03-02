@@ -2,11 +2,13 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+
 import App from '~/App';
 import { RouteErrorBoundary } from '~/components/ErrorBoundary';
 import { ThemeProvider } from '~/context/theme-provider';
 import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
-import { store } from '~/store';
+import { store } from '~/store/store';
+
 import { LocationProbe } from './router';
 
 const renderApp = (url = '/') =>

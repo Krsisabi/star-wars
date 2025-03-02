@@ -1,2 +1,2 @@
-export { Home } from './Home';
 export type { DetailsOutletContext } from './Home';
+export { Home } from './Home';

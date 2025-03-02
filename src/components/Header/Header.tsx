@@ -1,6 +1,8 @@
 import { memo } from 'react';
-import { Search } from '../Search';
-import { ThemeSwitcher } from '../ThemeSwitcher';
+
+import { Search } from '~/components/Search';
+import { ThemeSwitcher } from '~/components/ThemeSwitcher';
+
 import styles from './Header.module.scss';
 
 export const Header = memo(function Header() {

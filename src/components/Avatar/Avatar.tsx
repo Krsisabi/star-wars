@@ -1,7 +1,9 @@
-import { useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import { useLayoutEffect, useRef, useState } from 'react';
+
 import { initials, toneStyle } from '~/utils/character';
 import { portraitOf } from '~/utils/portraits';
+
 import styles from './Avatar.module.scss';
 
 type AvatarProps = {

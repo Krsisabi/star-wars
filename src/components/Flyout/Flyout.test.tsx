@@ -1,9 +1,11 @@
 import { vi } from 'vitest';
-import { fireEvent, render, screen } from '@/tests/setup';
-import { mockData } from '@/tests/mockData';
-import { Flyout } from './Flyout';
-import { deleteAllItems } from '~/store/charactersSlice';
+
 import * as reduxHooks from '~/hooks/redux';
+import { deleteAllItems } from '~/store/charactersSlice';
+import { mockData } from '@/tests/mockData';
+import { fireEvent, render, screen } from '@/tests/setup';
+
+import { Flyout } from './Flyout';
 
 const selected = [mockData[0], mockData[1]];
 

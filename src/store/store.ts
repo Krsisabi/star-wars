@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+
 import { swApi } from './api/apiSlice';
 import charactersReducer from './charactersSlice';
 

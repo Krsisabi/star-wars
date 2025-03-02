@@ -1,4 +1,5 @@
 import { swatches } from '~/utils/character';
+
 import styles from './Swatches.module.scss';
 
 // A dot per colour in the value: "white, blue" gives two.

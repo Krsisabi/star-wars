@@ -1,5 +1,7 @@
-import { render, screen } from '@/tests/setup';
 import userEvent from '@testing-library/user-event';
+
+import { render, screen } from '@/tests/setup';
+
 import { ErrorButton } from './ErrorButton';
 
 describe('ErrorButton', () => {

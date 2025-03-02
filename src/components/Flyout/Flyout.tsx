@@ -1,6 +1,7 @@
+import { ExportCSV } from '~/components/ExportCSV';
 import { useAppDispatch, useAppSelector } from '~/hooks/redux';
 import { deleteAllItems } from '~/store/charactersSlice';
-import { ExportCSV } from '../ExportCSV';
+
 import styles from './Flyout.module.scss';
 
 export function Flyout() {

@@ -1,17 +1,20 @@
-import { ReactNode, useCallback, useEffect, useRef } from 'react';
+import clsx from 'clsx';
+import type { ReactNode } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   useNavigate,
   useOutletContext,
   useParams,
   useSearchParams,
 } from 'react-router-dom';
-import clsx from 'clsx';
-import { DetailsOutletContext } from '~/pages/Home';
+
+import { Avatar } from '~/components/Avatar';
+import { Swatches } from '~/components/Swatches';
+import type { DetailsOutletContext } from '~/pages/Home';
 import { useGetDetailsQuery } from '~/store/api/apiSlice';
-import { Character } from '~/types';
+import type { Character } from '~/types';
 import { summary, toneStyle, withUnit } from '~/utils/character';
-import { Avatar } from '../Avatar';
-import { Swatches } from '../Swatches';
+
 import styles from './Details.module.scss';
 
 type Field = [label: string, render: (character: Character) => ReactNode];

@@ -1,12 +1,14 @@
 import '@testing-library/jest-dom/vitest';
+
 import {
+  act,
+  fireEvent,
   render,
   type RenderOptions,
   screen,
-  fireEvent,
   waitFor,
-  act,
 } from '@testing-library/react';
+
 import { AllTheProviders } from './providers';
 
 const customRender = (
@@ -14,4 +16,4 @@ const customRender = (
   options?: Omit<RenderOptions, 'wrapper'>
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
-export { customRender as render, screen, fireEvent, waitFor, act };
+export { act, fireEvent, customRender as render, screen, waitFor };

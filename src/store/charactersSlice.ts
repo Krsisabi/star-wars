@@ -1,8 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { CharacterNormalized } from '~/types';
+import { createSlice } from '@reduxjs/toolkit';
 
-export const initialState: CharacterNormalized[] = [];
+import type { CharacterNormalized } from '~/types';
+
+const initialState: CharacterNormalized[] = [];
 
 const selectedCharactersSlice = createSlice({
   name: 'selectedCharacters',

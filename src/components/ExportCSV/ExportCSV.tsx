@@ -1,4 +1,5 @@
-import { CharacterNormalized } from '~/types';
+import type { CharacterNormalized } from '~/types';
+
 import styles from './ExportCSV.module.scss';
 
 type ExportCSV = {

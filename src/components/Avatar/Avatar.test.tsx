@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
+
 import { Avatar } from './Avatar';
 
 const portraitIn = (container: HTMLElement) => container.querySelector('img');

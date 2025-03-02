@@ -1,7 +1,8 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { store } from '~/store';
+
+import { store } from '~/store/store';
 
 export const AllTheProviders = ({ children }: PropsWithChildren) => {
   return (

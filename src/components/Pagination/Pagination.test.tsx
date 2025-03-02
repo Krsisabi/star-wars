@@ -1,8 +1,11 @@
-import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+
 import { BackButton, LocationProbe } from '@/tests/router';
-import { Pagination, PaginationProps } from './Pagination';
+
+import type { PaginationProps } from './Pagination';
+import { Pagination } from './Pagination';
 
 describe('Pagination Component', () => {
   const renderPagination = (

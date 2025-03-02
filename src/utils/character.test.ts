@@ -1,4 +1,5 @@
 import { mockData } from '@/tests/mockData';
+
 import { initials, summary, swatches, withUnit } from './character';
 
 describe('character helpers', () => {

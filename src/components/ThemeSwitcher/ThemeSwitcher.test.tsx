@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
 import { ThemeProvider } from '~/context/theme-provider';
 import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
+
 import { ThemeSwitcher } from './ThemeSwitcher';
 
 const renderSwitcher = () =>

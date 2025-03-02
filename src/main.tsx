@@ -1,13 +1,16 @@
+import '~/styles/index.scss';
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App.tsx';
-import { RouteErrorBoundary } from './components/ErrorBoundary';
-import { ThemeProvider } from './context/theme-provider.tsx';
-import { store } from './store';
-import './styles/index.scss';
-import { trackPointerLight } from './utils/pointer-light.ts';
+
+import { RouteErrorBoundary } from '~/components/ErrorBoundary';
+import { ThemeProvider } from '~/context/theme-provider';
+import { store } from '~/store/store';
+import { trackPointerLight } from '~/utils/pointer-light';
+
+import App from './App';
 
 trackPointerLight();
 

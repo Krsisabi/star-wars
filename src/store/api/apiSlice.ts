@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
 import type { CharacterNormalized, TResponse } from '~/types';
 
 export const BASE_URL = 'https://swapi.dev/api/people/';

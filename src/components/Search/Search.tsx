@@ -1,5 +1,8 @@
-import { FormEvent, useState } from 'react';
-import { useSearchQuery } from '~/hooks';
+import type { FormEvent } from 'react';
+import { useState } from 'react';
+
+import { useSearchQuery } from '~/hooks/useSearchQuery';
+
 import styles from './Search.module.scss';
 
 export function Search() {

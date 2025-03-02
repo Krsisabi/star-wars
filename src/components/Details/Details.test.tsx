@@ -1,16 +1,19 @@
-import { useRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useRef } from 'react';
 import { Link, MemoryRouter, Outlet, Route, Routes } from 'react-router-dom';
+
+import type { DetailsOutletContext } from '~/pages/Home';
+import type * as ApiSlice from '~/store/api/apiSlice';
+import { useGetDetailsQuery } from '~/store/api/apiSlice';
 import { mockData } from '@/tests/mockData';
 import { LocationProbe } from '@/tests/router';
-import { DetailsOutletContext } from '~/pages/Home';
-import { useGetDetailsQuery } from '~/store/api/apiSlice';
+
 import { Details } from './Details';
 
 // the component is tested on its own; the request itself belongs to apiSlice
 vi.mock('~/store/api/apiSlice', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('~/store/api/apiSlice')>()),
+  ...(await importOriginal<typeof ApiSlice>()),
   useGetDetailsQuery: vi.fn(),
 }));
 

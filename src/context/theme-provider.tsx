@@ -1,7 +1,10 @@
-import React, { ReactNode, useLayoutEffect } from 'react';
-import { useLocalStorage } from '~/hooks';
-import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
-import { Theme, ThemeContext } from './theme-context';
+import type { ReactNode } from 'react';
+import React, { useLayoutEffect } from 'react';
+
+import { STORAGE_KEYS, useLocalStorage } from '~/hooks/useLocalStorage';
+
+import type { Theme } from './theme-context';
+import { ThemeContext } from './theme-context';
 
 // Without a saved choice the page follows the system setting.
 // index.html repeats this before the first paint, so there is no flash.

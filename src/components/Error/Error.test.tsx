@@ -1,4 +1,5 @@
 import { render, screen } from '@/tests/setup';
+
 import { Error } from './Error';
 
 describe('Error Component', () => {

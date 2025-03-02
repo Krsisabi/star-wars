@@ -1,9 +1,11 @@
-import { Link, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
-import { CharacterNormalized } from '~/types';
+import { Link, useSearchParams } from 'react-router-dom';
+
+import { Avatar } from '~/components/Avatar';
+import { Swatches } from '~/components/Swatches';
+import type { CharacterNormalized } from '~/types';
 import { isKnown, summary, toneStyle, withUnit } from '~/utils/character';
-import { Avatar } from '../../Avatar';
-import { Swatches } from '../../Swatches';
+
 import styles from './Card.module.scss';
 
 export type CardProps = {

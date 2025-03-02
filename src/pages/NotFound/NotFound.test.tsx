@@ -1,4 +1,5 @@
 import { render, screen } from '@/tests/setup';
+
 import { NotFound } from './NotFound';
 
 describe('NotFound', () => {

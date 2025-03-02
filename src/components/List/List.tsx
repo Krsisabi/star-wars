@@ -1,10 +1,13 @@
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { SerializedError } from '@reduxjs/toolkit';
+import type { SerializedError } from '@reduxjs/toolkit';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import clsx from 'clsx';
+
 import { useAppDispatch, useAppSelector } from '~/hooks/redux';
 import { toggleChecked } from '~/store/charactersSlice';
-import { CharacterNormalized } from '~/types';
+import type { CharacterNormalized } from '~/types';
+
 import { Card } from './Card';
+
 import styles from './List.module.scss';
 
 const PAGE_SIZE = 10;

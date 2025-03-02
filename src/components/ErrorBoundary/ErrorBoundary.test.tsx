@@ -1,7 +1,9 @@
-import { beforeAll, afterAll, describe, it, expect, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+
+import { Error as ErrorElement } from '~/components/Error';
 import { render, screen } from '@/tests/setup';
+
 import { ErrorBoundary } from './ErrorBoundary';
-import { Error as ErrorElement } from '../Error/Error';
 
 const ThrowError: React.FC = () => {
   throw new Error('Test error');

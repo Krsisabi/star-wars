@@ -1,6 +1,8 @@
 import { screen } from '@testing-library/react';
+
 import { mockData } from '@/tests/mockData';
 import { render } from '@/tests/setup';
+
 import { List } from './List';
 
 describe('ListCards Component', () => {

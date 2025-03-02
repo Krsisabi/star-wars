@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+
 import { Search } from '~/components/Search';
 import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
 import { BackButton, LocationProbe } from '@/tests/router';

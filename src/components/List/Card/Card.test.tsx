@@ -1,9 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+
 import { mockData } from '@/tests/mockData';
 import { LocationProbe } from '@/tests/router';
-import { Card, CardProps } from './Card';
+
+import type { CardProps } from './Card';
+import { Card } from './Card';
 
 const renderCard = (url: string, props: Partial<CardProps> = {}) =>
   render(

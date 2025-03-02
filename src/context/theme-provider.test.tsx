@@ -1,5 +1,7 @@
 import { render } from '@testing-library/react';
+
 import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
+
 import { ThemeProvider } from './theme-provider';
 
 const prefersDark = (matches: boolean) =>

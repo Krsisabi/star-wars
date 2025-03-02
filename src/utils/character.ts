@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
-import { Character } from '~/types';
+
+import type { Character } from '~/types';
 
 const UNKNOWN = new Set(['n/a', 'none', 'unknown']);
 

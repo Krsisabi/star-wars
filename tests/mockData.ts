@@ -1,4 +1,4 @@
-import { CharacterNormalized } from '~/types';
+import type { CharacterNormalized } from '~/types';
 
 const mockData: CharacterNormalized[] = [
   {

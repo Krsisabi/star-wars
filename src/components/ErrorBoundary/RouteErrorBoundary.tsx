@@ -1,6 +1,8 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Error } from '../Error';
+
+import { Error } from '~/components/Error';
+
 import { ErrorBoundary } from './ErrorBoundary';
 
 export const RouteErrorBoundary = ({ children }: { children: ReactNode }) => {

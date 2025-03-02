@@ -1,6 +1,8 @@
 import { vi } from 'vitest';
-import { fireEvent, render, screen } from '@/tests/setup';
+
 import { mockData } from '@/tests/mockData';
+import { fireEvent, render, screen } from '@/tests/setup';
+
 import { ExportCSV } from './ExportCSV';
 
 describe('ExportCSV Component', () => {

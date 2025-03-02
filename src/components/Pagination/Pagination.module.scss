@@ -1,8 +1,6 @@
 @use '../../styles/mixins' as *;
 
 .paginationContainer {
-  list-style-type: none;
-  padding: 0;
   display: flex;
   gap: 4px;
   justify-content: center;
@@ -56,8 +54,7 @@
       @include frost-current;
     }
 
-    &.dots,
-    &.disabled {
+    &.dots {
       --body: transparent;
       --edge: transparent;
       --lit: 0;
@@ -65,10 +62,6 @@
 
       box-shadow: none;
       cursor: default;
-    }
-
-    &.disabled {
-      pointer-events: none;
     }
   }
 }

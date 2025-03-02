@@ -2,6 +2,7 @@
 // Node's own fetch, Request and AbortSignal: under jsdom the request
 // is rejected before it reaches fetch, and there is nothing to inspect.
 import { configureStore } from '@reduxjs/toolkit';
+
 import { swApi } from './apiSlice';
 
 const requestedUrl = async (args: { search: string; page: number }) => {

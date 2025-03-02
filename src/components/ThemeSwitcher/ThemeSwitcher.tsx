@@ -1,5 +1,7 @@
 import { useId, useState } from 'react';
-import { useTheme } from '~/hooks';
+
+import { useTheme } from '~/hooks/useTheme';
+
 import styles from './ThemeSwitcher.module.scss';
 
 // A 24×24 scene: the sun or the moon above a horizon at y = 17.

@@ -1,9 +1,9 @@
 import clsx from 'clsx';
+import { Link, useSearchParams } from 'react-router-dom';
 
-import { usePagination, DOTS } from '~/hooks/usePagination';
+import { DOTS, usePagination } from '~/hooks/usePagination';
 
 import styles from './Pagination.module.scss';
-import { Link, useSearchParams } from 'react-router-dom';
 
 export type PaginationProps = {
   totalCount: number;
@@ -41,7 +41,7 @@ export const Pagination = (props: PaginationProps) => {
 
   return (
     <ul className={styles.paginationContainer}>
-      {paginationRange?.map((pageNumber, i) => {
+      {paginationRange.map((pageNumber, i) => {
         if (pageNumber === DOTS) {
           // Drawn dots: the … glyph sits on the baseline, below the centre.
           return (
