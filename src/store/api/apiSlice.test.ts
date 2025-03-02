@@ -1,24 +1,21 @@
 // @vitest-environment node
 // Node's own fetch, Request and AbortSignal: under jsdom the request
 // is rejected before it reaches fetch, and there is nothing to inspect.
-import { configureStore } from '@reduxjs/toolkit';
+
+import { makeStore } from '~/store/store';
 
 import { swApi } from './apiSlice';
 
+const responding = (body: object) =>
+  vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+    new Response(JSON.stringify(body), {
+      headers: { 'Content-Type': 'application/json' },
+    })
+  );
+
 const requestedUrl = async (args: { search: string; page: number }) => {
-  const fetchMock = vi
-    .spyOn(globalThis, 'fetch')
-    .mockResolvedValue(
-      new Response(
-        JSON.stringify({ count: 0, next: null, previous: null, results: [] }),
-        { headers: { 'Content-Type': 'application/json' } }
-      )
-    );
-  const store = configureStore({
-    reducer: { [swApi.reducerPath]: swApi.reducer },
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(swApi.middleware),
-  });
+  const fetchMock = responding({ count: 0, results: [] });
+  const store = makeStore();
 
   await store.dispatch(swApi.endpoints.getCharacters.initiate(args));
 
@@ -46,5 +43,28 @@ describe('getCharacters', () => {
     expect(await requestedUrl({ search: 'r2 d2&x', page: 1 })).toBe(
       'https://swapi.dev/api/people/?search=r2+d2%26x&page=1'
     );
+  });
+});
+
+describe('getDetails', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('asks for the character and gives it the id from its url', async () => {
+    const fetchMock = responding({
+      name: 'C-3PO',
+      url: 'https://swapi.dev/api/people/2/',
+    });
+    const store = makeStore();
+
+    const { data } = await store.dispatch(
+      swApi.endpoints.getDetails.initiate('2')
+    );
+
+    expect((fetchMock.mock.calls[0][0] as Request).url).toBe(
+      'https://swapi.dev/api/people/2'
+    );
+    expect(data).toMatchObject({ name: 'C-3PO', id: 2 });
   });
 });

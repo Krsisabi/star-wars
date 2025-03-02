@@ -1,51 +1,37 @@
 import { Button } from '~/components/Button';
 import type { CharacterNormalized } from '~/types';
+import { toCsv } from '~/utils/csv';
+import { downloadFile } from '~/utils/download';
 
-type ExportCSV = {
+type ExportCSVProps = {
   data: CharacterNormalized[];
   fileName: string;
 };
 
-const COLUMNS = [
-  'id',
-  'Name',
-  'Skin color',
-  'Eye color',
-  'Birth year',
-  'Gender',
-  'URL',
-] as const;
+type Column = {
+  header: string;
+  value: (character: CharacterNormalized) => string;
+};
 
-const escapeCell = (value: string) =>
-  /[";\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+const COLUMNS: Column[] = [
+  { header: 'id', value: ({ id }) => String(id) },
+  { header: 'Name', value: ({ name }) => name },
+  { header: 'Skin color', value: ({ skin_color }) => skin_color },
+  { header: 'Eye color', value: ({ eye_color }) => eye_color },
+  { header: 'Birth year', value: ({ birth_year }) => birth_year },
+  { header: 'Gender', value: ({ gender }) => gender },
+  { header: 'URL', value: ({ url }) => url },
+];
 
-export function ExportCSV({ data, fileName }: ExportCSV) {
-  const downloadCSV = () => {
-    const rows = data.map((item) => [
-      String(item.id),
-      item.name,
-      item.skin_color,
-      item.eye_color,
-      item.birth_year,
-      item.gender,
-      item.url,
-    ]);
+export function ExportCSV({ data, fileName }: ExportCSVProps) {
+  const download = () => {
+    const header = COLUMNS.map((column) => column.header);
+    const rows = data.map((character) =>
+      COLUMNS.map((column) => column.value(character))
+    );
 
-    const csvString = [[...COLUMNS], ...rows]
-      .map((row) => row.map(escapeCell).join(';'))
-      .join('\n');
-
-    const blob = new Blob([csvString], { type: 'text/csv' });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName || 'download.csv';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    downloadFile(toCsv([header, ...rows]), fileName, 'text/csv');
   };
 
-  return <Button icon="download" label="Download" onClick={downloadCSV} />;
+  return <Button icon="download" label="Download" onClick={download} />;
 }

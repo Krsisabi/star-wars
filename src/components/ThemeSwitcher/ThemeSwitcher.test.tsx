@@ -1,10 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { ThemeProvider } from '~/context/theme-provider';
-import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
+import { ThemeProvider } from '~/context/ThemeProvider';
+import { STORAGE_KEYS } from '~/utils/storage';
 
 import { ThemeSwitcher } from './ThemeSwitcher';
+
+const root = document.documentElement;
 
 const renderSwitcher = () =>
   render(
@@ -14,13 +16,16 @@ const renderSwitcher = () =>
   );
 
 describe('ThemeSwitcher', () => {
+  beforeEach(() => {
+    root.dataset.theme = 'light';
+  });
+
   afterEach(() => {
     localStorage.clear();
+    delete root.dataset.theme;
   });
 
   it('names the theme it switches to', () => {
-    localStorage.setItem(STORAGE_KEYS.theme, JSON.stringify('light'));
-
     renderSwitcher();
 
     expect(
@@ -29,13 +34,12 @@ describe('ThemeSwitcher', () => {
   });
 
   it('switches the whole document and remembers the choice', async () => {
-    localStorage.setItem(STORAGE_KEYS.theme, JSON.stringify('light'));
     const user = userEvent.setup();
 
     renderSwitcher();
     await user.click(screen.getByRole('button'));
 
-    expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
+    expect(root).toHaveAttribute('data-theme', 'dark');
     expect(screen.getByRole('button')).toHaveAccessibleName(
       'Switch to light theme'
     );

@@ -1,21 +1,24 @@
-import type { ReactNode } from 'react';
-import { useCallback, useEffect, useRef } from 'react';
-import {
-  useNavigate,
-  useOutletContext,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import type { ReactNode, RefObject } from 'react';
+import { useCallback, useRef } from 'react';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import { Avatar } from '~/components/Avatar';
 import { Button } from '~/components/Button';
 import { Swatches } from '~/components/Swatches';
-import type { DetailsOutletContext } from '~/pages/Home';
+import { useDismiss } from '~/hooks/useDismiss';
+import { useSearchLink } from '~/hooks/useSearchLink';
+import { ROUTES } from '~/routes';
 import { useGetDetailsQuery } from '~/store/api/apiSlice';
 import type { Character } from '~/types';
 import { LOOKS, MEASURES, summary, toneStyle } from '~/utils/character';
 
 import styles from './Details.module.scss';
+
+// What the page around the panel hands it: the list's wrapper, where a
+// click closes the panel.
+export type DetailsOutletContext = {
+  wrapperRef: RefObject<HTMLElement>;
+};
 
 type Field = {
   label: string;
@@ -68,7 +71,8 @@ function Fields({ fields, character, className }: FieldsProps) {
 
 export function Details() {
   const { id = '' } = useParams();
-  const [searchParams] = useSearchParams();
+  const characterId = Number(id);
+  const { toPath } = useSearchLink();
   const { wrapperRef } = useOutletContext<DetailsOutletContext>();
   const navigate = useNavigate();
   const detailsRef = useRef<HTMLElement>(null);
@@ -77,38 +81,12 @@ export function Details() {
   // one must not be shown under the new selection.
   const { currentData: character, error } = useGetDetailsQuery(id);
 
-  const closeHandler = useCallback(() => {
-    navigate(
-      { pathname: `..`, search: searchParams.toString() },
-      { replace: true }
-    );
-  }, [navigate, searchParams]);
+  const close = useCallback(() => {
+    navigate(toPath(ROUTES.home), { replace: true });
+  }, [navigate, toPath]);
 
-  useEffect(() => {
-    // A click on the list closes the panel, unless it lands on a control
-    // that has a job of its own (another card, a checkbox, a page link).
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as Element;
-      if (
-        wrapperRef.current?.contains(target) &&
-        !detailsRef.current?.contains(target) &&
-        !target.closest('a, button, input, label')
-      )
-        closeHandler();
-    };
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeHandler();
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    document.addEventListener('keydown', handleEscape);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, [wrapperRef, closeHandler]);
+  // A click on the list closes the panel, as Escape does.
+  useDismiss(close, { area: wrapperRef, except: detailsRef });
 
   const title = character?.name ?? (error ? 'Not available' : 'Loading...');
 
@@ -117,14 +95,14 @@ export function Details() {
       <div className={styles.backdrop} />
       <aside
         className={styles.details}
-        style={toneStyle(Number(id))}
+        style={toneStyle(characterId)}
         ref={detailsRef}
         aria-labelledby="details-title"
         aria-busy={!character && !error}
       >
         <header className={styles.header}>
           <Avatar
-            id={Number(id)}
+            id={characterId}
             name={character?.name}
             size="large"
             className={styles.portrait}
@@ -137,13 +115,12 @@ export function Details() {
               <p className={styles.summary}>{summary(character)}</p>
             )}
           </div>
-          {/* A drawn cross: the × glyph sits wherever the font puts it. */}
           <Button
             icon="cross"
             label="Close details"
             iconOnly
             className={styles.close}
-            onClick={closeHandler}
+            onClick={close}
           />
         </header>
         {error ? (

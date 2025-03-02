@@ -1,26 +1,20 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
-import App from '~/App';
-import { RouteErrorBoundary } from '~/components/ErrorBoundary';
-import { ThemeProvider } from '~/context/theme-provider';
-import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
-import { store } from '~/store/store';
+import { App } from '~/App';
+import { AppProviders } from '~/AppProviders';
+import { makeStore } from '~/store/store';
+import { STORAGE_KEYS } from '~/utils/storage';
 
 import { LocationProbe } from './router';
 
 const renderApp = (url = '/') =>
   render(
     <MemoryRouter initialEntries={[url]}>
-      <RouteErrorBoundary>
-        <ThemeProvider>
-          <Provider store={store}>
-            <App />
-          </Provider>
-        </ThemeProvider>
-      </RouteErrorBoundary>
+      <AppProviders store={makeStore()}>
+        <App />
+      </AppProviders>
       <LocationProbe />
     </MemoryRouter>
   );

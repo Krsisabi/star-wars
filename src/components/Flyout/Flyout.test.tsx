@@ -1,23 +1,17 @@
-import { vi } from 'vitest';
-
-import * as reduxHooks from '~/hooks/redux';
-import { deleteAllItems } from '~/store/charactersSlice';
+import { makeStore } from '~/store/store';
 import { mockData } from '@/tests/mockData';
 import { fireEvent, render, screen } from '@/tests/setup';
 
 import { Flyout } from './Flyout';
 
-const selected = [mockData[0], mockData[1]];
+const withSelection = () =>
+  makeStore({ selection: [mockData[0], mockData[1]] });
 
-describe('Flyout Component', () => {
-  test('should render Flyout component when items are selected', () => {
-    vi.spyOn(reduxHooks, 'useAppSelector').mockReturnValue(selected);
-    vi.spyOn(reduxHooks, 'useAppDispatch').mockReturnValue(vi.fn());
-
-    render(<Flyout />);
+describe('Flyout', () => {
+  it('counts the selection and offers to unselect or download it', () => {
+    render(<Flyout />, { store: withSelection() });
 
     expect(screen.getByRole('status')).toHaveTextContent('2 items selected');
-
     expect(
       screen.getByRole('button', { name: /unselect all/i })
     ).toBeInTheDocument();
@@ -26,22 +20,18 @@ describe('Flyout Component', () => {
     ).toBeInTheDocument();
   });
 
-  test('should dispatch deleteAllItems action on clicking "Unselect all" button', () => {
-    const dispatch = vi.fn();
-    vi.spyOn(reduxHooks, 'useAppSelector').mockReturnValue(selected);
-    vi.spyOn(reduxHooks, 'useAppDispatch').mockReturnValue(dispatch);
-
-    render(<Flyout />);
+  it('unselects everything at once', () => {
+    const { store, container } = render(<Flyout />, {
+      store: withSelection(),
+    });
 
     fireEvent.click(screen.getByRole('button', { name: /unselect all/i }));
 
-    expect(dispatch).toHaveBeenCalledWith(deleteAllItems());
+    expect(store.getState().selection).toEqual([]);
+    expect(container).toBeEmptyDOMElement();
   });
 
-  test('should render nothing when no items are selected', () => {
-    vi.spyOn(reduxHooks, 'useAppSelector').mockReturnValue([]);
-    vi.spyOn(reduxHooks, 'useAppDispatch').mockReturnValue(vi.fn());
-
+  it('shows nothing when nothing is selected', () => {
     const { container } = render(<Flyout />);
 
     expect(container).toBeEmptyDOMElement();

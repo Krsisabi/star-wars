@@ -1,48 +1,38 @@
 import clsx from 'clsx';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import { DOTS, usePagination } from '~/hooks/usePagination';
+import { useSearchLink } from '~/hooks/useSearchLink';
+import { PAGE_SIZE } from '~/store/api/apiSlice';
+import { DOTS, pageRange } from '~/utils/pagination';
 
 import styles from './Pagination.module.scss';
 
 export type PaginationProps = {
   totalCount: number;
+  currentPage: number;
   pageSize?: number;
   siblingCount?: number;
-  currentPage: number;
 };
 
-export const Pagination = (props: PaginationProps) => {
-  const { totalCount, siblingCount, currentPage, pageSize } = props;
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
-  const [searchParams] = useSearchParams();
+export function Pagination({
+  totalCount,
+  currentPage,
+  pageSize = PAGE_SIZE,
+  siblingCount = 1,
+}: PaginationProps) {
+  const { toPage } = useSearchLink();
+  const pages = pageRange({ totalCount, pageSize, siblingCount, currentPage });
 
-  const paginationRange = usePagination({
-    currentPage,
-    totalCount,
-    siblingCount,
-    pageSize,
-  });
-
-  if (!paginationRange || paginationRange.length < 2) {
-    return null;
-  }
-
-  const onTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Only the query changes, so an open details panel stays open.
-  const linkTo = (page: number) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', page.toString());
-    return { search: `?${params}` };
-  };
+  if (pages.length < 2) return null;
 
   return (
     <ul className={styles.paginationContainer}>
-      {paginationRange.map((pageNumber, i) => {
-        if (pageNumber === DOTS) {
+      {pages.map((page, i) => {
+        if (page === DOTS) {
           // Drawn dots: the … glyph sits on the baseline, below the centre.
           return (
             <li
@@ -59,23 +49,23 @@ export const Pagination = (props: PaginationProps) => {
           );
         }
 
-        const isCurrent = +pageNumber === currentPage;
+        const isCurrent = page === currentPage;
 
         return (
-          <li key={pageNumber}>
+          <li key={page}>
             <Link
-              to={linkTo(+pageNumber)}
+              to={toPage(page)}
               className={clsx(styles.paginationItem, {
                 [styles.selected]: isCurrent,
               })}
               aria-current={isCurrent ? 'page' : undefined}
-              onClick={onTop}
+              onClick={scrollToTop}
             >
-              {pageNumber}
+              {page}
             </Link>
           </li>
         );
       })}
     </ul>
   );
-};
+}

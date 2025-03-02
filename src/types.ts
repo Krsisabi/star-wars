@@ -1,8 +1,7 @@
-export type TResponse = {
+// One page of a SWAPI list, with the size of the whole list.
+export type Page<T> = {
   count: number;
-  next: number | null;
-  previous: number | null;
-  results: Character[];
+  results: T[];
 };
 
 export type Character = {

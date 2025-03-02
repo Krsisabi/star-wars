@@ -16,8 +16,9 @@
       crossorigin
     />
     <script>
-      // Mirrors ThemeProvider before the first paint, so a dark page
-      // never flashes light while the bundle loads.
+      // The theme before the first paint, so a dark page never flashes
+      // light while the bundle loads: the saved choice, or the system's.
+      // ThemeProvider starts from what this sets.
       (function () {
         var theme;
         try {

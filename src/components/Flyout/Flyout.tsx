@@ -1,31 +1,28 @@
 import { Button } from '~/components/Button';
 import { ExportCSV } from '~/components/ExportCSV';
 import { useAppDispatch, useAppSelector } from '~/hooks/redux';
-import { deleteAllItems } from '~/store/charactersSlice';
+import { clearSelection, selectSelected } from '~/store/selectionSlice';
 
 import styles from './Flyout.module.scss';
 
 export function Flyout() {
   const dispatch = useAppDispatch();
-  const selectedItems = useAppSelector((state) => state.selectedCharacters);
-  const selectedCount = selectedItems.length;
+  const selected = useAppSelector(selectSelected);
+  const count = selected.length;
 
-  const handleUnselectAll = () => {
-    dispatch(deleteAllItems());
+  const unselectAll = () => {
+    dispatch(clearSelection());
   };
 
-  if (selectedCount === 0) return null;
+  if (count === 0) return null;
 
   return (
     <div className={styles.flyout}>
       <p className={styles.count} role="status">
-        {selectedCount} {selectedCount === 1 ? 'item' : 'items'} selected
+        {count} {count === 1 ? 'item' : 'items'} selected
       </p>
-      <Button icon="cross" label="Unselect all" onClick={handleUnselectAll} />
-      <ExportCSV
-        data={selectedItems}
-        fileName={`${selectedCount}_characters.csv`}
-      />
+      <Button icon="cross" label="Unselect all" onClick={unselectAll} />
+      <ExportCSV data={selected} fileName={`${count}_characters.csv`} />
     </div>
   );
 }

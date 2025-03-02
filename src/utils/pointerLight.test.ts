@@ -1,4 +1,4 @@
-import { trackPointerLight } from './pointer-light';
+import { trackPointerLight } from './pointerLight';
 
 // jsdom has no PointerEvent; a MouseEvent with the pointer's fields is
 // what the listener reads.

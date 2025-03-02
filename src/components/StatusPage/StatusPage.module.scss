@@ -1,0 +1,27 @@
+@use '../../styles/mixins' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.title {
+  font-size: 3rem;
+}
+
+.text {
+  margin: 1rem 0;
+}
+
+// In the rim's colour: indigo by day, pink by night.
+.link {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: rgb(var(--frost-rim));
+
+  @include focus-ring;
+}

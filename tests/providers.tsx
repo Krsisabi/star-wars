@@ -1,15 +1,18 @@
-import type { PropsWithChildren } from 'react';
+import type { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
-import { store } from '~/store/store';
+import type { AppStore } from '~/store/store';
 
-export const AllTheProviders = ({ children }: PropsWithChildren) => {
+type ProvidersProps = {
+  store: AppStore;
+  children: ReactNode;
+};
+
+export function Providers({ store, children }: ProvidersProps) {
   return (
     <BrowserRouter>
       <Provider store={store}>{children}</Provider>
     </BrowserRouter>
   );
-};
-
-AllTheProviders.displayName = 'AllTheProviders';
+}

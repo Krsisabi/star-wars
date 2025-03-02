@@ -1,16 +1,23 @@
 import type { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { Error } from '~/components/Error';
-
 import { ErrorBoundary } from './ErrorBoundary';
 
-export const RouteErrorBoundary = ({ children }: { children: ReactNode }) => {
+type RouteErrorBoundaryProps = {
+  fallback: ReactNode;
+  children: ReactNode;
+};
+
+// The fallback gives way to the page again once the address changes.
+export function RouteErrorBoundary({
+  fallback,
+  children,
+}: RouteErrorBoundaryProps) {
   const location = useLocation();
 
   return (
-    <ErrorBoundary fallback={<Error />} resetKey={location.key}>
+    <ErrorBoundary fallback={fallback} resetKey={location.key}>
       {children}
     </ErrorBoundary>
   );
-};
+}

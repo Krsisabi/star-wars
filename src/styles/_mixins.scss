@@ -112,7 +112,7 @@ $control-height: 46px;
 // steps on rounded corners.
 //
 // The cursor is one pair of variables on the root, --mx and --my, in
-// viewport coordinates (utils/pointer-light.ts), and the gradients that
+// viewport coordinates (utils/pointerLight.ts), and the gradients that
 // read it are fixed to the viewport, so no element needs its own. Without
 // a mouse there is no rim at all, and no fixed layers to repaint on scroll.
 //

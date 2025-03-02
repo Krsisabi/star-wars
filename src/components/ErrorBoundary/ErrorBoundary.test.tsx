@@ -1,6 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { Error as ErrorElement } from '~/components/Error';
 import { render, screen } from '@/tests/setup';
 
 import { ErrorBoundary } from './ErrorBoundary';
@@ -20,7 +19,7 @@ describe('ErrorBoundary Component', () => {
 
   it('renders children without error', () => {
     render(
-      <ErrorBoundary fallback={<ErrorElement />}>
+      <ErrorBoundary fallback={<p>Fallback</p>}>
         <div>Child Component</div>
       </ErrorBoundary>
     );
@@ -29,12 +28,12 @@ describe('ErrorBoundary Component', () => {
 
   it('catches error and displays fallback UI', () => {
     render(
-      <ErrorBoundary fallback={<ErrorElement />}>
+      <ErrorBoundary fallback={<p>Fallback</p>}>
         <ThrowError />
       </ErrorBoundary>
     );
 
-    expect(screen.getByText(/error/i)).toBeInTheDocument();
+    expect(screen.getByText('Fallback')).toBeInTheDocument();
   });
 
   it('renders children again once resetKey changes', () => {
@@ -45,26 +44,26 @@ describe('ErrorBoundary Component', () => {
     };
 
     const { rerender } = render(
-      <ErrorBoundary fallback={<ErrorElement />} resetKey="first">
+      <ErrorBoundary fallback={<p>Fallback</p>} resetKey="first">
         <MaybeThrow />
       </ErrorBoundary>
     );
-    expect(screen.getByTestId('error-page')).toBeInTheDocument();
+    expect(screen.getByText('Fallback')).toBeInTheDocument();
 
     shouldThrow = false;
     rerender(
-      <ErrorBoundary fallback={<ErrorElement />} resetKey="first">
+      <ErrorBoundary fallback={<p>Fallback</p>} resetKey="first">
         <MaybeThrow />
       </ErrorBoundary>
     );
-    expect(screen.getByTestId('error-page')).toBeInTheDocument();
+    expect(screen.getByText('Fallback')).toBeInTheDocument();
 
     rerender(
-      <ErrorBoundary fallback={<ErrorElement />} resetKey="second">
+      <ErrorBoundary fallback={<p>Fallback</p>} resetKey="second">
         <MaybeThrow />
       </ErrorBoundary>
     );
-    expect(screen.queryByTestId('error-page')).not.toBeInTheDocument();
+    expect(screen.queryByText('Fallback')).not.toBeInTheDocument();
     expect(screen.getByText('Recovered')).toBeInTheDocument();
   });
 });

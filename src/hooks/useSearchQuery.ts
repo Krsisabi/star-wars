@@ -1,11 +1,7 @@
 import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import {
-  readStoredValue,
-  STORAGE_KEYS,
-  writeStoredValue,
-} from './useLocalStorage';
+import { readStored, STORAGE_KEYS, writeStored } from '~/utils/storage';
 
 const toPage = (value: string | null) => {
   const page = Number(value);
@@ -13,7 +9,7 @@ const toPage = (value: string | null) => {
 };
 
 const readStoredSearch = () => {
-  const stored = readStoredValue<unknown>(STORAGE_KEYS.searchValue, '');
+  const stored = readStored(STORAGE_KEYS.searchValue);
   return typeof stored === 'string' ? stored.trim() : '';
 };
 
@@ -39,7 +35,7 @@ export function useSearchQuery() {
   const submitSearch = useCallback(
     (value: string) => {
       const term = value.trim();
-      writeStoredValue(STORAGE_KEYS.searchValue, term);
+      writeStored(STORAGE_KEYS.searchValue, term);
       setSearchParams(firstPageOf(term));
     },
     [setSearchParams]

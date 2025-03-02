@@ -1,8 +1,10 @@
 import clsx from 'clsx';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { Avatar } from '~/components/Avatar';
 import { Swatches } from '~/components/Swatches';
+import { useSearchLink } from '~/hooks/useSearchLink';
+import { detailsPath, ROUTES } from '~/routes';
 import type { CharacterNormalized } from '~/types';
 import {
   isKnown,
@@ -27,7 +29,7 @@ export function Card({
   isSelected,
   character,
 }: CardProps) {
-  const [searchParams] = useSearchParams();
+  const { toPath } = useSearchLink();
 
   const { id, name } = character;
   const facts = summary(character);
@@ -37,12 +39,8 @@ export function Card({
     value(character),
   ]).filter(([, value]) => isKnown(value));
 
-  // A second click on the open card closes it; the query stays either way.
-  const query = searchParams.toString();
-  const to = {
-    pathname: isActive ? '/' : `/details/${id}`,
-    search: query ? `?${query}` : '',
-  };
+  // A second click on the open card closes it.
+  const to = toPath(isActive ? ROUTES.home : detailsPath(id));
 
   return (
     <li

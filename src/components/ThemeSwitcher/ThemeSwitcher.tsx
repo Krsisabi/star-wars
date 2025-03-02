@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 
+import { otherTheme } from '~/context/ThemeContext';
 import { useTheme } from '~/hooks/useTheme';
 
 import styles from './ThemeSwitcher.module.scss';
@@ -23,13 +24,13 @@ const sparkle = (x: number, y: number, size: number) =>
   `Q${x} ${y} ${x - size} ${y}Q${x} ${y} ${x} ${y - size}Z`;
 
 export const ThemeSwitcher = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   // The sunset plays only after a click; on load the icon just shows
   // where the day is, instead of replaying the last change.
   const [hasToggled, setHasToggled] = useState(false);
   const id = useId().replace(/:/g, '');
 
-  const label = `Switch to ${theme === 'light' ? 'dark' : 'light'} theme`;
+  const label = `Switch to ${otherTheme(theme)} theme`;
 
   return (
     <button
@@ -41,7 +42,7 @@ export const ThemeSwitcher = () => {
       title={label}
       onClick={() => {
         setHasToggled(true);
-        setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+        toggleTheme();
       }}
     >
       <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true">

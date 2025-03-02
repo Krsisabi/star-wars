@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 
 import { Search } from '~/components/Search';
-import { STORAGE_KEYS } from '~/hooks/useLocalStorage';
+import { STORAGE_KEYS } from '~/utils/storage';
 import { BackButton, LocationProbe } from '@/tests/router';
 
 const renderSearch = (entries: string[]) =>

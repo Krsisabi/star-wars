@@ -2,25 +2,23 @@ import clsx from 'clsx';
 import { useRef } from 'react';
 import { Navigate, useMatch, useOutlet } from 'react-router-dom';
 
+import type { DetailsOutletContext } from '~/components/Details';
 import { ErrorButton } from '~/components/ErrorButton';
 import { Flyout } from '~/components/Flyout';
 import { Header } from '~/components/Header';
 import { List, ListSkeleton } from '~/components/List';
 import { Pagination } from '~/components/Pagination';
 import { useSearchQuery } from '~/hooks/useSearchQuery';
+import { ROUTES } from '~/routes';
 import { useGetCharactersQuery } from '~/store/api/apiSlice';
 
 import styles from './Home.module.scss';
-
-export type DetailsOutletContext = {
-  wrapperRef: React.RefObject<HTMLElement>;
-};
 
 export const Home = () => {
   const { search, page, restoreTo } = useSearchQuery();
   const wrapperRef = useRef<HTMLElement>(null);
   const details = useOutlet({ wrapperRef } satisfies DetailsOutletContext);
-  const activeId = useMatch('/details/:id')?.params.id;
+  const activeId = useMatch(ROUTES.details)?.params.id;
 
   const { data, error, isLoading, isFetching } = useGetCharactersQuery(
     { search, page },

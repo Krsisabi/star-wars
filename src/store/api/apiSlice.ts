@@ -1,52 +1,39 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import type { CharacterNormalized, TResponse } from '~/types';
+import type { Character, CharacterNormalized, Page } from '~/types';
 
-export const BASE_URL = 'https://swapi.dev/api/people/';
+const BASE_URL = 'https://swapi.dev/api/people/';
 
-type TransformedResponse = {
-  count: number;
-  next: number | null;
-  previous: number | null;
-  results: CharacterNormalized[];
+// SWAPI serves ten characters a page.
+export const PAGE_SIZE = 10;
+
+// SWAPI gives a character no id of its own: it is the last part of the
+// character's url.
+const withId = (character: Character): CharacterNormalized => {
+  const parts = character.url.split('/').filter(Boolean);
+  return { ...character, id: parseInt(parts[parts.length - 1], 10) };
 };
 
 export const swApi = createApi({
-  reducerPath: 'charactersApi',
+  reducerPath: 'swApi',
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
     getCharacters: builder.query<
-      TransformedResponse,
+      Page<CharacterNormalized>,
       { search: string; page: number }
     >({
       query: ({ search, page }) => ({
         url: '',
         params: { search: search || undefined, page },
       }),
-      transformResponse: (response: TResponse): TransformedResponse => {
-        const usersWithCheck: CharacterNormalized[] = response.results.map(
-          (character) => {
-            const urlParts = character.url.split('/').filter(Boolean);
-            const id = parseInt(urlParts[urlParts.length - 1], 10);
-
-            return {
-              ...character,
-              id,
-              isChecked: false,
-            };
-          }
-        );
-
-        return {
-          count: response.count,
-          next: response.next,
-          previous: response.previous,
-          results: usersWithCheck,
-        };
-      },
+      transformResponse: ({ count, results }: Page<Character>) => ({
+        count,
+        results: results.map(withId),
+      }),
     }),
     getDetails: builder.query<CharacterNormalized, string>({
-      query: (id) => `${BASE_URL}${id}`,
+      query: (id) => id,
+      transformResponse: withId,
     }),
   }),
 });

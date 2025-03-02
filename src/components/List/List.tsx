@@ -3,14 +3,13 @@ import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import clsx from 'clsx';
 
 import { useAppDispatch, useAppSelector } from '~/hooks/redux';
-import { toggleChecked } from '~/store/charactersSlice';
+import { PAGE_SIZE } from '~/store/api/apiSlice';
+import { selectSelected, toggleSelected } from '~/store/selectionSlice';
 import type { CharacterNormalized } from '~/types';
 
 import { Card } from './Card';
 
 import styles from './List.module.scss';
-
-const PAGE_SIZE = 10;
 
 type ListProps = {
   data?: CharacterNormalized[];
@@ -23,20 +22,18 @@ type ListProps = {
 
 export function List({ data, activeId, error, isRefreshing, fit }: ListProps) {
   const dispatch = useAppDispatch();
-  const selectedCharacters = useAppSelector(
-    (state) => state.selectedCharacters
-  );
+  const selected = useAppSelector(selectSelected);
 
   if (data && data.length === 0)
     return <p className={styles.message}>No such characters =(</p>;
   if (!data || !!error)
     return <p className={styles.message}>Something went wrong</p>;
 
-  const isCharacterSelected = (id: number) =>
-    selectedCharacters.some((character) => character.id === id);
+  const isSelected = (id: number) =>
+    selected.some((character) => character.id === id);
 
   const onSelect = (character: CharacterNormalized) => {
-    dispatch(toggleChecked(character));
+    dispatch(toggleSelected(character));
   };
 
   // While the next page loads, the current one stays in place, dimmed,
@@ -55,7 +52,7 @@ export function List({ data, activeId, error, isRefreshing, fit }: ListProps) {
             key={el.id}
             character={el}
             isActive={activeId === String(el.id)}
-            isSelected={isCharacterSelected(el.id)}
+            isSelected={isSelected(el.id)}
             onSelect={onSelect}
           />
         );

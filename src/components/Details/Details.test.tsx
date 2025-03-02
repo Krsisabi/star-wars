@@ -3,12 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { useRef } from 'react';
 import { Link, MemoryRouter, Outlet, Route, Routes } from 'react-router-dom';
 
-import type { DetailsOutletContext } from '~/pages/Home';
+import { ROUTES } from '~/routes';
 import type * as ApiSlice from '~/store/api/apiSlice';
 import { useGetDetailsQuery } from '~/store/api/apiSlice';
 import { mockData } from '@/tests/mockData';
 import { LocationProbe } from '@/tests/router';
 
+import type { DetailsOutletContext } from './Details';
 import { Details } from './Details';
 
 // the component is tested on its own; the request itself belongs to apiSlice
@@ -43,8 +44,8 @@ const renderDetails = () =>
   render(
     <MemoryRouter initialEntries={['/details/1?search=luke&page=2']}>
       <Routes>
-        <Route path="/" element={<ListArea />}>
-          <Route path="details/:id" element={<Details />} />
+        <Route path={ROUTES.home} element={<ListArea />}>
+          <Route path={ROUTES.details} element={<Details />} />
         </Route>
       </Routes>
       <LocationProbe />
