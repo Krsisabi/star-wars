@@ -47,7 +47,6 @@
     }
 
     &.dots {
-      line-height: 32px;
       box-shadow: unset;
 
       &:hover {
@@ -65,4 +64,10 @@
       }
     }
   }
+}
+
+.dotsIcon {
+  width: 16px;
+  height: 4px;
+  fill: currentColor;
 }

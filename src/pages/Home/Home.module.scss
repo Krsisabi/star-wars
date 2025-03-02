@@ -1,8 +1,10 @@
 .home {
-  --bar-height: 72px;
+  // Pagination 48 + padding 24 + border 2, with a little to spare.
+  --bar-height: 76px;
   --bar-gap: 16px;
-  // Room the bar takes from the bottom of the window, gaps included.
-  --bar-space: calc(var(--bar-height) + 2 * var(--bar-gap));
+  // Room under the content: its bottom padding, the bar, the gap below.
+  // A list or a panel this much shorter than the window never scrolls it.
+  --bar-space: calc(2rem + var(--bar-height) + var(--bar-gap));
   // Where the content starts: header padding, search field, content padding.
   --content-top: calc(4rem + 46px);
 
@@ -41,6 +43,12 @@
       grid-template-columns: minmax(0, 1fr);
     }
   }
+}
+
+// The list lays out its columns by the width it gets, not the window's.
+.listArea {
+  min-width: 0;
+  container-type: inline-size;
 }
 
 // One floating bar for everything at the bottom. It is glass: whatever

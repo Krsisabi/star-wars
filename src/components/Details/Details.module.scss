@@ -62,8 +62,8 @@
 }
 
 .avatarPlaceholder {
-  width: 72px;
-  height: 72px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   background-color: currentColor;
   opacity: 0.15;
@@ -93,9 +93,7 @@
   height: 40px;
   border: 1px solid var(--border-color);
   border-radius: 50%;
-  font-family: inherit;
-  font-size: 1.5rem;
-  line-height: 1;
+  padding: 0;
   color: var(--text-color);
   background-color: var(--background-color);
   cursor: pointer;
@@ -117,6 +115,15 @@
     outline: 2px solid var(--text-color);
     outline-offset: 2px;
   }
+}
+
+.closeIcon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
 }
 
 .section {

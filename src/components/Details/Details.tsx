@@ -130,7 +130,15 @@ export function Details() {
           onClick={closeHandler}
           aria-label="Close details"
         >
-          &times;
+          {/* A drawn cross: the × glyph sits wherever the font puts it. */}
+          <svg
+            className={styles.closeIcon}
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M7 7l10 10M17 7 7 17" />
+          </svg>
         </button>
       </header>
       {error ? (

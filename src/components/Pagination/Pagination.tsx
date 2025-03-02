@@ -43,12 +43,18 @@ export const Pagination = (props: PaginationProps) => {
     <ul className={styles.paginationContainer}>
       {paginationRange?.map((pageNumber, i) => {
         if (pageNumber === DOTS) {
+          // Drawn dots: the … glyph sits on the baseline, below the centre.
           return (
             <li
-              className={`${styles.paginationItem} ${styles.dots}`}
+              className={clsx(styles.paginationItem, styles.dots)}
               key={`dots-${i}`}
+              aria-hidden="true"
             >
-              &#8230;
+              <svg className={styles.dotsIcon} viewBox="0 0 16 4">
+                <circle cx="2" cy="2" r="1.5" />
+                <circle cx="8" cy="2" r="1.5" />
+                <circle cx="14" cy="2" r="1.5" />
+              </svg>
             </li>
           );
         }

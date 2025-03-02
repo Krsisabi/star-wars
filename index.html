@@ -5,6 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Star wars</title>
+    <!-- The portraits come from Wookieepedia: the connection is ready by the
+         time the list arrives. Both kinds: an <img> goes over a credentialed
+         connection, but where third-party cookies are blocked it goes over
+         an anonymous one, and only the crossorigin hint opened that. -->
+    <link rel="preconnect" href="https://static.wikia.nocookie.net" />
+    <link
+      rel="preconnect"
+      href="https://static.wikia.nocookie.net"
+      crossorigin
+    />
     <script>
       // Mirrors ThemeProvider before the first paint, so a dark page
       // never flashes light while the bundle loads.

@@ -35,16 +35,19 @@ export const Home = () => {
         className={clsx(styles.content, { [styles.withDetails]: details })}
         ref={wrapperRef}
       >
-        {isLoading ? (
-          <ListSkeleton />
-        ) : (
-          <List
-            data={data?.results}
-            activeId={activeId}
-            error={error}
-            isRefreshing={isFetching}
-          />
-        )}
+        <div className={styles.listArea}>
+          {isLoading ? (
+            <ListSkeleton fit={Boolean(details)} />
+          ) : (
+            <List
+              data={data?.results}
+              activeId={activeId}
+              error={error}
+              isRefreshing={isFetching}
+              fit={Boolean(details)}
+            />
+          )}
+        </div>
         {details}
       </main>
       <footer className={styles.bar}>

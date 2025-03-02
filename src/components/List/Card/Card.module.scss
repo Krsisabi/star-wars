@@ -1,17 +1,11 @@
+// The card is a container for its own content: the layout follows the
+// height the list gives it, from a full card down to a phone row.
 .card {
+  // The character's tint, as on the portrait; --hue comes from the card.
+  --tone: hsl(var(--hue) 70% 55%);
+
   position: relative;
   height: var(--card-height);
-  padding: 16px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto auto minmax(0, 1fr);
-  grid-template-areas:
-    'avatar select'
-    'title title'
-    'meta meta';
-  row-gap: 12px;
-  // The card has a fixed size, so it can be a container for its own
-  // content: a short card drops the least important line.
   container-type: size;
   border: 1px solid var(--border-color);
   border-radius: 12px;
@@ -40,9 +34,59 @@
     outline: 2px solid var(--text-color);
     outline-offset: 2px;
   }
+}
 
-  // A phone gets a row: monogram, name over one line of facts, checkbox.
-  @media (max-width: 767px) {
+// Each threshold is the height the next layout needs, measured in Chrome
+// with a few pixels to spare: a full card 241px with the appearance line
+// and 211 without, a card with a small portrait 145, a row 47. The full
+// card counts its portrait band at its least, 48px; the band takes any
+// height the card has over that.
+.body {
+  height: 100%;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: minmax(3rem, 1fr) auto auto;
+  grid-template-areas:
+    'avatar select'
+    'title title'
+    'meta meta';
+  row-gap: 12px;
+
+  // A full card opens with a band in the character's tint, edge to edge,
+  // with the portrait in the middle: the picture, not a gap in the text,
+  // takes the room a tall card has to spare.
+  &::before {
+    content: '';
+    grid-row: 1;
+    grid-column: 1 / -1;
+    margin: -16px -16px 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--tone) 30%, transparent);
+    background: radial-gradient(
+      120% 100% at 50% 100%,
+      color-mix(in srgb, var(--tone) 24%, transparent),
+      color-mix(in srgb, var(--tone) 6%, transparent)
+    );
+  }
+
+  // Less room: a small portrait moves into the name's line, and the
+  // checkbox goes down beside height and mass to leave the name the width.
+  @container (height < 13.5rem) {
+    &::before {
+      display: none;
+    }
+
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+      'avatar title title'
+      'meta meta select';
+    column-gap: 10px;
+    row-gap: 6px;
+  }
+
+  // A row: monogram, the name over one line of facts, the checkbox.
+  @container (height < 9.5rem) {
     padding: 0 12px;
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-rows: 1fr 1fr;
@@ -57,7 +101,26 @@
 .avatar {
   grid-area: avatar;
 
-  @media (max-width: 767px) {
+  // Centred in the band, which starts 16px above its grid row: the
+  // portrait grows with the band, keeping a margin that grows too.
+  @container (height >= 13.5rem) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    align-self: center;
+    width: auto;
+    height: clamp(3rem, 100% - 1rem, 8rem);
+    aspect-ratio: 1;
+    margin-top: -16px;
+    font-size: clamp(1rem, (100cqh - 12.5rem) / 3, 2.5rem);
+  }
+
+  @container (9.5rem <= height < 13.5rem) {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
+
+  @container (height < 9.5rem) {
     align-self: center;
     width: 40px;
     height: 40px;
@@ -79,7 +142,12 @@
   font-size: 1.25rem;
   line-height: 1.3;
 
-  @media (max-width: 767px) {
+  @container (height < 13.5rem) {
+    align-self: center;
+    font-size: 1.125rem;
+  }
+
+  @container (height < 9.5rem) {
     align-self: end;
     font-size: 1.0625rem;
   }
@@ -108,7 +176,11 @@
     flex-shrink: 0;
   }
 
-  @media (max-width: 767px) {
+  @container (height < 13.5rem) {
+    gap: 4px;
+  }
+
+  @container (height < 9.5rem) {
     align-self: start;
     flex-direction: row;
     gap: 0;
@@ -120,17 +192,21 @@
 }
 
 .summary {
-  margin-top: -8px;
+  min-height: 1lh;
+  margin-top: -6px;
   color: var(--muted-color);
 
-  @media (max-width: 767px) {
+  @container (height < 13.5rem) {
     margin-top: 0;
+  }
+
+  @container (height < 9.5rem) {
     flex: none;
     color: inherit;
   }
 }
 
-// Hair, skin and eyes: the middle of a tall card, gone on a phone row.
+// Hair, skin and eyes: the middle of a tall card, the first to go.
 // One line only; the parts that wrap to a second one stay hidden.
 .looks {
   --line: 1.25rem;
@@ -138,17 +214,14 @@
   display: flex;
   flex-wrap: wrap;
   column-gap: 14px;
+  min-height: var(--line);
   max-height: var(--line);
   overflow: hidden;
   font-size: 0.875rem;
   line-height: var(--line);
   color: var(--muted-color);
 
-  @container (height < 13.5rem) {
-    display: none;
-  }
-
-  @media (max-width: 767px) {
+  @container (height < 15.5rem) {
     display: none;
   }
 }
@@ -169,7 +242,11 @@
   gap: 12px;
   border-top: 1px solid color-mix(in srgb, var(--border-color) 15%, transparent);
 
-  @media (max-width: 767px) {
+  @container (height < 13.5rem) {
+    padding-top: 6px;
+  }
+
+  @container (height < 9.5rem) {
     margin: 0;
     padding: 0;
     display: flex;
@@ -193,7 +270,7 @@
     font-weight: 600;
   }
 
-  @media (max-width: 767px) {
+  @container (height < 9.5rem) {
     flex: none;
 
     dt {
@@ -211,7 +288,7 @@
     }
 
     // The facts read as one line: "male · 19BBY · 172 cm · 77 kg".
-    .summary ~ .stats &:first-child dd::before,
+    .summary:not(:empty) ~ .stats &:first-child dd::before,
     & + & dd::before {
       content: '·';
       margin: 0 0.4em;
@@ -234,7 +311,12 @@
     box-shadow: 0 0 10px var(--box-shadow-color);
   }
 
-  @media (max-width: 767px) {
+  @container (height < 13.5rem) {
+    align-self: end;
+    margin: 0 -10px -10px 0;
+  }
+
+  @container (height < 9.5rem) {
     align-self: center;
     margin: 0 -10px 0 0;
   }

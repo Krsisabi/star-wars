@@ -14,9 +14,11 @@ type ListProps = {
   activeId?: string;
   error?: FetchBaseQueryError | SerializedError;
   isRefreshing?: boolean;
+  // Fit the list into the window height (the details panel is open).
+  fit?: boolean;
 };
 
-export function List({ data, activeId, error, isRefreshing }: ListProps) {
+export function List({ data, activeId, error, isRefreshing, fit }: ListProps) {
   const dispatch = useAppDispatch();
   const selectedCharacters = useAppSelector(
     (state) => state.selectedCharacters
@@ -38,7 +40,10 @@ export function List({ data, activeId, error, isRefreshing }: ListProps) {
   // instead of collapsing into a loader and jumping back.
   return (
     <ul
-      className={clsx(styles.list, { [styles.refreshing]: isRefreshing })}
+      className={clsx(styles.list, {
+        [styles.refreshing]: isRefreshing,
+        [styles.fit]: fit,
+      })}
       aria-busy={isRefreshing || undefined}
     >
       {data.map((el) => {
@@ -56,13 +61,16 @@ export function List({ data, activeId, error, isRefreshing }: ListProps) {
   );
 }
 
-export function ListSkeleton() {
+export function ListSkeleton({ fit }: { fit?: boolean }) {
   return (
     <div>
       <p className="visually-hidden" role="status">
         Loading...
       </p>
-      <ul className={styles.list} aria-hidden="true">
+      <ul
+        className={clsx(styles.list, { [styles.fit]: fit })}
+        aria-hidden="true"
+      >
         {Array.from({ length: PAGE_SIZE }, (_, i) => (
           <li key={i} className={styles.placeholder} />
         ))}

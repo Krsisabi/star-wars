@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { CharacterNormalized } from '~/types';
-import { isKnown, summary, withUnit } from '~/utils/character';
+import { hueOf, isKnown, summary, withUnit } from '~/utils/character';
 import { Avatar } from '../../Avatar';
 import { Swatches } from '../../Swatches';
 import styles from './Card.module.scss';
@@ -38,21 +38,26 @@ export function Card({
   };
 
   return (
-    <li className={clsx(styles.card, { [styles.active]: isActive })}>
-      <Avatar id={id} name={name} className={styles.avatar} />
-      <h2 className={styles.title} title={name}>
-        <Link
-          to={to}
-          replace
-          className={styles.link}
-          aria-current={isActive || undefined}
-        >
-          {name}
-        </Link>
-      </h2>
-      <div className={styles.meta}>
-        {facts && <p className={styles.summary}>{facts}</p>}
-        {looks.length > 0 && (
+    <li
+      className={clsx(styles.card, { [styles.active]: isActive })}
+      style={{ '--hue': hueOf(id) } as React.CSSProperties}
+    >
+      <div className={styles.body}>
+        <Avatar id={id} name={name} className={styles.avatar} />
+        <h2 className={styles.title} title={name}>
+          <Link
+            to={to}
+            replace
+            className={styles.link}
+            aria-current={isActive || undefined}
+          >
+            {name}
+          </Link>
+        </h2>
+        <div className={styles.meta}>
+          {/* Both lines stay when SWAPI has nothing for them, so the
+              names in a row of cards stand at one height. */}
+          <p className={styles.summary}>{facts}</p>
           <p className={styles.looks}>
             {looks.map(([part, value], i) => (
               <span key={part} className={styles.look}>
@@ -62,30 +67,30 @@ export function Card({
               </span>
             ))}
           </p>
-        )}
-        <dl className={styles.stats}>
-          <div className={styles.stat}>
-            <dt>Height</dt>
-            <dd>{withUnit(height, 'cm')}</dd>
-          </div>
-          <div className={styles.stat}>
-            <dt>Mass</dt>
-            <dd>{withUnit(mass, 'kg')}</dd>
-          </div>
-        </dl>
+          <dl className={styles.stats}>
+            <div className={styles.stat}>
+              <dt>Height</dt>
+              <dd>{withUnit(height, 'cm')}</dd>
+            </div>
+            <div className={styles.stat}>
+              <dt>Mass</dt>
+              <dd>{withUnit(mass, 'kg')}</dd>
+            </div>
+          </dl>
+        </div>
+        <label
+          className={styles.select}
+          title={isSelected ? 'Unselect' : 'Select'}
+        >
+          <input
+            type="checkbox"
+            checked={isSelected}
+            className={styles.checkbox}
+            onChange={() => onSelect(character)}
+          />
+          <span className="visually-hidden">Select {name}</span>
+        </label>
       </div>
-      <label
-        className={styles.select}
-        title={isSelected ? 'Unselect' : 'Select'}
-      >
-        <input
-          type="checkbox"
-          checked={isSelected}
-          className={styles.checkbox}
-          onChange={() => onSelect(character)}
-        />
-        <span className="visually-hidden">Select {name}</span>
-      </label>
     </li>
   );
 }

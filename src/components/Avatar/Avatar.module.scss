@@ -1,9 +1,11 @@
 .avatar {
   --tone: hsl(var(--hue) 70% 55%);
 
+  position: relative;
   flex: none;
   display: grid;
   place-content: center;
+  overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--tone) 70%, transparent);
   border-radius: 50%;
   font-weight: 700;
@@ -13,6 +15,23 @@
   user-select: none;
 }
 
+// Most pictures are cut-outs: the tint shows through around the figure.
+// Faces sit near the top, so the crop keeps the top of the picture.
+.portrait {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 12%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  &[data-loaded] {
+    opacity: 1;
+  }
+}
+
 .medium {
   width: 48px;
   height: 48px;
@@ -20,7 +39,7 @@
 }
 
 .large {
-  width: 72px;
-  height: 72px;
-  font-size: 1.5rem;
+  width: 96px;
+  height: 96px;
+  font-size: 1.75rem;
 }

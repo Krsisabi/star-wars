@@ -27,6 +27,42 @@
   }
 }
 
+// With the details panel open the list takes exactly the panel's height,
+// so the page does not scroll. The rows are counted for a full page of ten,
+// never for the cards that came, and each card picks the layout its
+// share of the height allows. A phone shows the panel over everything.
+//
+// Two columns by default: a card squeezed into a row needs the width.
+// More columns only where the window is tall enough for the cards to stay
+// cards (9.5rem + border each, see Card): 4 rows need 898px, 3 need 728px.
+.fit {
+  @media (min-width: 768px) {
+    --card-height: auto;
+    --rows: 5;
+
+    height: calc(100dvh - var(--content-top) - var(--bar-space));
+    min-height: 18rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(var(--rows), minmax(0, 1fr));
+
+    @media (min-height: 898px) {
+      @container (width >= 640px) {
+        --rows: 4;
+
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-height: 728px) {
+      @container (width >= 1000px) {
+        --rows: 3;
+
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  }
+}
+
 .placeholder {
   height: var(--card-height);
   border: 1px solid var(--border-color);
