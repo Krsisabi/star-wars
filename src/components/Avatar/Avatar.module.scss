@@ -1,5 +1,7 @@
+@use '../../styles/mixins' as *;
+
 .avatar {
-  --tone: hsl(var(--hue) 70% 55%);
+  @include character-tone;
 
   position: relative;
   flex: none;

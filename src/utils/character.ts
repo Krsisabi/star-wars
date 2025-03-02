@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { Character } from '~/types';
 
 const UNKNOWN = new Set(['n/a', 'none', 'unknown']);
@@ -23,7 +24,12 @@ export const initials = (name: string) => {
 };
 
 // The golden angle spreads neighbouring ids far apart on the colour wheel.
-export const hueOf = (id: number) => Math.round((id * 137.508) % 360);
+const hueOf = (id: number) => Math.round((id * 137.508) % 360);
+
+// The character's tint for an element's style: --hue here, and --tone made
+// from it by the character-tone mixin (styles/_mixins.scss).
+export const toneStyle = (id: number) =>
+  ({ '--hue': hueOf(id) }) as CSSProperties;
 
 // Every colour word SWAPI uses for hair, skin and eyes.
 const COLORS: Record<string, string> = {

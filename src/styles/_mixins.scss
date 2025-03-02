@@ -19,6 +19,24 @@ $not-phone: '(min-width: 768px) and (min-height: 501px)';
   border: 0;
 }
 
+// A character's own tint, made from the --hue its component sets
+// (toneStyle in utils/character.ts). Declared on each element that sets
+// --hue: made on the root, it would read no hue at all.
+@mixin character-tone {
+  --tone: hsl(var(--hue) 70% 55%);
+}
+
+// The band a full card and the details panel open with: the character's
+// tint, strongest under the portrait, and a line along its foot.
+@mixin tone-band {
+  border-bottom: 1px solid color-mix(in srgb, var(--tone) 30%, transparent);
+  background: radial-gradient(
+    120% 100% at 50% 100%,
+    color-mix(in srgb, var(--tone) 24%, transparent),
+    color-mix(in srgb, var(--tone) 6%, transparent)
+  );
+}
+
 // Frosted glass, after variant 7 of the repo-explorer lab: a body over the
 // blurred sky, and a rim that lights up at the cursor. Under the body lies
 // a radial gradient at the cursor; the 1px border, a faint line in the

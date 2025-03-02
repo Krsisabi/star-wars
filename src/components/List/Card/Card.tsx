@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { CharacterNormalized } from '~/types';
-import { hueOf, isKnown, summary, withUnit } from '~/utils/character';
+import { isKnown, summary, toneStyle, withUnit } from '~/utils/character';
 import { Avatar } from '../../Avatar';
 import { Swatches } from '../../Swatches';
 import styles from './Card.module.scss';
@@ -40,7 +40,7 @@ export function Card({
   return (
     <li
       className={clsx(styles.card, { [styles.active]: isActive })}
-      style={{ '--hue': hueOf(id) } as React.CSSProperties}
+      style={toneStyle(id)}
     >
       <div className={styles.body}>
         <Avatar id={id} name={name} className={styles.avatar} />

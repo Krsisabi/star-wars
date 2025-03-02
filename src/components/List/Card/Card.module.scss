@@ -3,8 +3,7 @@
 // The card is a container for its own content: the layout follows the
 // height the list gives it, from a full card down to a phone row.
 .card {
-  // The character's tint, as on the portrait; --hue comes from the card.
-  --tone: hsl(var(--hue) 70% 55%);
+  @include character-tone;
 
   position: relative;
   height: var(--card-height);
@@ -63,12 +62,8 @@
     grid-row: 1;
     grid-column: 1 / -1;
     margin: -16px -16px 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--tone) 30%, transparent);
-    background: radial-gradient(
-      120% 100% at 50% 100%,
-      color-mix(in srgb, var(--tone) 24%, transparent),
-      color-mix(in srgb, var(--tone) 6%, transparent)
-    );
+
+    @include tone-band;
   }
 
   // Less room: a small portrait moves into the name's line, and the

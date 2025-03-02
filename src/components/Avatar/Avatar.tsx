@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { hueOf, initials } from '~/utils/character';
+import { initials, toneStyle } from '~/utils/character';
 import { portraitOf } from '~/utils/portraits';
 import styles from './Avatar.module.scss';
 
@@ -37,7 +37,7 @@ export function Avatar({ id, name, size = 'medium', className }: AvatarProps) {
   return (
     <span
       className={clsx(styles.avatar, styles[size], className)}
-      style={{ '--hue': hueOf(id) } as React.CSSProperties}
+      style={toneStyle(id)}
       aria-hidden="true"
     >
       {src && src !== failed ? (

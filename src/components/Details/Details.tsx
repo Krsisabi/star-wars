@@ -5,10 +5,11 @@ import {
   useParams,
   useSearchParams,
 } from 'react-router-dom';
+import clsx from 'clsx';
 import { DetailsOutletContext } from '~/pages/Home';
 import { useGetDetailsQuery } from '~/store/api/apiSlice';
 import { Character } from '~/types';
-import { summary, withUnit } from '~/utils/character';
+import { summary, toneStyle, withUnit } from '~/utils/character';
 import { Avatar } from '../Avatar';
 import { Swatches } from '../Swatches';
 import styles from './Details.module.scss';
@@ -110,15 +111,21 @@ export function Details() {
       <div className={styles.backdrop} />
       <aside
         className={styles.details}
+        style={toneStyle(Number(id))}
         ref={detailsRef}
         aria-labelledby="details-title"
         aria-busy={!character && !error}
       >
         <header className={styles.header}>
           {character ? (
-            <Avatar id={Number(id)} name={character.name} size="large" />
+            <Avatar
+              id={Number(id)}
+              name={character.name}
+              size="large"
+              className={styles.portrait}
+            />
           ) : (
-            <span className={styles.avatarPlaceholder} />
+            <span className={clsx(styles.avatarPlaceholder, styles.portrait)} />
           )}
           <div className={styles.heading}>
             <h2 id="details-title" className={styles.title}>
