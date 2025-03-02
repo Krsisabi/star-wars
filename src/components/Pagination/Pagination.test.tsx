@@ -23,14 +23,31 @@ describe('Pagination Component', () => {
     return render(<Pagination {...defaultProps} {...props} />);
   };
 
-  test('renders correct number of pages', async () => {
+  test('renders correct number of pages', () => {
     renderPagination();
 
     const pageItems = screen.getAllByRole('listitem');
     expect(pageItems.length).toBeGreaterThanOrEqual(5);
+  });
 
-    const buttons = screen.getAllByRole('listitem');
+  test('keeps every page link inside a list item', () => {
+    renderPagination();
+
+    const links = screen.getAllByRole('link');
+    expect(links.length).toBeGreaterThan(0);
+    links.forEach((link) => {
+      expect(link.parentElement?.tagName).toBe('LI');
+    });
+  });
+
+  test('reports the clicked page', async () => {
+    vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    const onPageChange = vi.fn();
+    renderPagination({ onPageChange });
+
     const user = userEvent.setup();
-    await user.click(buttons[0]);
+    await user.click(screen.getByRole('link', { name: '2' }));
+
+    expect(onPageChange).toHaveBeenCalledWith(2);
   });
 });

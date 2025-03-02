@@ -39,7 +39,7 @@ export function List({
       {data.map((el) => {
         return (
           <Card
-            key={el.name}
+            key={el.id}
             character={el}
             activeElement={activeElement}
             setActiveElement={setActiveElement}

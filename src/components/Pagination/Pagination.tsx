@@ -54,11 +54,9 @@ export const Pagination = (props: PaginationProps) => {
         }
 
         return (
-          <Link
-            to={`${id ? `/details/${id}` : ''}?${searchFromUrl ? `search=${searchFromUrl}&` : ''}page=${pageNumber}`}
-            key={pageNumber}
-          >
-            <li
+          <li key={pageNumber}>
+            <Link
+              to={`${id ? `/details/${id}` : ''}?${searchFromUrl ? `search=${searchFromUrl}&` : ''}page=${pageNumber}`}
               className={clsx(styles.paginationItem, {
                 [styles.selected]: +pageNumber === currentPage,
               })}
@@ -66,11 +64,10 @@ export const Pagination = (props: PaginationProps) => {
                 onTop();
                 onPageChange(+pageNumber);
               }}
-              key={pageNumber}
             >
               {pageNumber}
-            </li>
-          </Link>
+            </Link>
+          </li>
         );
       })}
     </ul>
