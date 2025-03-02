@@ -1,0 +1,26 @@
+.avatar {
+  --tone: hsl(var(--hue) 70% 55%);
+
+  flex: none;
+  display: grid;
+  place-content: center;
+  border: 1px solid color-mix(in srgb, var(--tone) 70%, transparent);
+  border-radius: 50%;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--tone) 65%, var(--text-color));
+  background-color: color-mix(in srgb, var(--tone) 16%, transparent);
+  user-select: none;
+}
+
+.medium {
+  width: 48px;
+  height: 48px;
+  font-size: 1rem;
+}
+
+.large {
+  width: 72px;
+  height: 72px;
+  font-size: 1.5rem;
+}

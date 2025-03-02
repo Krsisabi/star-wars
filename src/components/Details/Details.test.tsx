@@ -60,7 +60,9 @@ describe('Details', () => {
 
     renderDetails();
 
-    expect(screen.getByRole('heading')).toHaveTextContent(/loading/i);
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
+      /loading/i
+    );
     expect(screen.getByRole('complementary')).toHaveAttribute(
       'aria-busy',
       'true'
@@ -73,10 +75,13 @@ describe('Details', () => {
 
     renderDetails();
 
-    expect(screen.getByRole('heading')).toHaveTextContent('Luke Skywalker');
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(
+      'Luke Skywalker'
+    );
+    expect(screen.getByText('male · 19BBY')).toBeInTheDocument();
     expect(screen.getByText('172 cm')).toBeInTheDocument();
     expect(screen.getByText('77 kg')).toBeInTheDocument();
-    expect(screen.getByText('19BBY')).toBeInTheDocument();
+    expect(screen.getByText('blond')).toBeInTheDocument();
   });
 
   it('reports a failed request instead of loading forever', () => {

@@ -1,54 +1,99 @@
 .search {
   display: flex;
-  flex: 1 1 280px;
+  flex: 1 1 240px;
   min-width: 0;
   max-width: 800px;
   align-items: stretch;
-  position: relative;
   width: 100%;
-  overflow: hidden;
-  background-color: var(--search-bg, white);
-  border: 1px solid var(--border-color);
   margin: 0 auto;
-  font-size: 24px;
-  box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.2);
-  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
   border-radius: 15px;
-  transition: box-shadow 0.25s;
+  background-color: var(--background-color);
+  box-shadow: 0px 16px 30px -10px rgba(70, 96, 187, 0.2);
+  transition:
+    box-shadow 0.25s,
+    background-color 0.8s ease,
+    border-color 0.8s ease;
 
   &:focus-within {
     box-shadow: 0 0 15px var(--box-shadow-color);
   }
+}
 
-  .textField {
-    margin: 10px 10px 10px 16px;
-    flex-grow: 5;
-    min-width: 0;
-    height: 24px;
-    max-width: calc(100% - 100px - 20px);
-    border: none;
-    color: #2b3442;
-    cursor: text;
-    background-color: #fff;
-    font-size: 16px;
-    line-height: 1.5;
+.field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px 0 14px;
+  color: var(--muted-color);
+  cursor: text;
+  transition: color 0.25s;
 
-    &::placeholder {
-      color: #4b6a9b;
-    }
+  .search:focus-within & {
+    color: var(--text-color);
+  }
+}
 
-    &:focus {
-      outline: none;
-    }
+.icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.textField {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-color);
+  background-color: transparent;
+
+  &::placeholder {
+    color: var(--muted-color);
   }
 
-  .button {
-    border: none;
-    border-left: 1px solid black;
-    font-weight: bold;
-    font-size: 16px;
-    flex: 1;
-    cursor: pointer;
+  &:focus {
     outline: none;
+  }
+}
+
+.button {
+  flex: none;
+  padding: 0 20px;
+  border: none;
+  border-left: 1px solid var(--border-color);
+  font-family: inherit;
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--text-color);
+  background-color: color-mix(
+    in srgb,
+    var(--text-color) 7%,
+    var(--background-color)
+  );
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: color-mix(
+      in srgb,
+      var(--text-color) 14%,
+      var(--background-color)
+    );
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--text-color);
+    outline-offset: -4px;
   }
 }

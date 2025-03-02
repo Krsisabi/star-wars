@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { ReactNode, useCallback, useEffect, useRef } from 'react';
 import {
   useNavigate,
   useOutletContext,
@@ -8,19 +8,36 @@ import {
 import { DetailsOutletContext } from '~/pages/Home';
 import { useGetDetailsQuery } from '~/store/api/apiSlice';
 import { Character } from '~/types';
+import { summary, withUnit } from '~/utils/character';
+import { Avatar } from '../Avatar';
+import { Swatches } from '../Swatches';
 import styles from './Details.module.scss';
 
-const withUnit = (value: string, unit: string) =>
-  /^[\d.,]+$/.test(value) ? `${value} ${unit}` : value;
+type Field = [label: string, render: (character: Character) => ReactNode];
 
-const FIELDS: [label: string, format: (character: Character) => string][] = [
+const STATS: Field[] = [
   ['Height', (character) => withUnit(character.height, 'cm')],
   ['Mass', (character) => withUnit(character.mass, 'kg')],
-  ['Birth year', (character) => character.birth_year],
-  ['Gender', (character) => character.gender],
-  ['Hair color', (character) => character.hair_color],
-  ['Skin color', (character) => character.skin_color],
-  ['Eye color', (character) => character.eye_color],
+];
+
+const withSwatches = (value: string) => (
+  <>
+    <Swatches value={value} />
+    {value}
+  </>
+);
+
+const APPEARANCE: Field[] = [
+  ['Hair', (character) => withSwatches(character.hair_color)],
+  ['Skin', (character) => withSwatches(character.skin_color)],
+  ['Eyes', (character) => withSwatches(character.eye_color)],
+];
+
+// The lists are links to other resources; their length needs no request.
+const APPEARS_IN: Field[] = [
+  ['Films', (character) => character.films.length],
+  ['Starships', (character) => character.starships.length],
+  ['Vehicles', (character) => character.vehicles.length],
 ];
 
 export function Details() {
@@ -69,6 +86,25 @@ export function Details() {
 
   const title = character?.name ?? (error ? 'Not available' : 'Loading...');
 
+  // Until the data comes, every value keeps its place with a placeholder
+  // of the same height, so the panel does not grow when it arrives.
+  const renderFields = (fields: Field[], className: string) => (
+    <dl className={className}>
+      {fields.map(([label, render]) => (
+        <div key={label} className={styles.field}>
+          <dt>{label}</dt>
+          <dd>
+            {character ? (
+              render(character)
+            ) : (
+              <span className={styles.placeholder} />
+            )}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+
   return (
     <aside
       className={styles.details}
@@ -77,9 +113,17 @@ export function Details() {
       aria-busy={!character && !error}
     >
       <header className={styles.header}>
-        <h2 id="details-title" className={styles.title}>
-          {title}
-        </h2>
+        {character ? (
+          <Avatar id={Number(id)} name={character.name} size="large" />
+        ) : (
+          <span className={styles.avatarPlaceholder} />
+        )}
+        <div className={styles.heading}>
+          <h2 id="details-title" className={styles.title}>
+            {title}
+          </h2>
+          {character && <p className={styles.summary}>{summary(character)}</p>}
+        </div>
         <button
           type="button"
           className={styles.close}
@@ -92,20 +136,21 @@ export function Details() {
       {error ? (
         <p>Something went wrong...</p>
       ) : (
-        <dl className={styles.fields}>
-          {FIELDS.map(([label, format]) => (
-            <div key={label} className={styles.field}>
-              <dt>{label}</dt>
-              <dd>
-                {character ? (
-                  format(character)
-                ) : (
-                  <span className={styles.placeholder} />
-                )}
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <>
+          {renderFields(STATS, styles.tiles)}
+          <section className={styles.section} aria-labelledby="appearance">
+            <h3 id="appearance" className={styles.sectionTitle}>
+              Appearance
+            </h3>
+            {renderFields(APPEARANCE, styles.rows)}
+          </section>
+          <section className={styles.section} aria-labelledby="appears-in">
+            <h3 id="appears-in" className={styles.sectionTitle}>
+              Appears in
+            </h3>
+            {renderFields(APPEARS_IN, styles.counts)}
+          </section>
+        </>
       )}
     </aside>
   );

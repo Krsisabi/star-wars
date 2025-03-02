@@ -1,21 +1,36 @@
 .list {
-  --card-height: 11rem;
+  // Two rows of cards fill the screen between the header and the bar;
+  // the height depends on the window, never on how many cards came.
+  --card-height: clamp(14rem, calc((100dvh - 16rem) / 2), 24rem);
+  --gap: 16px;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  // A page is ten characters: at most five columns, so a wide screen
+  // shows two full rows instead of eight cards and a stray pair.
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(max(220px, (100% - 4 * var(--gap)) / 5), 1fr)
+  );
   align-content: start;
-  gap: 16px;
+  gap: var(--gap);
   transition: opacity 0.2s ease;
 
   &.refreshing {
     opacity: 0.5;
+  }
+
+  @media (max-width: 767px) {
+    --card-height: 4.5rem;
+    --gap: 8px;
+
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 .placeholder {
   height: var(--card-height);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 12px;
   opacity: 0.25;
 }
 

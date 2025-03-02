@@ -1,34 +1,87 @@
 @use 'reset';
 
 :root {
+  color-scheme: light;
+
+  // Surfaces: cards, panels, buttons. The page itself is the sky below.
   --background-color: #fff;
   --text-color: #000;
+  --muted-color: color-mix(in srgb, var(--text-color) 60%, transparent);
   --border-color: #000;
   --box-shadow-color: rgba(36, 36, 36, 0.7);
   --error-color: #fb2c36;
   --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
+  // Frosted glass for the floating bar.
+  --glass-color: color-mix(in srgb, var(--background-color) 55%, transparent);
+  --glass-edge: color-mix(in srgb, var(--border-color) 15%, transparent);
+  --glass-shadow: 0 12px 32px -12px rgba(30, 50, 90, 0.35);
+
   font-family: var(--font-family);
 }
 
 [data-theme='dark'] {
+  color-scheme: dark;
+
   --text-color: #fff;
   --background-color: #242424;
   --border-color: #fff;
-
   --box-shadow-color: rgba(255, 255, 255, 0.7);
+
+  --glass-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.8);
 }
 
 // The gutter is kept even without a scrollbar, so the page does not
 // shift sideways when the content grows past the viewport.
+// The day sky lives on the root; the night sky is a layer above it
+// that fades in, so a theme change is a dusk rather than a cut.
 html {
+  min-height: 100%;
   scrollbar-gutter: stable;
+  // A transparent track lets the sky run under the scrollbar too.
+  scrollbar-color: color-mix(in srgb, var(--text-color) 30%, transparent)
+    transparent;
+  background: linear-gradient(180deg, #c9dcf5 0%, #e4edf9 45%, #f8efe4 100%)
+    fixed;
 }
 
 body {
-  transition:
-    background-color 0.5s ease,
-    color 0.5s ease;
+  transition: color 0.5s ease;
+
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      url('../assets/stars.svg') 0 0 / 480px 480px,
+      url('../assets/stars.svg') 170px 290px / 720px 720px,
+      radial-gradient(
+        60% 50% at 85% 0%,
+        rgba(80, 96, 180, 0.28),
+        transparent 70%
+      ),
+      radial-gradient(
+        50% 45% at 0% 100%,
+        rgba(170, 70, 120, 0.16),
+        transparent 70%
+      ),
+      #0d0e14;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+}
+
+[data-theme='dark'] body::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body::before {
+    transition: none;
+  }
 }
 
 .visually-hidden {

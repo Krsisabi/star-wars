@@ -1,50 +1,92 @@
-// Sticks under the top edge while the list scrolls, and never grows
-// taller than the space between the top and the bottom bar.
+// Stands still between the header and the bottom bar while the list
+// scrolls beside it; a long card scrolls inside.
 .details {
   position: sticky;
-  top: 16px;
+  top: var(--content-top, 16px);
   align-self: start;
-  max-height: calc(100dvh - 32px - var(--bar-height, 0px));
+  height: calc(100dvh - var(--content-top, 16px) - var(--bar-space, 16px));
+  min-height: 24rem;
   overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 16px 16px 20px;
+  gap: 28px;
+  padding: 24px;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 16px;
   background-color: var(--background-color);
   box-shadow: 0 0 15px var(--box-shadow-color);
+  animation: slide-in 0.25s ease-out;
 
-  // No room beside the list on a phone: the panel takes the screen.
+  // No room beside the list on a phone: the card takes the screen.
   @media (max-width: 767px) {
     position: fixed;
     inset: 0;
     // align-self: start would shrink a fixed box to its content.
     align-self: stretch;
     z-index: 20;
-    max-height: none;
-    padding: 16px;
+    height: auto;
+    min-height: 0;
+    gap: 24px;
+    padding: 16px 16px 32px;
     border: none;
     border-radius: 0;
     box-shadow: none;
+    animation-name: slide-up;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
   }
 }
 
 .header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatarPlaceholder {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0.15;
+}
+
+.heading {
+  min-width: 0;
 }
 
 .title {
-  font-size: 1.5rem;
-  line-height: 1.25;
+  font-size: 1.75rem;
+  line-height: 1.2;
   overflow-wrap: anywhere;
+}
+
+.summary {
+  margin-top: 4px;
+  color: var(--muted-color);
 }
 
 .close {
   flex: none;
+  align-self: start;
   display: grid;
   place-content: center;
   width: 40px;
@@ -77,21 +119,78 @@
   }
 }
 
-.fields {
+.section {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
-.field {
+.sectionTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-color);
+}
+
+// Big numbers: height and mass, and how often the character appears.
+.tiles,
+.counts {
   display: grid;
-  grid-template-columns: 7rem minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 
+  .field {
+    padding: 14px 16px;
+    border: 1px solid color-mix(in srgb, var(--border-color) 12%, transparent);
+    border-radius: 12px;
+    background-color: color-mix(in srgb, var(--text-color) 5%, transparent);
+  }
+
   dt {
-    opacity: 0.7;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-color);
   }
 
   dd {
+    margin-top: 4px;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.counts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  dd {
+    font-size: 1.5rem;
+  }
+}
+
+.rows {
+  display: grid;
+  gap: 12px;
+
+  .field {
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+  }
+
+  dt {
+    color: var(--muted-color);
+  }
+
+  dd {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     overflow-wrap: anywhere;
   }
 }
